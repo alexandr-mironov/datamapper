@@ -1,22 +1,20 @@
 <?php
 
 
-namespace Micro\Core\DataMapper;
+namespace DataMapper;
 
 
 use PDO;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionObject;
-use Micro\Core\App;
-use Micro\Core\DataMapper\Attributes\{Column, Table};
-use Micro\Core\QueryBuilder\Exceptions\{Exception as QueryBuilderException, UnsupportedException};
-use Micro\Core\QueryBuilder\QueryBuilder;
-use Micro\Exceptions\Exception;
+
+use DataMapper\DataMapper\Attributes\{Column, Table};
+use DataMapper\QueryBuilder\Exceptions\{Exception as QueryBuilderException, UnsupportedException};
 
 /**
  * Class DataMapper
- * @package Micro\Core\DataMapper
+ * @package DataMapper\DataMapper
  */
 class DataMapper
 {

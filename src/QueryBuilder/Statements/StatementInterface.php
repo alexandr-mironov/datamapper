@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
 /**
  * Interface StatementInterface
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  */
 interface StatementInterface
 {

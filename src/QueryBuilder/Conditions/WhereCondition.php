@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Conditions;
+namespace DataMapper\QueryBuilder\Conditions;
 
 /**
  * Class WhereCondition
- * @package unshort\core\QueryBuilder\Conditions
+ * @package DataMapper\QueryBuilder\Conditions
  */
 class WhereCondition implements ConditionInterface
 {

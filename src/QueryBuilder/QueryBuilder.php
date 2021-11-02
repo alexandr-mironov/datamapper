@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder;
+namespace DataMapper\QueryBuilder;
 
 
 use PDO;
 use PDOStatement;
-use Micro\Core\QueryBuilder\Conditions\WhereCondition;
-use Micro\Core\QueryBuilder\Definitions\Column;
-use Micro\Core\QueryBuilder\Exceptions\{Exception, UnsupportedException};
-use Micro\Core\QueryBuilder\Statements\{AbstractStatementWithWhere,
+use DataMapper\QueryBuilder\Conditions\WhereCondition;
+use DataMapper\QueryBuilder\Definitions\Column;
+use DataMapper\QueryBuilder\Exceptions\{Exception, UnsupportedException};
+use DataMapper\QueryBuilder\Statements\{AbstractStatementWithWhere,
     CreateTable,
     Delete,
     Insert,
@@ -21,7 +21,7 @@ use Micro\Core\QueryBuilder\Statements\{AbstractStatementWithWhere,
 
 /**
  * Class QueryBuilder
- * @package unshort\core\QueryBuilder
+ * @package DataMapper\QueryBuilder
  */
 class QueryBuilder implements BuilderInterface
 {

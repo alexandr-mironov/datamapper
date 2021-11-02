@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
 
-use Micro\Core\QueryBuilder\{DBType, Exceptions\Exception, Expression};
+use DataMapper\QueryBuilder\{DBType, Exceptions\Exception, Expression};
 
 /**
  * Class Insert
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  */
 class Insert implements StatementInterface
 {

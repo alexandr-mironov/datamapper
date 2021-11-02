@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
 /**
  * Class AlterTable
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  */
 class AlterTable implements StatementInterface
 {

@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
-use Micro\Core\QueryBuilder\Exceptions\Exception;
+use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
  * Class SelectWrapper
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  *
  * @property-read Select $statement
  * @property-read string $alias

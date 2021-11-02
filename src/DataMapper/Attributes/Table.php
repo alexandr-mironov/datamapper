@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\DataMapper\Attributes;
+namespace DataMapper\DataMapper\Attributes;
 
 
 use Attribute;
 
 /**
  * Class Table
- * @package Micro\Core\DataMapper\Attributes
+ * @package DataMapper\DataMapper\Attributes
  */
 #[Attribute]
 class Table

@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Definitions;
+namespace DataMapper\QueryBuilder\Definitions;
 
 /**
  * Interface DefinitionInterface
- * @package unshort\core\QueryBuilder\Definitions
+ * @package DataMapper\QueryBuilder\Definitions
  */
 interface DefinitionInterface
 {

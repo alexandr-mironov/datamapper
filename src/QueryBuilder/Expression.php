@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder;
+namespace DataMapper\QueryBuilder;
 
 
 /**
  * Class Expression
- * @package unshort\core\QueryBuilder
+ * @package DataMapper\QueryBuilder
  */
 class Expression
 {

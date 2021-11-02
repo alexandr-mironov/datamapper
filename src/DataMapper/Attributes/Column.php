@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Micro\Core\DataMapper\Attributes;
+namespace DataMapper\DataMapper\Attributes;
 
 use Attribute;
 use DateTime;
-use Micro\Core\QueryBuilder\Definitions\DefinitionInterface;
+use DataMapper\QueryBuilder\Definitions\DefinitionInterface;
 
 /**
  * Class Column
- * @package Micro\Core\DataMapper\Attributes
+ * @package DataMapper\DataMapper\Attributes
  */
 #[Attribute]
 class Column implements DefinitionInterface

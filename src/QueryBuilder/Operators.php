@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder;
+namespace DataMapper\QueryBuilder;
 
 /**
  * Class Operators
- * @package unshort\core\QueryBuilder
+ * @package DataMapper\QueryBuilder
  */
 class Operators
 {

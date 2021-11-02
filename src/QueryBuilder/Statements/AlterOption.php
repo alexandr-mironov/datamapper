@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
-use Micro\Core\QueryBuilder\Definitions\DefinitionInterface;
+use DataMapper\QueryBuilder\Definitions\DefinitionInterface;
 
 /**
  * Class AlterOption
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  *
  * alter_option: {
  *  table_options

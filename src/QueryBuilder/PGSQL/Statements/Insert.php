@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\PGSQL\Statements;
+namespace DataMapper\QueryBuilder\PGSQL\Statements;
 
 use Micro\Core\QueryBuilder\Expression;
 use Micro\Core\QueryBuilder\Statements\StatementInterface;
 
 /**
  * Class Insert
- * @package unshort\core\QueryBuilder\PGSQL\Statements
+ * @package DataMapper\QueryBuilder\PGSQL\Statements
  */
 class Insert implements StatementInterface
 {

@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\PGSQL;
+namespace DataMapper\QueryBuilder\PGSQL;
 
 
-use Micro\Core\QueryBuilder\SchemaInterface;
+use DataMapper\QueryBuilder\SchemaInterface;
 
 /**
  * Class Schema
- * @package unshort\core\QueryBuilder\PGSQL
+ * @package DataMapper\QueryBuilder\PGSQL
  */
 class Schema implements SchemaInterface
 {

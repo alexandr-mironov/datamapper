@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\MySQL;
+namespace DataMapper\QueryBuilder\MySQL;
 
 
-use Micro\Core\QueryBuilder\Conditions\{Between,
+use DataMapper\QueryBuilder\Conditions\{Between,
     ConditionFactory as ConditionFactoryParent,
     Equal,
     Exists,
@@ -22,11 +22,11 @@ use Micro\Core\QueryBuilder\Conditions\{Between,
     NotLessThen,
     Regex
 };
-use Micro\Core\QueryBuilder\Exceptions\Exception;
+use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
  * Class ConditionFactory
- * @package unshort\core\QueryBuilder\MySQL
+ * @package DataMapper\QueryBuilder\MySQL
  */
 class ConditionFactory extends ConditionFactoryParent
 {

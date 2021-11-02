@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
 /**
  * Class DropIndex
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  *
  * DROP INDEX index_name ON tbl_name
  * [algorithm_option | lock_option] ...

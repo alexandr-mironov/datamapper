@@ -8,7 +8,7 @@ use Micro\Core\QueryBuilder\Definitions\Column;
 
 /**
  * Class AlterAddColumn
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  */
 class AlterAddColumn extends AlterOption
 {

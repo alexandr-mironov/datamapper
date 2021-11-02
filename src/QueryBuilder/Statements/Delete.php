@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
 
-use Micro\Core\QueryBuilder\Conditions\ConditionInterface;
+use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 
 /**
  * Class Delete
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  */
 class Delete extends AbstractStatementWithWhere implements StatementInterface
 {

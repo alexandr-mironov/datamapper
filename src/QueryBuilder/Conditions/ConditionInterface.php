@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Conditions;
+namespace DataMapper\QueryBuilder\Conditions;
 
 /**
  * Interface ConditionInterface
- * @package unshort\core\QueryBuilder\Conditions
+ * @package DataMapper\QueryBuilder\Conditions
  */
 interface ConditionInterface
 {

@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Conditions;
+namespace DataMapper\QueryBuilder\Conditions;
 
 
-use Micro\Core\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class IsNotNull
- * @package unshort\core\QueryBuilder\Conditions
+ * @package DataMapper\QueryBuilder\Conditions
  */
 class IsNotNull extends IsNull
 {
