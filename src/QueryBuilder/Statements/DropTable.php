@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
 
 class DropTable implements StatementInterface

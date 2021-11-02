@@ -9,7 +9,7 @@ use Micro\Core\QueryBuilder\Operators;
 
 /**
  * Class Like
- * @package unshort\core\QueryBuilder\Conditions
+ * @package DataMapper\QueryBuilder\Conditions
  */
 class Like extends AbstractCondition
 {

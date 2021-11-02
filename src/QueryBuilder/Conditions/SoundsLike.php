@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Conditions;
+namespace DataMapper\QueryBuilder\Conditions;
 
 
-use Micro\Core\QueryBuilder\MySQL\Operators;
+use DataMapper\QueryBuilder\MySQL\Operators;
 
 /**
  * Class SoundsLike
- * @package unshort\core\QueryBuilder\Conditions
+ * @package DataMapper\QueryBuilder\Conditions
  */
 class SoundsLike extends Like
 {

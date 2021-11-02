@@ -1,17 +1,17 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\PGSQL;
+namespace DataMapper\QueryBuilder\PGSQL;
 
 
 use PDO;
-use Micro\Core\QueryBuilder\Exceptions\Exception;
-use Micro\Core\QueryBuilder\PGSQL\Statements\Insert;
-use Micro\Core\QueryBuilder\QueryBuilder as ParentQueryBuilder;
+use DataMapper\QueryBuilder\Exceptions\Exception;
+use DataMapper\QueryBuilder\PGSQL\Statements\Insert;
+use DataMapper\QueryBuilder\QueryBuilder as ParentQueryBuilder;
 
 /**
  * Class QueryBuilder
- * @package unshort\core\QueryBuilder\PGSQL
+ * @package DataMapper\QueryBuilder\PGSQL
  */
 final class QueryBuilder extends ParentQueryBuilder
 {

@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
 
-use Micro\Core\QueryBuilder\Conditions\ConditionInterface;
-use Micro\Core\QueryBuilder\Exceptions\Exception;
+use DataMapper\QueryBuilder\Conditions\ConditionInterface;
+use DataMapper\QueryBuilder\Exceptions\Exception;
 use Micro\Core\QueryBuilder\Operators;
 
 /**
  * Class WhereCollection
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  */
 class WhereCollection
 {

@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\MySQL\Statements;
+namespace DataMapper\QueryBuilder\MySQL\Statements;
 
 
-use Micro\Core\QueryBuilder\Expression;
-use Micro\Core\QueryBuilder\Statements\StatementInterface;
+use DataMapper\QueryBuilder\Expression;
+use DataMapper\QueryBuilder\Statements\StatementInterface;
 
 /**
  * Class Insert
- * @package unshort\core\QueryBuilder\MySQL\Statements
+ * @package DataMapper\QueryBuilder\MySQL\Statements
  */
 class Insert implements StatementInterface
 {

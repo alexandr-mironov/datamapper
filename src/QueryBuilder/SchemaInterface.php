@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder;
+namespace DataMapper\QueryBuilder;
 
 
 interface SchemaInterface

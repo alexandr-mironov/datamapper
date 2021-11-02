@@ -5,7 +5,7 @@ namespace Micro\Core\QueryBuilder;
 
 /**
  * Interface BuilderInterface
- * @package unshort\core\QueryBuilder
+ * @package DataMapper\QueryBuilder
  */
 interface BuilderInterface
 {

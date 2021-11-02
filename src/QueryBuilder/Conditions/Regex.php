@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Conditions;
+namespace DataMapper\QueryBuilder\Conditions;
 
 
-use Micro\Core\QueryBuilder\MySQL\Operators;
+use DataMapper\QueryBuilder\MySQL\Operators;
 
 class Regex extends Like
 {

@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\MySQL;
+namespace DataMapper\QueryBuilder\MySQL;
 
 
-use Micro\Core\QueryBuilder\Operators as OperatorsParent;
+use DataMapper\QueryBuilder\Operators as OperatorsParent;
 
 /**
  * Class Operators
  * Operators which implemented in MySQL
  *
- * @package unshort\core\QueryBuilder\MySQL
+ * @package DataMapper\QueryBuilder\MySQL
  */
 class Operators extends OperatorsParent
 {

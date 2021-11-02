@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Exceptions;
+namespace DataMapper\QueryBuilder\Exceptions;
 
 /**
  * Class UnsupportedException
- * @package unshort\core\QueryBuilder\Exceptions
+ * @package DataMapper\QueryBuilder\Exceptions
  */
 class UnsupportedException extends Exception
 {

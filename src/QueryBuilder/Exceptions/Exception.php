@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Exceptions;
+namespace DataMapper\QueryBuilder\Exceptions;
 
 /**
  * Class Exception
- * @package unshort\core\QueryBuilder\Exceptions
+ * @package DataMapper\QueryBuilder\Exceptions
  */
 class Exception extends \Exception implements \JsonSerializable
 {

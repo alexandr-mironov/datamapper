@@ -8,7 +8,7 @@ use Micro\Core\QueryBuilder\Definitions\Column;
 
 /**
  * Class CreateTable
- * @package unshort\core\QueryBuilder\Statements
+ * @package DataMapper\QueryBuilder\Statements
  */
 class CreateTable implements StatementInterface
 {

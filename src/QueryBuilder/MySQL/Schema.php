@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\MySQL;
+namespace DataMapper\QueryBuilder\MySQL;
 
 
-use Micro\Core\QueryBuilder\SchemaInterface;
+use DataMapper\QueryBuilder\SchemaInterface;
 
 /**
  * Class Schema
- * @package unshort\core\QueryBuilder\MySQL
+ * @package DataMapper\QueryBuilder\MySQL
  */
 class Schema implements SchemaInterface
 {

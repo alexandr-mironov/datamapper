@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Conditions;
+namespace DataMapper\QueryBuilder\Conditions;
 
 use Micro\Core\QueryBuilder\Operators;
 
 /**
  * Class NotGreaterThen
- * @package unshort\core\QueryBuilder\Conditions
+ * @package DataMapper\QueryBuilder\Conditions
  */
 class NotGreaterThen extends GreaterThen
 {

@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Conditions;
+namespace DataMapper\QueryBuilder\Conditions;
 
 
-use Micro\Core\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class LessThen
- * @package unshort\core\QueryBuilder\Conditions
+ * @package DataMapper\QueryBuilder\Conditions
  */
 class LessThen extends Equal
 {
