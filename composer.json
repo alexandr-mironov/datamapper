@@ -1,0 +1,23 @@
+{
+  "name": "alexandr-mironov/datamapper",
+  "description": "Data mapper and query builder for PHP8+ based on Attributes",
+  "keywords": ["PDO", "ORM", "MySQL", "Postgres"],
+  "homepage": "https://github.com/alexandr-mironov/datamapper",
+  "type": "library",
+  "license": "LGPL",
+  "authors": [
+    {
+      "name": "Alexandr Mironov",
+      "email": "alex@hyptrex.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DataMapper\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.*",
+    "ext-pdo": "*"
+  }
+}
