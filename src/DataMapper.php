@@ -25,7 +25,7 @@ class DataMapper
      * DataMapper constructor.
      * @param PDO $pdo
      */
-    private function __construct(
+    public function __construct(
         private PDO $pdo,
     )
     {
@@ -33,27 +33,13 @@ class DataMapper
     }
 
     /**
-     * @return static
-     */
-    public static function getInstance(): self
-    {
-        if (self::$instance === null) {
-            self::$instance = new static(App::getInstance()->getPdo());
-        }
-
-        return self::$instance;
-    }
-
-    /**
      * @param string $className
      * @return QueryBuilder
      * @throws UnsupportedException
      */
-    public static function find(string $className): QueryBuilder
+    public function find(string $className): QueryBuilder
     {
-        $queryBuilder = self::getQueryBuilder();
-        $queryBuilder->find($className);
-        return $queryBuilder;
+        return $this->getQueryBuilder()->find($className);
     }
 
     /**
@@ -63,18 +49,17 @@ class DataMapper
      * @throws UnsupportedException
      * @throws QueryBuilderException
      */
-    public static function store(object $model): int
+    public function store(object $model): int
     {
-        $self = self::getInstance();
         $reflection = new ReflectionObject($model);
-        $table = $self->getTable($reflection);
-        $fields = $self->getFields($reflection, $model);
+        $table = $this->getTable($reflection);
+        $fields = $this->getFields($reflection, $model);
         $fieldsForUpdate = array_column($fields, 'key');
         if (in_array('id', $fieldsForUpdate) && false !== ($index = array_search('id', $fieldsForUpdate))) {
             unset($fieldsForUpdate[$index]);
         }
 
-        return self::getQueryBuilder()->insertUpdate($table, $fields, $fieldsForUpdate);
+        return $this->getQueryBuilder()->insertUpdate($table, $fields, $fieldsForUpdate);
     }
 
     /**
@@ -83,12 +68,13 @@ class DataMapper
      * @throws Exception
      * @throws UnsupportedException
      */
-    public static function delete(object $model): bool
+    public function delete(object $model): bool
     {
-        $self = self::getInstance();
-        $reflection = new ReflectionObject($model);
-        $table = $self->getTable($reflection);
-        return self::getQueryBuilder()->delete($table, []);
+        return $this->getQueryBuilder()
+            ->delete(
+                $this->getTable(new ReflectionObject($model)),
+                []
+            );
     }
 
     /**
@@ -98,21 +84,19 @@ class DataMapper
      * @throws ReflectionException
      * @throws UnsupportedException
      */
-    public static function createTable(object|string $class): bool
+    public function createTable(object|string $class): bool
     {
-        $self = self::getInstance();
         $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
-        $queryBuilder = self::getQueryBuilder();
-        return $queryBuilder->createTable($self->getTable($reflection), $self->getColumns($reflection));
+        return $this->getQueryBuilder()->createTable($this->getTable($reflection), $this->getColumns($reflection));
     }
 
     /**
      * @return QueryBuilder
      * @throws UnsupportedException
      */
-    private static function getQueryBuilder(): QueryBuilder
+    private function getQueryBuilder(): QueryBuilder
     {
-        return new QueryBuilder(static::$instance->pdo);
+        return new QueryBuilder($this->pdo);
     }
 
     /**

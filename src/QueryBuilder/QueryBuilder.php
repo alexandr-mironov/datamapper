@@ -105,7 +105,7 @@ class QueryBuilder implements BuilderInterface
     /**
      * @return false|PDOStatement
      */
-    private function lastInsertId()
+    private function lastInsertId(): false|PDOStatement
     {
         return $this->pdo->lastInsertId();
     }
@@ -119,7 +119,7 @@ class QueryBuilder implements BuilderInterface
      */
     public function createTable(string $name, array $columns, array $options = []): bool
     {
-        $createTableStatement = new CreateTable($name);
+        $createTableStatement = new CreateTable($name, $options);
         foreach ($columns as $column) {
             $columnDefinition = new Column($column['key'], $column['type']);
 
@@ -155,7 +155,7 @@ class QueryBuilder implements BuilderInterface
      * @param array $conditions
      * @return bool
      */
-    public function delete(string $table, array $conditions)
+    public function delete(string $table, array $conditions): bool
     {
         $statement = new Delete($table);
         foreach ($conditions as $condition) {
