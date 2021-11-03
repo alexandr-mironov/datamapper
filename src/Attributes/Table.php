@@ -1,14 +1,14 @@
 <?php
 
 
-namespace DataMapper\DataMapper\Attributes;
+namespace DataMapper\Attributes;
 
 
 use Attribute;
 
 /**
  * Class Table
- * @package DataMapper\DataMapper\Attributes
+ * @package DataMapper\Attributes
  */
 #[Attribute]
 class Table

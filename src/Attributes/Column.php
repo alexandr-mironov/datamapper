@@ -1,7 +1,7 @@
 <?php
 
 
-namespace DataMapper\DataMapper\Attributes;
+namespace DataMapper\Attributes;
 
 use Attribute;
 use DateTime;
@@ -9,7 +9,7 @@ use DataMapper\QueryBuilder\Definitions\DefinitionInterface;
 
 /**
  * Class Column
- * @package DataMapper\DataMapper\Attributes
+ * @package DataMapper\Attributes
  */
 #[Attribute]
 class Column implements DefinitionInterface

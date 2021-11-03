@@ -4,17 +4,17 @@
 namespace DataMapper;
 
 
+use DataMapper\Attributes\{Column, Table};
+use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
+use DataMapper\QueryBuilder\QueryBuilder;
 use PDO;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionObject;
 
-use DataMapper\DataMapper\Attributes\{Column, Table};
-use DataMapper\QueryBuilder\Exceptions\{Exception as QueryBuilderException, UnsupportedException};
-
 /**
  * Class DataMapper
- * @package DataMapper\DataMapper
+ * @package DataMapper
  */
 class DataMapper
 {
