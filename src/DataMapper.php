@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace DataMapper;
 
@@ -18,9 +18,6 @@ use ReflectionObject;
  */
 class DataMapper
 {
-    /** @var DataMapper|null */
-    private static ?DataMapper $instance = null;
-
     /**
      * DataMapper constructor.
      * @param PDO $pdo
@@ -34,7 +31,9 @@ class DataMapper
 
     /**
      * @param string $className
+     *
      * @return QueryBuilder
+     *
      * @throws UnsupportedException
      */
     public function find(string $className): QueryBuilder
@@ -44,7 +43,9 @@ class DataMapper
 
     /**
      * @param object $model
+     *
      * @return int
+     *
      * @throws Exception
      * @throws UnsupportedException
      * @throws QueryBuilderException
@@ -64,7 +65,9 @@ class DataMapper
 
     /**
      * @param object $model
+     *
      * @return bool
+     *
      * @throws Exception
      * @throws UnsupportedException
      */
@@ -79,8 +82,11 @@ class DataMapper
 
     /**
      * @param object|string $class
+     * @param array $options
+     *
      * @return bool
-     * @throws Exception
+     *
+     * @throws QueryBuilderException
      * @throws ReflectionException
      * @throws UnsupportedException
      */
