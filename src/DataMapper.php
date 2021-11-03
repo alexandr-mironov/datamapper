@@ -84,10 +84,15 @@ class DataMapper
      * @throws ReflectionException
      * @throws UnsupportedException
      */
-    public function createTable(object|string $class): bool
+    public function createTable(object|string $class, array $options = []): bool
     {
         $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
-        return $this->getQueryBuilder()->createTable($this->getTable($reflection), $this->getColumns($reflection));
+        return $this->getQueryBuilder()
+            ->createTable(
+                $this->getTable($reflection),
+                $this->getColumns($reflection),
+                $options
+            );
     }
 
     /**
