@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Micro\Core\QueryBuilder\Statements;
+namespace DataMapper\QueryBuilder\Statements;
 
 
-use Micro\Core\QueryBuilder\Definitions\Column;
+use DataMapper\QueryBuilder\Definitions\Column;
 
 /**
  * Class CreateTable

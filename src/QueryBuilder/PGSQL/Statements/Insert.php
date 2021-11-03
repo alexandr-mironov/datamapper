@@ -3,8 +3,8 @@
 
 namespace DataMapper\QueryBuilder\PGSQL\Statements;
 
-use Micro\Core\QueryBuilder\Expression;
-use Micro\Core\QueryBuilder\Statements\StatementInterface;
+use DataMapper\QueryBuilder\Expression;
+use DataMapper\QueryBuilder\Statements\StatementInterface;
 
 /**
  * Class Insert

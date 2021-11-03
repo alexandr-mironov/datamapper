@@ -6,7 +6,7 @@ namespace DataMapper\QueryBuilder\Statements;
 
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
-use Micro\Core\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class WhereCollection
