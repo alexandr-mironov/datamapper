@@ -39,6 +39,9 @@ class QueryBuilder implements BuilderInterface
     /** @var BuilderInterface */
     private BuilderInterface $adapter;
 
+    /** @var string $returnObject */
+    private string $returnObject;
+
     /**
      * QueryBuilder constructor.
      * @param PDO $pdo
@@ -100,6 +103,22 @@ class QueryBuilder implements BuilderInterface
             $statement->bindParam($value['key'], $value['value'], $this->getType($value['type']));
         }
         return $statement->execute();
+    }
+
+    public function setObjectClass(string $className)
+    {
+        $this->returnObject = $className;
+    }
+
+    /**
+     * @param string $className
+     * @return string
+     */
+    public function getAlias(string $className): string
+    {
+        $parts = array_filter(explode('\\', $className));
+        array_walk($parts, 'strtolower');
+        return implode('_', $parts);
     }
 
     /**
@@ -201,5 +220,10 @@ class QueryBuilder implements BuilderInterface
         $this->statement = new With(...$wrappers);
 
         return $this;
+    }
+
+    public function getOne()
+    {
+
     }
 }

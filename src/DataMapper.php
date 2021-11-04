@@ -41,7 +41,10 @@ class DataMapper
      */
     public function find(string $className): QueryBuilder
     {
-        return $this->getQueryBuilder()->find($className);
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder->setObjectClass($className);
+        $alias = $queryBuilder->getAlias($className);
+        return $queryBuilder->find($alias);
     }
 
     /**
