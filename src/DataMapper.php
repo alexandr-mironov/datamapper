@@ -148,8 +148,9 @@ class DataMapper
                     /** @var Column $column */
                     $column = $attribute->newInstance();
                     $columnType = $column->getType();
-                    $result[] = [
-                        'key' => $column->getName(),
+                    $key = $column->getName();
+                    $result[$key] = [
+                        'key' => $key,
                         'value' => $column->castToType($property->getValue($model), $columnType),
                         'type' => $columnType,
                     ];
@@ -301,10 +302,19 @@ class DataMapper
      * @param ReflectionObject $reflection
      * @param object $model
      * @return array
+     * @throws QueryBuilderException
      */
     private function buildConditionArray(ReflectionObject $reflection, object $model): array
     {
-        return [];
+        $result = [];
+        foreach ($this->columnIterator($reflection) as $column) {
+            $key = $column->getName();
+            $result[] = new Equal([
+                $key,
+                $model->$key
+            ]);
+        }
+        return $result;
     }
 
     /**

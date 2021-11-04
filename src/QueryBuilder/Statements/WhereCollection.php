@@ -4,7 +4,6 @@
 namespace DataMapper\QueryBuilder\Statements;
 
 
-use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Operators;
 
@@ -16,15 +15,15 @@ class WhereCollection
 {
     /** @var array */
     private const ALLOWED_OPERATORS = [
-        Operators:: AND,
-        Operators:: OR,
-        Operators:: XOR,
+        Operators::AND,
+        Operators::OR,
+        Operators::XOR,
     ];
 
     /**
      * @var string|mixed
      */
-    private string $operator = Operators:: AND;
+    private string $operator = Operators::AND;
 
     /**
      * @var array
