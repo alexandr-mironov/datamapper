@@ -5,6 +5,12 @@ namespace DataMapper\QueryBuilder\Statements;
 
 
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
+use DataMapper\QueryBuilder\Conditions\Equal;
+use DataMapper\QueryBuilder\Conditions\In;
+use DataMapper\QueryBuilder\Conditions\NotEqual;
+use DataMapper\QueryBuilder\Conditions\NotIn;
+use DataMapper\QueryBuilder\Exceptions\Exception;
+use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class AbstractStatementWithWhere
@@ -16,13 +22,14 @@ abstract class AbstractStatementWithWhere
     public array $wheres = [];
 
     /**
-     * @param ConditionInterface $where
+     * @param ConditionInterface $condition
+     * @param string $operator
      */
-    public function addWhereCondition(ConditionInterface $where)
+    public function addWhereCondition(ConditionInterface $condition, string $operator = Operators::AND)
     {
         $this->wheres[] = [
-            'operator' => null,
-            'condition' => (string)$where,
+            'operator' => $operator,
+            'condition' => (string)$condition,
         ];
     }
 
@@ -33,8 +40,43 @@ abstract class AbstractStatementWithWhere
     {
         $query = '';
         foreach ($this->wheres as $where) {
-            $query .= $where['condition'];
+            $query .= $where['operator'] . ' ' . $where['condition'];
         }
         return $query;
+    }
+
+    public function limit(int $limit, ?int $offset = null): static
+    {
+        $this->limit = $limit;
+        if ($offset) {
+            $this->offset = $offset;
+        }
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function by(string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        $args = [$key, $value];
+        $this->addWhereCondition(
+            (is_array($value)) ? new In($args) : new Equal($args),
+            $operator
+        );
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function byNot(string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        $args = [$key, $value];
+        $this->addWhereCondition(
+            (is_array($value)) ? new NotIn($args) : new NotEqual($args),
+            $operator
+        );
+        return $this;
     }
 }

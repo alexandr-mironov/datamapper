@@ -77,6 +77,15 @@ class QueryBuilder implements BuilderInterface
         return $this;
     }
 
+    public function orWhere(array $condition): static
+    {
+        $whereCondition = new WhereCondition($condition);
+        if ($this->statement instanceof AbstractStatementWithWhere) {
+            $this->statement->addWhereCondition($whereCondition, Operators::OR);
+        }
+        return $this;
+    }
+
     /**
      * @param string $table
      * @param array $values ['key' => ..., 'value' => ..., 'type' => ...]

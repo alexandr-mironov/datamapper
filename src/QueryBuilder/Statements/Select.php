@@ -79,15 +79,6 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         return $this->$name;
     }
 
-    public function limit(int $limit, ?int $offset = null): static
-    {
-        $this->limit = $limit;
-        if ($offset) {
-            $this->offset = $offset;
-        }
-        return $this;
-    }
-
     public function getOne()
     {
         $this->limit = 1;
