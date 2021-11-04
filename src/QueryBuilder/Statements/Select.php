@@ -19,6 +19,13 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /** @var string|Expression */
     public string|Expression $selectExpression;
 
+    /** @var int|null $limit */
+    public ?int $limit = null;
+
+    /** @var int|null $offset */
+    public ?int $offset = null;
+
+
     /**
      * Select constructor.
      * @param string $tableName
@@ -46,6 +53,15 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         $query = 'SELECT ';
         $query .= $this->selectExpression;
         $query .= ' FROM ' . $this->tableName;
+        if (count($this->wheres)) {
+            $query .= $this->buildWhereStatement();
+        }
+        if ($this->limit) {
+            $query .= ' LIMIT ' . $this->limit;
+            if ($this->offset) {
+                $query .= ' OFFSET ' . $this->offset;
+            }
+        }
         return $query;
     }
 
@@ -61,5 +77,27 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         }
 
         return $this->$name;
+    }
+
+    public function limit(int $limit, ?int $offset = null): static
+    {
+        $this->limit = $limit;
+        if ($offset) {
+            $this->offset = $offset;
+        }
+        return $this;
+    }
+
+    public function getOne()
+    {
+        $this->limit = 1;
+        $result = $this->execute();
+        $className = $this->returnObject;
+        return new $className(...$result);
+    }
+
+    public function getArray()
+    {
+
     }
 }

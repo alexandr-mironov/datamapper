@@ -221,9 +221,4 @@ class QueryBuilder implements BuilderInterface
 
         return $this;
     }
-
-    public function getOne()
-    {
-
-    }
 }

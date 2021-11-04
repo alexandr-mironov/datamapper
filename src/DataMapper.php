@@ -38,9 +38,13 @@ class DataMapper
      * @return QueryBuilder
      *
      * @throws UnsupportedException
+     * @throws QueryBuilderException
      */
     public function find(string $className): QueryBuilder
     {
+        if (!class_exists($className)) {
+            throw new Exception('Invalid class provided ' . $className);
+        }
         $queryBuilder = $this->getQueryBuilder();
         $queryBuilder->setObjectClass($className);
         $alias = $queryBuilder->getAlias($className);
