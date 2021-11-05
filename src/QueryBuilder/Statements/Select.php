@@ -19,13 +19,6 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /** @var string|Expression */
     public string|Expression $selectExpression;
 
-    /** @var int|null $limit */
-    public ?int $limit = null;
-
-    /** @var int|null $offset */
-    public ?int $offset = null;
-
-
     /**
      * Select constructor.
      * @param string $tableName

@@ -25,6 +25,12 @@ abstract class AbstractStatementWithWhere
     /** @var array */
     public array $wheres = [];
 
+    /** @var int|null $limit */
+    public ?int $limit = null;
+
+    /** @var int|null $offset */
+    public ?int $offset = null;
+
     /**
      * @param ConditionInterface $condition
      * @param string $operator
