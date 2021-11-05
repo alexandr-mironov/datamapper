@@ -4,11 +4,15 @@
 namespace DataMapper\QueryBuilder\Statements;
 
 
-use DataMapper\QueryBuilder\Conditions\ConditionInterface;
-use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\Conditions\In;
-use DataMapper\QueryBuilder\Conditions\NotEqual;
-use DataMapper\QueryBuilder\Conditions\NotIn;
+use DataMapper\QueryBuilder\Conditions\{ConditionInterface,
+    Equal,
+    GreaterThen,
+    GreaterThenOrEqual,
+    In,
+    LessThen,
+    LessThenOrEqual,
+    NotEqual,
+    NotIn};
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Operators;
 
@@ -55,6 +59,10 @@ abstract class AbstractStatementWithWhere
     }
 
     /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     * @return $this
      * @throws Exception
      */
     public function by(string $key, mixed $value, string $operator = Operators::AND): static
@@ -68,6 +76,10 @@ abstract class AbstractStatementWithWhere
     }
 
     /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     * @return $this
      * @throws Exception
      */
     public function byNot(string $key, mixed $value, string $operator = Operators::AND): static
@@ -78,5 +90,80 @@ abstract class AbstractStatementWithWhere
             $operator
         );
         return $this;
+    }
+
+    /**
+     * @param string $condition
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     * @return $this
+     * @throws Exception
+     */
+    public function where(string $condition, string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        if (!class_exists($condition)) {
+            throw new Exception('invalid condition provided');
+        }
+
+        $conditionInstance = new $condition([$key, $value]);
+
+        if (false === ($conditionInstance instanceof ConditionInterface)) {
+            throw new Exception('invalid condition provided');
+        }
+
+        $this->addWhereCondition(
+            $conditionInstance,
+            $operator
+        );
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     * @return $this
+     * @throws Exception
+     */
+    public function whereGreaterThen(string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        return $this->where(GreaterThen::class, $key, $value, $operator);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     * @return $this
+     * @throws Exception
+     */
+    public function whereGreaterThenOrEqual(string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        return $this->where(GreaterThenOrEqual::class, $key, $value, $operator);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     * @return $this
+     * @throws Exception
+     */
+    public function whereLessThen(string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        return $this->where(LessThen::class, $key, $value, $operator);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     * @return $this
+     * @throws Exception
+     */
+    public function whereLessThenOrEqual(string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        return $this->where(LessThenOrEqual::class, $key, $value, $operator);
     }
 }
