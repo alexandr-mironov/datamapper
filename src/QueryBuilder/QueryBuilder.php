@@ -57,10 +57,9 @@ class QueryBuilder implements BuilderInterface
      *
      * @return $this
      */
-    public function find(string $table): static
+    public function find(string $table): Select
     {
-        $this->statement = new Select($table);
-        return $this;
+        return new Select($this, $table);
     }
 
     /**

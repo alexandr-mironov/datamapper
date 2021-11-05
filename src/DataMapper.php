@@ -45,10 +45,7 @@ class DataMapper
         if (!class_exists($className)) {
             throw new Exception('Invalid class provided ' . $className);
         }
-        $queryBuilder = $this->getQueryBuilder();
-        $queryBuilder->setObjectClass($className);
-        $alias = $queryBuilder->getAlias($className);
-        return $queryBuilder->find($alias);
+        return $this->getQueryBuilder()->find($className);
     }
 
     /**

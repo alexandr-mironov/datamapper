@@ -55,6 +55,11 @@ abstract class AbstractStatementWithWhere
         return $query;
     }
 
+    /**
+     * @param int $limit
+     * @param int|null $offset
+     * @return $this
+     */
     public function limit(int $limit, ?int $offset = null): static
     {
         $this->limit = $limit;
