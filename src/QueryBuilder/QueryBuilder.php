@@ -39,9 +39,6 @@ class QueryBuilder implements BuilderInterface
     /** @var BuilderInterface */
     private BuilderInterface $adapter;
 
-    /** @var string $returnObject */
-    private string $returnObject;
-
     /**
      * QueryBuilder constructor.
      * @param PDO $pdo
@@ -60,6 +57,20 @@ class QueryBuilder implements BuilderInterface
     public function find(string $table): Select
     {
         return new Select($this, $table);
+    }
+
+    /**
+     * @param string $query
+     * @return PDOStatement
+     * @throws Exception
+     */
+    public function execute(string $query): PDOStatement
+    {
+        $result = $this->pdo->query($query);
+        if (!$result) {
+            throw new Exception('Invalid query');
+        }
+        return $result;
     }
 
     /**
@@ -111,11 +122,6 @@ class QueryBuilder implements BuilderInterface
             $statement->bindParam($value['key'], $value['value'], $this->getType($value['type']));
         }
         return $statement->execute();
-    }
-
-    public function setObjectClass(string $className)
-    {
-        $this->returnObject = $className;
     }
 
     /**
