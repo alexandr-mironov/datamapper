@@ -110,12 +110,19 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     public function getArray(): array
     {
         $collection = [];
+        foreach ($this->getIterator() as $item) {
+            $collection[] = $item;
+        }
+        return $collection;
+    }
+
+    public function getIterator(): \Generator
+    {
         /** @var PDOStatement $result */
         $result = $this->queryBuilder->execute((string)$this);
         $className = $this->resultObject;
         foreach ($result->fetchAll(\PDO::FETCH_ASSOC) as $row) {
-            $collection[] = new $className(...$row);
+            yield new $className(...$row);
         }
-        return $collection;
     }
 }
