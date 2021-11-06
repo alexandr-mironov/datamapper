@@ -21,6 +21,8 @@ use ReflectionObject;
  */
 class DataMapper
 {
+    private array $__aliases;
+
     /**
      * DataMapper constructor.
      * @param PDO $pdo
@@ -29,7 +31,7 @@ class DataMapper
         private PDO $pdo,
     )
     {
-
+        $this->__aliases = $this->getTableAliases();
     }
 
     /**
@@ -329,5 +331,15 @@ class DataMapper
     private function getFirstUniqueColumnName($reflection): string
     {
         return $this->getColumnNameByOption($reflection, Column::UNIQUE);
+    }
+
+    private function getTableAliases(): array
+    {
+        $aliases = [];
+        $result = $this->pdo->query('SELECT * FROM __aliases');
+        if ($result) {
+            $aliases = array_column($result->fetchAll(PDO::FETCH_ASSOC), 'model_name', 'alias');
+        }
+        return $aliases;
     }
 }

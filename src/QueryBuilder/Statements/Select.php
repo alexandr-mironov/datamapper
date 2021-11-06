@@ -5,11 +5,9 @@ namespace DataMapper\QueryBuilder\Statements;
 
 
 use DataMapper\QueryBuilder\BuilderInterface;
-use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Expression;
 use Generator;
-use PDOStatement;
 
 /**
  * Class Select
@@ -28,16 +26,24 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /** @var object $resultObject */
     private mixed $resultObject;
 
+    private string $tableName;
+
     /**
      * Select constructor.
      * @param BuilderInterface $queryBuilder
      * @param string $tableName
+     * @throws Exception
      */
     public function __construct(
         private BuilderInterface $queryBuilder,
-        private string $tableName,
+        string $tableName,
     )
     {
+        if (!class_exists($tableName)) {
+            throw new Exception('Invalid class provided');
+        }
+        $this->resultObject = $tableName;
+        $this->tableName = implode('_', array_filter(explode('\\', $tableName)));
         $this->selectExpression = new Expression('*');
     }
 
@@ -72,19 +78,19 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         return $query;
     }
 
-    /**
-     * @param $name
-     * @return mixed
-     * @throws Exception
-     */
-    public function __get($name): mixed
-    {
-        if (!property_exists($this, $name)) {
-            throw new Exception('Invalid property name');
-        }
-
-        return $this->$name;
-    }
+//    /**
+//     * @param $name
+//     * @return mixed
+//     * @throws Exception
+//     */
+//    public function __get($name): mixed
+//    {
+//        if (!property_exists($this, $name)) {
+//            throw new Exception('Invalid property name');
+//        }
+//
+//        return $this->$name;
+//    }
 
     /**
      * @return object
@@ -112,6 +118,10 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         return $this;
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     public function getArray(): array
     {
         $collection = [];
