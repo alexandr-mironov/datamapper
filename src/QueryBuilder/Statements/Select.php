@@ -23,27 +23,19 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /** @var array $order */
     private array $order = [];
 
-    /** @var object $resultObject */
-    private mixed $resultObject;
-
-    private string $tableName;
-
     /**
      * Select constructor.
      * @param BuilderInterface $queryBuilder
      * @param string $tableName
+     * @param string $resultObject
      * @throws Exception
      */
     public function __construct(
         private BuilderInterface $queryBuilder,
-        string $tableName,
+        private string $tableName,
+        private string $resultObject,
     )
     {
-        if (!class_exists($tableName)) {
-            throw new Exception('Invalid class provided');
-        }
-        $this->resultObject = $tableName;
-        $this->tableName = implode('_', array_filter(explode('\\', $tableName)));
         $this->selectExpression = new Expression('*');
     }
 

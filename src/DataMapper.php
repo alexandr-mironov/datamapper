@@ -41,13 +41,16 @@ class DataMapper
      *
      * @throws UnsupportedException
      * @throws QueryBuilderException
+     * @throws ReflectionException
      */
     public function find(string $className): QueryBuilder
     {
         if (!class_exists($className)) {
             throw new Exception('Invalid class provided ' . $className);
         }
-        return $this->getQueryBuilder()->find($className);
+        $reflection = new ReflectionClass($className);
+        $table = $this->getTable($reflection);
+        return $this->getQueryBuilder()->find($table, $className);
     }
 
     /**

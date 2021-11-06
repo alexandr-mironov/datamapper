@@ -52,11 +52,12 @@ class QueryBuilder implements BuilderInterface
     /**
      * @param string $table
      *
-     * @return $this
+     * @return Select
+     * @throws Exception
      */
-    public function find(string $table): Select
+    public function find(string $table, string $className): Select
     {
-        return new Select($this, $table);
+        return new Select($this, $table, $className);
     }
 
     /**
