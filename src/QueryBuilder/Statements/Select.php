@@ -8,6 +8,7 @@ use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Expression;
+use PDOStatement;
 
 /**
  * Class Select
@@ -84,7 +85,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         return $this->$name;
     }
 
-    public function getOne()
+    public function getOne(): object
     {
         $this->limit = 1;
         $result = $this->queryBuilder->execute((string)$this);
@@ -106,8 +107,15 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         return $this;
     }
 
-    public function getArray()
+    public function getArray(): array
     {
-
+        $collection = [];
+        /** @var PDOStatement $result */
+        $result = $this->queryBuilder->execute((string)$this);
+        $className = $this->resultObject;
+        foreach ($result->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            $collection[] = new $className(...$row);
+        }
+        return $collection;
     }
 }
