@@ -94,9 +94,12 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
 
     public function order(string|array $order): static
     {
-        if () {
-
+        if (is_string($order)) {
+            $this->order[] = [
+                $order => 'DESC',
+            ];
         }
+        return $this;
     }
 
     public function getArray()
