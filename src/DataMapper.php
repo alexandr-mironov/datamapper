@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DataMapper;
@@ -7,6 +8,7 @@ namespace DataMapper;
 use DataMapper\Attributes\{Column, Table};
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
+use DataMapper\QueryBuilder\Statements\Select;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\QueryBuilder;
 use Generator;
@@ -21,8 +23,6 @@ use ReflectionObject;
  */
 class DataMapper
 {
-    private array $__aliases;
-
     /**
      * DataMapper constructor.
      * @param PDO $pdo
@@ -41,9 +41,8 @@ class DataMapper
      *
      * @throws UnsupportedException
      * @throws QueryBuilderException
-     * @throws ReflectionException
      */
-    public function find(string $className): QueryBuilder
+    public function find(string $className): Select
     {
         if (!class_exists($className)) {
             throw new Exception('Invalid class provided ' . $className);

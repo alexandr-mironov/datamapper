@@ -4,7 +4,7 @@
 namespace DataMapper\QueryBuilder\Statements;
 
 
-use DataMapper\QueryBuilder\{DBType, Exceptions\Exception, Expression};
+use DataMapper\QueryBuilder\{Exceptions\Exception, Expression};
 
 /**
  * Class Insert

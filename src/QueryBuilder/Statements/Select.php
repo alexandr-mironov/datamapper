@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
@@ -28,7 +29,6 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
      * @param BuilderInterface $queryBuilder
      * @param string $tableName
      * @param string $resultObject
-     * @throws Exception
      */
     public function __construct(
         private BuilderInterface $queryBuilder,

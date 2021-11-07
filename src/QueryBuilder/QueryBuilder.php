@@ -51,9 +51,8 @@ class QueryBuilder implements BuilderInterface
 
     /**
      * @param string $table
-     *
+     * @param string $className
      * @return Select
-     * @throws Exception
      */
     public function find(string $table, string $className): Select
     {
@@ -126,17 +125,6 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @param string $className
-     * @return string
-     */
-    public function getAlias(string $className): string
-    {
-        $parts = array_filter(explode('\\', $className));
-        array_walk($parts, 'strtolower');
-        return implode('_', $parts);
-    }
-
-    /**
      * @return false|PDOStatement
      */
     private function lastInsertId(): false|PDOStatement
@@ -155,7 +143,7 @@ class QueryBuilder implements BuilderInterface
     {
         $createTableStatement = new CreateTable($name, $options);
         foreach ($columns as $column) {
-            $columnDefinition = new Column($column['key'], $column['type']);
+            $columnDefinition = new Column($column['key'], $column['type'], $column['options'] ?? []);
 
             $createTableStatement->addColumn($columnDefinition);
         }
