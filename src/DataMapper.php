@@ -183,12 +183,7 @@ class DataMapper
         $collection = new ColumnCollection();
         foreach ($this->columnIterator($reflection) as $column) {
             /** @var Column $column */
-            $c = new Entity\Column($column);
-            $result[] = [
-                'key' => $column->getName(),
-                'type' => $column->getType(),
-                'options' => $column->getOptions(),
-            ];
+            $collection->push(Entity\Column::createFromAttribute($column));
         }
         return $collection;
     }
