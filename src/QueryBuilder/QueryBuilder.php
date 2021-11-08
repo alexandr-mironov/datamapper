@@ -6,10 +6,9 @@ namespace DataMapper\QueryBuilder;
 
 use PDO;
 use PDOStatement;
-use DataMapper\QueryBuilder\Conditions\WhereCondition;
 use DataMapper\QueryBuilder\Definitions\Column;
 use DataMapper\QueryBuilder\Exceptions\{Exception, UnsupportedException};
-use DataMapper\QueryBuilder\Statements\{AbstractStatementWithWhere,
+use DataMapper\QueryBuilder\Statements\{
     CreateTable,
     Delete,
     Insert,
@@ -74,29 +73,6 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @param array $condition
-     *
-     * @return $this
-     */
-    public function where(array $condition): static
-    {
-        $whereCondition = new WhereCondition($condition);
-        if ($this->statement instanceof AbstractStatementWithWhere) {
-            $this->statement->addWhereCondition($whereCondition);
-        }
-        return $this;
-    }
-
-    public function orWhere(array $condition): static
-    {
-        $whereCondition = new WhereCondition($condition);
-        if ($this->statement instanceof AbstractStatementWithWhere) {
-            $this->statement->addWhereCondition($whereCondition, Operators::OR);
-        }
-        return $this;
-    }
-
-    /**
      * @param string $table
      * @param array $values ['key' => ..., 'value' => ..., 'type' => ...]
      *
@@ -114,14 +90,16 @@ class QueryBuilder implements BuilderInterface
      * @param array $values
      * @param array $updatable
      * @return bool
+     * @throws Exception
      */
     public function insertUpdate(string $table, array $values, array $updatable): bool
     {
-        $statement = $this->pdo->query((string)new Insert($table, $values, $updatable));
-        foreach ($values as $value) {
-            $statement->bindParam($value['key'], $value['value'], $this->getType($value['type']));
-        }
-        return $statement->execute();
+        return $this->adapter->insertUpdate($table, $values, $updatable);
+//        $statement = $this->pdo->query((string)new Insert($table, $values, $updatable));
+//        foreach ($values as $value) {
+//            $statement->bindParam($value['key'], $value['value'], $this->getType($value['type']));
+//        }
+//        return $statement->execute();
     }
 
     /**
