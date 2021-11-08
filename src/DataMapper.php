@@ -6,6 +6,7 @@ namespace DataMapper;
 
 
 use DataMapper\Attributes\{Column, Table};
+use DataMapper\Entity\ColumnCollection;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -175,20 +176,21 @@ class DataMapper
 
     /**
      * @param ReflectionClass $reflection
-     * @return array
+     * @return ColumnCollection
      */
-    private function getColumns(ReflectionClass $reflection): array
+    private function getColumns(ReflectionClass $reflection): ColumnCollection
     {
-        $result = [];
+        $collection = new ColumnCollection();
         foreach ($this->columnIterator($reflection) as $column) {
             /** @var Column $column */
+            $c = new Entity\Column($column);
             $result[] = [
                 'key' => $column->getName(),
                 'type' => $column->getType(),
                 'options' => $column->getOptions(),
             ];
         }
-        return $result;
+        return $collection;
     }
 
     /**
