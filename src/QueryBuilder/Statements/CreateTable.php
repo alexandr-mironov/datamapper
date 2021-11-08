@@ -4,6 +4,7 @@
 namespace DataMapper\QueryBuilder\Statements;
 
 
+use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Definitions\Column;
 
 /**
@@ -29,11 +30,11 @@ class CreateTable implements StatementInterface
 
     /**
      * CreateTable constructor.
-     * @param string $tableName
+     * @param Table $tableName
      * @param array $options
      */
     public function __construct(
-        private string $tableName,
+        private Table $tableName,
         array $options = [],
     )
     {

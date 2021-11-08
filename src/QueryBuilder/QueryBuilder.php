@@ -112,13 +112,13 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @param string $name
+     * @param Table $name
      * @param array $columns
      * @param array $options
      *
      * @return bool
      */
-    public function createTable(string $name, array $columns, array $options = []): bool
+    public function createTable(Table $name, array $columns, array $options = []): bool
     {
         $createTableStatement = new CreateTable($name, $options);
         foreach ($columns as $column) {
