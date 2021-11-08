@@ -4,15 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\Entity;
 
-class ColumnCollection
+class ColumnCollection extends AbstractCollection
 {
-    public function __construct()
-    {
-
-    }
-
-    public function add()
-    {
-
-    }
+    public const COLLECTION_ITEM = Column::class;
 }
