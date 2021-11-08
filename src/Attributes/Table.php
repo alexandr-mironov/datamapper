@@ -27,10 +27,10 @@ class Table
     }
 
     /**
-     * @return string
+     * @return \DataMapper\Entity\Table
      */
-    public function getName(): string
+    public function getName(): \DataMapper\Entity\Table
     {
-        return '`' . $this->schema . '`.`' . $this->name . '`';
+        return new \DataMapper\Entity\Table('`' . $this->schema . '`.`' . $this->name . '`');
     }
 }

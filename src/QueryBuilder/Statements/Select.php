@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DataMapper\QueryBuilder\Statements;
 
 
+use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Expression;
@@ -27,13 +28,13 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /**
      * Select constructor.
      * @param BuilderInterface $queryBuilder
-     * @param string $tableName
+     * @param Table $table
      * @param string $resultObject
      */
     public function __construct(
         private BuilderInterface $queryBuilder,
-        private string $tableName,
-        private string $resultObject,
+        private Table            $table,
+        private string           $resultObject,
     )
     {
         $this->selectExpression = new Expression('*');
@@ -54,7 +55,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     {
         $query = 'SELECT ';
         $query .= $this->selectExpression;
-        $query .= ' FROM ' . $this->tableName;
+        $query .= ' FROM ' . $this->table->getName();
         if (count($this->wheres)) {
             $query .= $this->buildWhereStatement();
         }

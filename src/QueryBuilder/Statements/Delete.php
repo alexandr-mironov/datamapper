@@ -4,6 +4,7 @@
 namespace DataMapper\QueryBuilder\Statements;
 
 
+use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 
 /**
@@ -16,7 +17,7 @@ class Delete extends AbstractStatementWithWhere implements StatementInterface
      * Delete constructor.
      * @param string $table
      */
-    public function __construct(private string $table)
+    public function __construct(private Table $table)
     {
 
     }
@@ -26,6 +27,6 @@ class Delete extends AbstractStatementWithWhere implements StatementInterface
      */
     public function __toString(): string
     {
-        return 'DELETE FROM ' . $this->table . ' WHERE ' . $this->buildWhereStatement();
+        return 'DELETE FROM ' . $this->table->getName() . ' WHERE ' . $this->buildWhereStatement();
     }
 }

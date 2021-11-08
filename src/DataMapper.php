@@ -47,9 +47,10 @@ class DataMapper
         if (!class_exists($className)) {
             throw new Exception('Invalid class provided ' . $className);
         }
-        $reflection = new ReflectionClass($className);
-        $table = $this->getTable($reflection);
-        return $this->getQueryBuilder()->find($table, $className);
+        return $this->getQueryBuilder()->find(
+            $this->getTable(new ReflectionClass($className)),
+            $className
+        );
     }
 
     /**
@@ -63,14 +64,18 @@ class DataMapper
     public function store(object $model): bool
     {
         $reflection = new ReflectionObject($model);
-        $table = $this->getTable($reflection);
         $fields = $this->getFields($reflection, $model);
         $fieldsForUpdate = array_column($fields, 'key');
+        // todo: replace to getPrimaryKey
         if (in_array('id', $fieldsForUpdate) && false !== ($index = array_search('id', $fieldsForUpdate))) {
             unset($fieldsForUpdate[$index]);
         }
 
-        return $this->getQueryBuilder()->insertUpdate($table, $fields, $fieldsForUpdate);
+        return $this->getQueryBuilder()->insertUpdate(
+            $this->getTable($reflection),
+            $fields,
+            $fieldsForUpdate
+        );
     }
 
     /**
@@ -127,7 +132,7 @@ class DataMapper
      * @return string
      * @throws Exception
      */
-    private function getTable(ReflectionClass $reflection): string
+    private function getTable(ReflectionClass $reflection): Entity\Table
     {
         $classAttributes = $reflection->getAttributes(Table::class);
         if (count($classAttributes)) {

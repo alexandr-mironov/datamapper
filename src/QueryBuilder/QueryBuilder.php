@@ -4,6 +4,7 @@
 namespace DataMapper\QueryBuilder;
 
 
+use DataMapper\Entity\Table;
 use PDO;
 use PDOStatement;
 use DataMapper\QueryBuilder\Definitions\Column;
@@ -92,7 +93,7 @@ class QueryBuilder implements BuilderInterface
      * @return bool
      * @throws Exception
      */
-    public function insertUpdate(string $table, array $values, array $updatable): bool
+    public function insertUpdate(Table $table, array $values, array $updatable): bool
     {
         return $this->adapter->insertUpdate($table, $values, $updatable);
 //        $statement = $this->pdo->query((string)new Insert($table, $values, $updatable));
@@ -151,11 +152,11 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @param string $table
+     * @param Table $table
      * @param array $conditions
      * @return bool
      */
-    public function delete(string $table, array $conditions): bool
+    public function delete(Table $table, array $conditions): bool
     {
         $statement = new Delete($table);
         foreach ($conditions as $condition) {
