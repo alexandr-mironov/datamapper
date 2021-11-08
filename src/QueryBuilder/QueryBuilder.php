@@ -4,6 +4,7 @@
 namespace DataMapper\QueryBuilder;
 
 
+use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\Table;
 use PDO;
 use PDOStatement;
@@ -113,16 +114,20 @@ class QueryBuilder implements BuilderInterface
 
     /**
      * @param Table $name
-     * @param array $columns
+     * @param ColumnCollection $columns
      * @param array $options
      *
      * @return bool
      */
-    public function createTable(Table $name, array $columns, array $options = []): bool
+    public function createTable(Table $name, ColumnCollection $columns, array $options = []): bool
     {
         $createTableStatement = new CreateTable($name, $options);
         foreach ($columns as $column) {
-            $columnDefinition = new Column($column['key'], $column['type'], $column['options'] ?? []);
+            $columnDefinition = new Column(
+                $column->getKey(),
+                $column->getType(),
+                $column->getOptions()
+            );
 
             $createTableStatement->addColumn($columnDefinition);
         }

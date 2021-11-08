@@ -32,16 +32,16 @@ class DataMapper
         private PDO $pdo,
     )
     {
-        $this->__aliases = $this->getTableAliases();
+
     }
 
     /**
      * @param string $className
      *
-     * @return QueryBuilder
+     * @return Select
      *
-     * @throws UnsupportedException
      * @throws QueryBuilderException
+     * @throws UnsupportedException
      */
     public function find(string $className): Select
     {
@@ -335,15 +335,5 @@ class DataMapper
     private function getFirstUniqueColumnName($reflection): string
     {
         return $this->getColumnNameByOption($reflection, Column::UNIQUE);
-    }
-
-    private function getTableAliases(): array
-    {
-        $aliases = [];
-        $result = $this->pdo->query('SELECT * FROM __aliases');
-        if ($result) {
-            $aliases = array_column($result->fetchAll(PDO::FETCH_ASSOC), 'model_name', 'alias');
-        }
-        return $aliases;
     }
 }
