@@ -53,11 +53,11 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @param string $table
+     * @param Table $table
      * @param string $className
      * @return Select
      */
-    public function find(string $table, string $className): Select
+    public function find(Table $table, string $className): Select
     {
         return new Select($this, $table, $className);
     }

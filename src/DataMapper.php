@@ -130,8 +130,8 @@ class DataMapper
 
     /**
      * @param ReflectionObject $reflection
-     * @return string
-     * @throws Exception
+     * @return Entity\Table
+     * @throws QueryBuilderException
      */
     private function getTable(ReflectionClass $reflection): Entity\Table
     {
@@ -209,7 +209,7 @@ class DataMapper
     /**
      * @param ReflectionObject $reflection
      * @param object $model
-     * @return ConditionInterface[]
+     * @return ConditionCollection
      * @throws QueryBuilderException
      */
     private function getConditionsByModel(ReflectionObject $reflection, object $model): ConditionCollection
