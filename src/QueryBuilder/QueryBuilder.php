@@ -5,7 +5,9 @@ namespace DataMapper\QueryBuilder;
 
 
 use DataMapper\Entity\ColumnCollection;
+use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\Table;
+use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use PDO;
 use PDOStatement;
 use DataMapper\QueryBuilder\Definitions\Column;
@@ -158,12 +160,13 @@ class QueryBuilder implements BuilderInterface
 
     /**
      * @param Table $table
-     * @param array $conditions
+     * @param ConditionCollection $conditions
      * @return bool
      */
-    public function delete(Table $table, array $conditions): bool
+    public function delete(Table $table, ConditionCollection $conditions): bool
     {
         $statement = new Delete($table);
+        /** @var ConditionInterface $condition */
         foreach ($conditions as $condition) {
             $statement->addWhereCondition($condition);
         }

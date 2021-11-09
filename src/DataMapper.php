@@ -7,6 +7,7 @@ namespace DataMapper;
 
 use DataMapper\Attributes\{Column, Table};
 use DataMapper\Entity\ColumnCollection;
+use DataMapper\Entity\ConditionCollection;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -90,11 +91,10 @@ class DataMapper
     public function delete(object $model): bool
     {
         $reflection = new ReflectionObject($model);
-        $conditions = $this->getConditionsByModel($reflection, $model);
         return $this->getQueryBuilder()
             ->delete(
                 $this->getTable($reflection),
-                $conditions
+                $this->getConditionsByModel($reflection, $model)
             );
     }
 
@@ -212,12 +212,12 @@ class DataMapper
      * @return ConditionInterface[]
      * @throws QueryBuilderException
      */
-    private function getConditionsByModel(ReflectionObject $reflection, object $model): array
+    private function getConditionsByModel(ReflectionObject $reflection, object $model): ConditionCollection
     {
         return match (true) {
-            $this->hasPrimaryKey($reflection) => [$this->getPrimaryKeyValue($reflection, $model)],
-            $this->hasUnique($reflection) => [$this->getUniqueValue($reflection, $model)],
-            default => $this->buildConditionArray($reflection, $model)
+            $this->hasPrimaryKey($reflection) => new ConditionCollection([$this->getPrimaryKeyValue($reflection, $model)]),
+            $this->hasUnique($reflection) => new ConditionCollection([$this->getUniqueValue($reflection, $model)]),
+            default => new ConditionCollection($this->buildConditionArray($reflection, $model))
         };
     }
 
