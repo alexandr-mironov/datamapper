@@ -7,12 +7,18 @@ use Iterator;
 
 abstract class AbstractCollection implements Iterator
 {
+    /** @var string */
     public const COLLECTION_ITEM = '';
 
-    private array $collection = [];
+    /** @var array $collection */
+    protected array $collection = [];
 
-    private int $current = 0;
+    /** @var int $current current item key (index) */
+    protected int $current = 0;
 
+    /**
+     * @param array $collection
+     */
     public function __construct(array $collection = [])
     {
         foreach ($collection as $item) {
@@ -29,6 +35,11 @@ abstract class AbstractCollection implements Iterator
         }
     }
 
+    /**
+     * Add item to end of collection
+     *
+     * @param object $item
+     */
     public function push(object $item): void
     {
         if (false === ($item instanceof static::COLLECTION_ITEM)) {
@@ -43,16 +54,25 @@ abstract class AbstractCollection implements Iterator
         $this->collection[] = $item;
     }
 
+    /**
+     * Remove last element of collection
+     */
     public function pop(): void
     {
         unset($this->collection[count($this->collection) - 1]);
     }
 
+    /**
+     * Clear collection
+     */
     public function clear(): void
     {
         $this->collection = [];
     }
 
+    /**
+     * @return object
+     */
     public function current(): object
     {
         return $this->collection[$this->current];
