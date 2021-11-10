@@ -24,7 +24,7 @@ class Column
      * @param \DataMapper\Attributes\Column $column
      * @return static
      */
-    public static function createFromAttribute(\DataMapper\Attributes\Column $column): static
+    public static function createFromAttribute(\DataMapper\Attributes\Column $column): self
     {
         return new self(
             $column->getName(),

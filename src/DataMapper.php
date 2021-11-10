@@ -8,6 +8,8 @@ namespace DataMapper;
 use DataMapper\Attributes\{Column, Table};
 use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\ConditionCollection;
+use DataMapper\Entity\Field;
+use DataMapper\Entity\FieldCollection;
 use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\QueryBuilder;
@@ -150,11 +152,11 @@ class DataMapper
     /**
      * @param ReflectionObject $reflection
      * @param object $model
-     * @return array
+     * @return FieldCollection
      */
-    private function getFields(ReflectionClass $reflection, object $model): array
+    private function getFields(ReflectionClass $reflection, object $model): FieldCollection
     {
-        $result = [];
+        $collection = new FieldCollection();
         $properties = $reflection->getProperties();
         foreach ($properties as $property) {
             $columnAttributes = $property->getAttributes(Column::class);
@@ -163,16 +165,16 @@ class DataMapper
                     /** @var Column $column */
                     $column = $attribute->newInstance();
                     $columnType = $column->getType();
-                    $key = $column->getName();
-                    $result[$key] = [
-                        'key' => $key,
-                        'value' => $column->castToType($property->getValue($model), $columnType),
-                        'type' => $columnType,
-                    ];
+                    $collection->push(new Field(
+                        $column->getName(),
+                        $column->castToType($property->getValue($model), $columnType),
+                        $columnType
+                    ));
+
                 }
             }
         }
-        return $result;
+        return $collection;
     }
 
     /**

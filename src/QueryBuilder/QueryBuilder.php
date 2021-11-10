@@ -6,6 +6,7 @@ namespace DataMapper\QueryBuilder;
 
 use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\ConditionCollection;
+use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use PDO;
@@ -90,13 +91,13 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @param string $table
-     * @param array $values
+     * @param Table $table
+     * @param FieldCollection $values
      * @param array $updatable
      * @return bool
      * @throws Exception
      */
-    public function insertUpdate(Table $table, array $values, array $updatable): bool
+    public function insertUpdate(Table $table, FieldCollection $values, array $updatable): bool
     {
         return $this->adapter->insertUpdate($table, $values, $updatable);
 //        $statement = $this->pdo->query((string)new Insert($table, $values, $updatable));

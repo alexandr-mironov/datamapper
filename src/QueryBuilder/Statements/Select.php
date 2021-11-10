@@ -14,8 +14,6 @@ use Generator;
 /**
  * Class Select
  * @package DataMapper\QueryBuilder\Statements
- *
- * @property-read string $tableName
  */
 class Select extends AbstractStatementWithWhere implements StatementInterface
 {
@@ -70,20 +68,6 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         }
         return $query;
     }
-
-//    /**
-//     * @param $name
-//     * @return mixed
-//     * @throws Exception
-//     */
-//    public function __get($name): mixed
-//    {
-//        if (!property_exists($this, $name)) {
-//            throw new Exception('Invalid property name');
-//        }
-//
-//        return $this->$name;
-//    }
 
     /**
      * @return object
