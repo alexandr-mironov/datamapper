@@ -8,11 +8,10 @@ namespace DataMapper;
 use DataMapper\Attributes\{Column, Table};
 use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\ConditionCollection;
-use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\Statements\Select;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\QueryBuilder;
+use DataMapper\QueryBuilder\Statements\Select;
 use Generator;
 use PDO;
 use ReflectionClass;
@@ -68,8 +67,10 @@ class DataMapper
         $reflection = new ReflectionObject($model);
         $fields = $this->getFields($reflection, $model);
         $fieldsForUpdate = array_column($fields, 'key');
-        // todo: replace to getPrimaryKey
-        if (in_array('id', $fieldsForUpdate) && false !== ($index = array_search('id', $fieldsForUpdate))) {
+        
+        if ($this->hasPrimaryKey($reflection)) {
+            $key = $this->getPrimaryKeyColumnName($reflection);
+            $index = array_search($key, $fieldsForUpdate);
             unset($fieldsForUpdate[$index]);
         }
 
