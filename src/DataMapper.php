@@ -67,7 +67,7 @@ class DataMapper
         $reflection = new ReflectionObject($model);
         $fields = $this->getFields($reflection, $model);
         $fieldsForUpdate = array_column($fields, 'key');
-        
+
         if ($this->hasPrimaryKey($reflection)) {
             $key = $this->getPrimaryKeyColumnName($reflection);
             $index = array_search($key, $fieldsForUpdate);

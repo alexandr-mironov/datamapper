@@ -125,6 +125,23 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     }
 
     /**
+     * @param string $key
+     * @return array
+     * @throws Exception
+     */
+    public function getMap(string $key): array
+    {
+        $collection = [];
+        foreach ($this->getIterator() as $item) {
+            if (!property_exists($item, $key)) {
+                throw new Exception('`' . $key . '` is not in field list');
+            }
+            $collection[$item->$key] = $item;
+        }
+        return $collection;
+    }
+
+    /**
      * @return Generator
      * @throws Exception
      */
