@@ -64,15 +64,16 @@ class DataMapper
      *
      * @throws QueryBuilderException
      * @throws UnsupportedException
+     * @throws Exceptions\Exception
      */
     public function store(object $model): bool
     {
         $reflection = new ReflectionObject($model);
         $fields = $this->getFields($reflection, $model);
-        $fieldsForUpdate = array_column($fields, 'key');
+        $fieldsForUpdate = $fields->getKeys();
 
         if (ColumnHelper::hasPrimaryKey($reflection)) {
-            $key = $this->getPrimaryKeyColumnName($reflection);
+            $key = ColumnHelper::getPrimaryKeyColumnName($reflection);
             $index = array_search($key, $fieldsForUpdate);
             unset($fieldsForUpdate[$index]);
         }
