@@ -206,7 +206,7 @@ class DataMapper
     {
         return match (true) {
             ColumnHelper::hasPrimaryKey($reflection) => new ConditionCollection([$this->getPrimaryKeyValue($reflection, $model)]),
-            $this->hasUnique($reflection) => new ConditionCollection([$this->getUniqueValue($reflection, $model)]),
+            ColumnHelper::hasUnique($reflection) => new ConditionCollection([$this->getUniqueValue($reflection, $model)]),
             default => new ConditionCollection($this->buildConditionArray($reflection, $model))
         };
     }

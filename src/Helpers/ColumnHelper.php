@@ -4,8 +4,7 @@ namespace DataMapper\Helpers;
 
 use DataMapper\Attributes\Column;
 use DataMapper\Entity\ColumnCollection;
-use DataMapper\Entity\ConditionCollection;
-use DataMapper\QueryBuilder\Exceptions\Exception as QueryBuilderException;
+use DataMapper\Exceptions\Exception;
 use Generator;
 use ReflectionClass;
 use ReflectionObject;
@@ -63,15 +62,38 @@ class ColumnHelper
 
     /**
      * @param ReflectionObject $reflection
-     * @param object $model
-     * @return ConditionCollection
+     * @return bool
      */
-    public static function getConditionsByModel(ReflectionObject $reflection, object $model): ConditionCollection
+    public static function hasUnique(ReflectionObject $reflection): bool
     {
-        return match (true) {
-            self::hasPrimaryKey($reflection) => new ConditionCollection([self::getPrimaryKeyValue($reflection, $model)]),
-            self::hasUnique($reflection) => new ConditionCollection([self::getUniqueValue($reflection, $model)]),
-            default => new ConditionCollection(self::buildConditionArray($reflection, $model))
-        };
+        return self::hasOption($reflection, Column::UNIQUE);
+    }
+
+    /**
+     * @param ReflectionObject $reflection
+     * @return string
+     * @throws Exception
+     */
+    public static function getPrimaryKeyColumnName(ReflectionObject $reflection): string
+    {
+        return self::getColumnNameByOption($reflection, Column::PRIMARY_KEY);
+    }
+
+    /**
+     * @param ReflectionClass $reflection
+     * @param string $option
+     * @return string
+     * @throws Exception
+     */
+    public static function getColumnNameByOption(ReflectionClass $reflection, string $option): string
+    {
+        foreach (self::getColumnIterator($reflection) as $column) {
+            /** @var Column $column */
+            $options = $column->getOptions();
+            if ($options && in_array($option, $options, true)) {
+                return $column->getName();
+            }
+        }
+        throw new Exception('Model does not have a option ' . $option);
     }
 }
