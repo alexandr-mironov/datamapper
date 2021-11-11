@@ -10,6 +10,7 @@ use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\Field;
 use DataMapper\Entity\FieldCollection;
+use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\QueryBuilder;
@@ -70,7 +71,7 @@ class DataMapper
         $fields = $this->getFields($reflection, $model);
         $fieldsForUpdate = array_column($fields, 'key');
 
-        if ($this->hasPrimaryKey($reflection)) {
+        if (ColumnHelper::hasPrimaryKey($reflection)) {
             $key = $this->getPrimaryKeyColumnName($reflection);
             $index = array_search($key, $fieldsForUpdate);
             unset($fieldsForUpdate[$index]);
@@ -117,7 +118,7 @@ class DataMapper
         return $this->getQueryBuilder()
             ->createTable(
                 $this->getTable($reflection),
-                $this->getColumns($reflection),
+                ColumnHelper::getColumns($reflection),
                 $options
             );
     }
@@ -179,20 +180,6 @@ class DataMapper
 
     /**
      * @param ReflectionClass $reflection
-     * @return ColumnCollection
-     */
-    private function getColumns(ReflectionClass $reflection): ColumnCollection
-    {
-        $collection = new ColumnCollection();
-        foreach ($this->columnIterator($reflection) as $column) {
-            /** @var Column $column */
-            $collection->push(Entity\Column::createFromAttribute($column));
-        }
-        return $collection;
-    }
-
-    /**
-     * @param ReflectionClass $reflection
      * @return Generator
      */
     private function columnIterator(ReflectionClass $reflection): Generator
@@ -218,7 +205,7 @@ class DataMapper
     private function getConditionsByModel(ReflectionObject $reflection, object $model): ConditionCollection
     {
         return match (true) {
-            $this->hasPrimaryKey($reflection) => new ConditionCollection([$this->getPrimaryKeyValue($reflection, $model)]),
+            ColumnHelper::hasPrimaryKey($reflection) => new ConditionCollection([$this->getPrimaryKeyValue($reflection, $model)]),
             $this->hasUnique($reflection) => new ConditionCollection([$this->getUniqueValue($reflection, $model)]),
             default => new ConditionCollection($this->buildConditionArray($reflection, $model))
         };
