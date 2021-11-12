@@ -5,6 +5,7 @@ namespace DataMapper\Helpers;
 use DataMapper\Attributes\Column;
 use DataMapper\Entity\ColumnCollection;
 use DataMapper\Exceptions\Exception;
+use DataMapper\QueryBuilder\Exceptions\Exception as QueryBuilderException;
 use Generator;
 use ReflectionClass;
 use ReflectionObject;
@@ -77,6 +78,16 @@ class ColumnHelper
     public static function getPrimaryKeyColumnName(ReflectionObject $reflection): string
     {
         return self::getColumnNameByOption($reflection, Column::PRIMARY_KEY);
+    }
+
+    /**
+     * @param $reflection
+     * @return string
+     * @throws Exception
+     */
+    public static function getFirstUniqueColumnName($reflection): string
+    {
+        return self::getColumnNameByOption($reflection, Column::UNIQUE);
     }
 
     /**

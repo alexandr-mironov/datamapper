@@ -213,89 +213,28 @@ class DataMapper
     }
 
     /**
-     * @param ReflectionClass $reflection
-     * @param string $option
-     * @return bool
-     */
-    private function hasOption(ReflectionClass $reflection, string $option): bool
-    {
-        foreach ($this->columnIterator($reflection) as $column) {
-            /** @var Column $column */
-            $options = $column->getOptions();
-            if ($options && in_array($option, $options, true)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param ReflectionObject $reflection
-     * @return bool
-     */
-    private function hasPrimaryKey(ReflectionObject $reflection): bool
-    {
-        return $this->hasOption($reflection, Column::PRIMARY_KEY);
-    }
-
-    /**
-     * @param ReflectionObject $reflection
-     * @return string
-     * @throws QueryBuilderException
-     */
-    private function getPrimaryKeyColumnName(ReflectionObject $reflection): string
-    {
-        return $this->getColumnNameByOption($reflection, Column::PRIMARY_KEY);
-    }
-
-    /**
-     * @param ReflectionClass $reflection
-     * @param string $option
-     * @return string
-     * @throws QueryBuilderException
-     */
-    private function getColumnNameByOption(ReflectionClass $reflection, string $option): string
-    {
-        foreach ($this->columnIterator($reflection) as $column) {
-            /** @var Column $column */
-            $options = $column->getOptions();
-            if ($options && in_array($option, $options, true)) {
-                return $column->getName();
-            }
-        }
-        throw new Exception('Model does not have a option ' . $option);
-    }
-
-    /**
      * @param ReflectionObject $reflection
      * @param object $model
      * @return Equal
      * @throws QueryBuilderException
+     * @throws Exceptions\Exception
      */
     private function getPrimaryKeyValue(ReflectionObject $reflection, object $model): Equal
     {
-        $key = $this->getPrimaryKeyColumnName($reflection);
+        $key = ColumnHelper::getPrimaryKeyColumnName($reflection);
         return new Equal([$key, $model->$key]);
     }
 
     /**
      * @param ReflectionObject $reflection
-     * @return bool
-     */
-    private function hasUnique(ReflectionObject $reflection): bool
-    {
-        return $this->hasOption($reflection, Column::UNIQUE);
-    }
-
-    /**
-     * @param ReflectionObject $reflection
      * @param object $model
      * @return Equal
      * @throws QueryBuilderException
+     * @throws Exceptions\Exception
      */
     private function getUniqueValue(ReflectionObject $reflection, object $model): Equal
     {
-        $key = $this->getFirstUniqueColumnName($reflection);
+        $key = ColumnHelper::getFirstUniqueColumnName($reflection);
         return new Equal([$key, $model->$key]);
     }
 
@@ -316,15 +255,5 @@ class DataMapper
             ]);
         }
         return $result;
-    }
-
-    /**
-     * @param $reflection
-     * @return string
-     * @throws QueryBuilderException
-     */
-    private function getFirstUniqueColumnName($reflection): string
-    {
-        return $this->getColumnNameByOption($reflection, Column::UNIQUE);
     }
 }
