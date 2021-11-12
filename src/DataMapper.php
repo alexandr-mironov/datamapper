@@ -6,7 +6,6 @@ namespace DataMapper;
 
 
 use DataMapper\Attributes\{Column, Table};
-use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\Field;
 use DataMapper\Entity\FieldCollection;
@@ -15,7 +14,6 @@ use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
-use Generator;
 use PDO;
 use ReflectionClass;
 use ReflectionException;
@@ -91,7 +89,7 @@ class DataMapper
      * @return bool
      *
      * @throws Exception
-     * @throws UnsupportedException
+     * @throws Exceptions\Exception
      */
     public function delete(object $model): bool
     {
@@ -180,28 +178,10 @@ class DataMapper
     }
 
     /**
-     * @param ReflectionClass $reflection
-     * @return Generator
-     */
-    private function columnIterator(ReflectionClass $reflection): Generator
-    {
-        $properties = $reflection->getProperties();
-        foreach ($properties as $property) {
-            $columnAttributes = $property->getAttributes(Column::class);
-            if (count($columnAttributes)) {
-                foreach ($columnAttributes as $attribute) {
-                    /** @var Column $column */
-                    yield $attribute->newInstance();
-                }
-            }
-        }
-    }
-
-    /**
      * @param ReflectionObject $reflection
      * @param object $model
      * @return ConditionCollection
-     * @throws QueryBuilderException
+     * @throws Exceptions\Exception|QueryBuilderException
      */
     private function getConditionsByModel(ReflectionObject $reflection, object $model): ConditionCollection
     {
@@ -247,7 +227,7 @@ class DataMapper
     private function buildConditionArray(ReflectionObject $reflection, object $model): array
     {
         $result = [];
-        foreach ($this->columnIterator($reflection) as $column) {
+        foreach (ColumnHelper::getColumnIterator($reflection) as $column) {
             $key = $column->getName();
             $result[] = new Equal([
                 $key,
