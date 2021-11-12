@@ -4,11 +4,17 @@ namespace DataMapper\Entity;
 
 class Field
 {
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $type
+     */
     public function __construct(
         private string $key,
-        private mixed $value,
+        private mixed  $value,
         private string $type,
-    ) {
+    )
+    {
 
     }
 

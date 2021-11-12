@@ -9,19 +9,11 @@ use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
-use PDO;
-use PDOStatement;
 use DataMapper\QueryBuilder\Definitions\Column;
 use DataMapper\QueryBuilder\Exceptions\{Exception, UnsupportedException};
-use DataMapper\QueryBuilder\Statements\{
-    CreateTable,
-    Delete,
-    Insert,
-    Select,
-    SelectWrapper,
-    StatementInterface,
-    With
-};
+use DataMapper\QueryBuilder\Statements\{CreateTable, Delete, Select, SelectWrapper, StatementInterface, With};
+use PDO;
+use PDOStatement;
 
 /**
  * Class QueryBuilder

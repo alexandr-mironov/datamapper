@@ -14,7 +14,7 @@ class Column
     public function __construct(
         private string $key,
         private string $type,
-        private array $options = [],
+        private array  $options = [],
     )
     {
 

@@ -6,11 +6,18 @@ namespace DataMapper\Entity;
 
 class Table
 {
-    public function __construct(private string $tableName)
-    {
+    /**
+     * @param string $tableName
+     */
+    public function __construct(
+        private string $tableName
+    ) {
 
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->tableName;

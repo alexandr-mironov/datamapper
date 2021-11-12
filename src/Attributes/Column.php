@@ -4,8 +4,8 @@
 namespace DataMapper\Attributes;
 
 use Attribute;
-use DateTime;
 use DataMapper\QueryBuilder\Definitions\DefinitionInterface;
+use DateTime;
 
 /**
  * Class Column
@@ -74,7 +74,7 @@ class Column implements DefinitionInterface
     public function __construct(
         public string $name,
         public string $type,
-        public array $options = []
+        public array  $options = []
     )
     {
 
