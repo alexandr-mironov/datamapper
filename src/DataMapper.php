@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DataMapper;
 
-
 use DataMapper\Attributes\{Column, Table};
 use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\Field;
@@ -146,12 +145,13 @@ class DataMapper
                 return $table->getName();
             }
         }
-        throw new Exception('model doesnt have required table attribute');
+        throw new Exception("model doesn't have required attribute Table");
     }
 
     /**
      * @param ReflectionObject $reflection
      * @param object $model
+     *
      * @return FieldCollection
      */
     private function getFields(ReflectionClass $reflection, object $model): FieldCollection
@@ -180,6 +180,7 @@ class DataMapper
     /**
      * @param ReflectionObject $reflection
      * @param object $model
+     *
      * @return ConditionCollection
      * @throws Exceptions\Exception|QueryBuilderException
      */
@@ -195,6 +196,7 @@ class DataMapper
     /**
      * @param ReflectionObject $reflection
      * @param object $model
+     *
      * @return Equal
      * @throws QueryBuilderException
      * @throws Exceptions\Exception
@@ -208,6 +210,7 @@ class DataMapper
     /**
      * @param ReflectionObject $reflection
      * @param object $model
+     *
      * @return Equal
      * @throws QueryBuilderException
      * @throws Exceptions\Exception
@@ -221,6 +224,7 @@ class DataMapper
     /**
      * @param ReflectionObject $reflection
      * @param object $model
+     *
      * @return array
      * @throws QueryBuilderException
      */

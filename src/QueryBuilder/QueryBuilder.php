@@ -21,6 +21,10 @@ use PDOStatement;
  */
 class QueryBuilder implements BuilderInterface
 {
+    private const PGSQL = 'pgsql';
+
+    private const MYSQL = 'mysql';
+
     /** @var StatementInterface */
     private StatementInterface $statement;
 
@@ -28,8 +32,8 @@ class QueryBuilder implements BuilderInterface
     private array $dbInfo = [null, null];
 
     private const DBMS = [
-        'pgsql' => PGSQL\QueryBuilder::class,
-        'mysql' => MySQL\QueryBuilder::class
+        self::PGSQL => PGSQL\QueryBuilder::class,
+        self::MYSQL => MySQL\QueryBuilder::class
     ];
 
     /** @var BuilderInterface */
