@@ -13,6 +13,7 @@ class ColumnHelper
 {
     /**
      * @param ReflectionClass $reflection
+     *
      * @return ColumnCollection
      */
     public static function getColumns(ReflectionClass $reflection): ColumnCollection
@@ -25,6 +26,12 @@ class ColumnHelper
         return $collection;
     }
 
+    /**
+     * @param ReflectionClass $reflection
+     * @param string $option
+     *
+     * @return bool
+     */
     public static function hasOption(ReflectionClass $reflection, string $option): bool
     {
         foreach (self::getColumnIterator($reflection) as $column) {
@@ -37,6 +44,11 @@ class ColumnHelper
         return false;
     }
 
+    /**
+     * @param ReflectionClass $reflection
+     *
+     * @return Generator
+     */
     public static function getColumnIterator(ReflectionClass $reflection): Generator
     {
         $properties = $reflection->getProperties();
@@ -53,6 +65,7 @@ class ColumnHelper
 
     /**
      * @param ReflectionObject $reflection
+     *
      * @return bool
      */
     public static function hasPrimaryKey(ReflectionObject $reflection): bool
@@ -62,6 +75,7 @@ class ColumnHelper
 
     /**
      * @param ReflectionObject $reflection
+     *
      * @return bool
      */
     public static function hasUnique(ReflectionObject $reflection): bool
@@ -71,6 +85,7 @@ class ColumnHelper
 
     /**
      * @param ReflectionObject $reflection
+     *
      * @return string
      * @throws Exception
      */
@@ -80,11 +95,12 @@ class ColumnHelper
     }
 
     /**
-     * @param $reflection
+     * @param ReflectionObject $reflection
+     *
      * @return string
      * @throws Exception
      */
-    public static function getFirstUniqueColumnName($reflection): string
+    public static function getFirstUniqueColumnName(ReflectionObject $reflection): string
     {
         return self::getColumnNameByOption($reflection, Column::UNIQUE);
     }
@@ -92,6 +108,7 @@ class ColumnHelper
     /**
      * @param ReflectionClass $reflection
      * @param string $option
+     *
      * @return string
      * @throws Exception
      */
