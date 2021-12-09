@@ -41,7 +41,7 @@ class DataMapper
      * @return Select
      *
      * @throws QueryBuilderException
-     * @throws UnsupportedException
+     * @throws UnsupportedException|ReflectionException
      */
     public function find(string $className): Select
     {
@@ -131,7 +131,8 @@ class DataMapper
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
+     *
      * @return Entity\Table
      * @throws QueryBuilderException
      */
@@ -149,7 +150,7 @@ class DataMapper
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      * @param object $model
      *
      * @return FieldCollection
