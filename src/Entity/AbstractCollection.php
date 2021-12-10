@@ -22,17 +22,26 @@ abstract class AbstractCollection implements Iterator
     public function __construct(array $collection = [])
     {
         foreach ($collection as $item) {
-            if (false === ($item instanceof static::COLLECTION_ITEM)) {
-                throw new InvalidArgumentException(
-                    'This collection expect '
-                    . static::COLLECTION_ITEM
-                    . ' as item, '
-                    . $item::class
-                    . ' provided'
-                );
-            }
+            $this->validateItem($item);
             $this->collection[] = $item;
         }
+    }
+
+    /**
+     * @param object $item
+     */
+    public function validateItem(object $item): void
+    {
+        if ($item instanceof static::COLLECTION_ITEM) {
+            return;
+        }
+        throw new InvalidArgumentException(
+            'This collection expect '
+            . static::COLLECTION_ITEM
+            . ' as item, '
+            . $item::class
+            . ' provided'
+        );
     }
 
     /**
@@ -42,15 +51,7 @@ abstract class AbstractCollection implements Iterator
      */
     public function push(object $item): void
     {
-        if (false === ($item instanceof static::COLLECTION_ITEM)) {
-            throw new InvalidArgumentException(
-                'This collection expect '
-                . static::COLLECTION_ITEM
-                . ' as item, '
-                . $item::class
-                . ' provided'
-            );
-        }
+        $this->validateItem($item);
         $this->collection[] = $item;
     }
 
