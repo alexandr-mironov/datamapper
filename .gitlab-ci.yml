@@ -6,7 +6,6 @@ phpstan:
       - .composer-cache/
   before_script:
     - curl -s https://getcomposer.org/installer | php -- --filename=composer.phar
-    - php composer.phar require --dev phpstan/phpstan
     - php composer.phar i
     - php composer.phar dump
   script:
@@ -30,12 +29,10 @@ phpunit:
       - .composer-cache/
   before_script:
     - curl -s https://getcomposer.org/installer | php -- --filename=composer.phar
-    - php composer.phar require --dev phpstan/phpstan
     - php composer.phar i
     - php composer.phar dump
-#    - vendor/bin/codecept build
   script:
-    - php vendor/bin/phpunit test --log-junit phpunit.junit.xml # --bootstrap tests/_bootstrap.php
+    - php vendor/bin/phpunit tests --log-junit phpunit.junit.xml
   artifacts:
     when: always
     reports:

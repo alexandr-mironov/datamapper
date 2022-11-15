@@ -9,6 +9,7 @@ use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\Field;
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Helpers\ColumnHelper;
+use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\QueryBuilder;
@@ -218,7 +219,7 @@ class DataMapper
      * @param ReflectionObject $reflection
      * @param object $model
      *
-     * @return array
+     * @return ConditionInterface[]
      * @throws QueryBuilderException
      */
     private function buildConditionArray(ReflectionObject $reflection, object $model): array
@@ -238,8 +239,8 @@ class DataMapper
     }
 
     /**
-     * @param object|string $class
-     * @param array $options
+     * @param object|class-string $class
+     * @param array<mixed> $options
      *
      * @return bool
      *

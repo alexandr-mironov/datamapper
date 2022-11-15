@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DataMapper\Entity;
 
 use InvalidArgumentException;
@@ -7,7 +9,6 @@ use Iterator;
 
 abstract class AbstractCollection implements Iterator
 {
-    /** @var string */
     public const COLLECTION_ITEM = '';
 
     /** @var array $collection */
@@ -17,7 +18,7 @@ abstract class AbstractCollection implements Iterator
     protected int $current = 0;
 
     /**
-     * @param array $collection
+     * @param array<mixed> $collection
      */
     public function __construct(array $collection = [])
     {
@@ -32,8 +33,7 @@ abstract class AbstractCollection implements Iterator
      */
     public function validateItem(object $item): void
     {
-        $className = static::class;
-        if ($item instanceof $className::COLLECTION_ITEM) {
+        if ($item instanceof static::COLLECTION_ITEM) {
             return;
         }
         throw new InvalidArgumentException(

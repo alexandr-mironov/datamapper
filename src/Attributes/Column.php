@@ -9,6 +9,7 @@ use DateTime;
 
 /**
  * Class Column
+ *
  * @package DataMapper\Attributes
  */
 #[Attribute]
@@ -53,7 +54,7 @@ class Column implements DefinitionInterface
     /** @var int[] */
     private const DEFAULT_LENGTH = [
         self::INTEGER => 11,
-        self::VARCHAR => 255
+        self::VARCHAR => 255,
     ];
 
     /** @var int|null */
@@ -67,17 +68,16 @@ class Column implements DefinitionInterface
 
     /**
      * Column constructor.
+     *
      * @param string $name
      * @param string $type
-     * @param array $options
+     * @param array<mixed> $options
      */
     public function __construct(
         public string $name,
         public string $type,
-        public array  $options = []
-    )
-    {
-
+        public array $options = []
+    ) {
     }
 
     /**
@@ -97,7 +97,7 @@ class Column implements DefinitionInterface
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getOptions(): array
     {
@@ -107,6 +107,7 @@ class Column implements DefinitionInterface
     /**
      * @param mixed $value
      * @param string $type
+     *
      * @return mixed
      */
     public function castToType(mixed $value, string $type): mixed
@@ -114,7 +115,8 @@ class Column implements DefinitionInterface
         return match ($type) {
             self::INTEGER => intval($value),
             self::FLOAT => doubleval($value),
-            self::STRING, self::VARCHAR => strval($value),
+            self::STRING => strval($value),
+            self::VARCHAR => strval($value),
             self::BOOLEAN => boolval($value),
             self::JSON, self::JSONB => json_encode($value),
             self::DATETIME => $this->castDateTimeToString($value),
@@ -122,8 +124,19 @@ class Column implements DefinitionInterface
     }
 
     /**
+     * @param DateTime $dateTime
+     *
+     * @return string
+     */
+    private function castDateTimeToString(DateTime $dateTime): string
+    {
+        return $dateTime->format('Y-m-d H:i:s');
+    }
+
+    /**
      * @param $value
      * @param $type
+     *
      * @return mixed
      */
     public function castFromType(mixed $value, string $type): mixed
@@ -131,15 +144,6 @@ class Column implements DefinitionInterface
         return match ($type) {
             self::JSON, self::JSONB => json_decode($value, true),
         };
-    }
-
-    /**
-     * @param DateTime $dateTime
-     * @return string
-     */
-    private function castDateTimeToString(DateTime $dateTime): string
-    {
-        return $dateTime->format('Y-m-d H:i:s');
     }
 
     /**
