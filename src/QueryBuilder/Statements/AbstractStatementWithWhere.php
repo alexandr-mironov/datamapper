@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
-
 
 use DataMapper\QueryBuilder\Conditions\{ConditionInterface,
     Equal,
@@ -12,12 +12,14 @@ use DataMapper\QueryBuilder\Conditions\{ConditionInterface,
     LessThen,
     LessThenOrEqual,
     NotEqual,
-    NotIn};
+    NotIn
+};
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class AbstractStatementWithWhere
+ *
  * @package DataMapper\QueryBuilder\Statements
  */
 abstract class AbstractStatementWithWhere
@@ -32,6 +34,54 @@ abstract class AbstractStatementWithWhere
     public ?int $offset = null;
 
     /**
+     * @return string
+     */
+    public function buildWhereStatement(): string
+    {
+        $query = '';
+        foreach ($this->wheres as $i => $where) {
+            $query .= (!$i ? '' : $where['operator'] . ' ') . $where['condition'];
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param int $limit
+     * @param int|null $offset
+     *
+     * @return $this
+     */
+    public function limit(int $limit, ?int $offset = null): static
+    {
+        $this->limit = $limit;
+        if ($offset) {
+            $this->offset = $offset;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function by(string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        $args = [$key, $value];
+        $this->addWhereCondition(
+            (is_array($value)) ? new In($args) : new Equal($args),
+            $operator
+        );
+
+        return $this;
+    }
+
+    /**
      * @param ConditionInterface $condition
      * @param string $operator
      */
@@ -44,52 +94,10 @@ abstract class AbstractStatementWithWhere
     }
 
     /**
-     * @return string
-     */
-    public function buildWhereStatement(): string
-    {
-        $query = '';
-        foreach ($this->wheres as $i => $where) {
-            $query .= (!$i ? '' : $where['operator']) . ' ' . $where['condition'];
-        }
-        return $query;
-    }
-
-    /**
-     * @param int $limit
-     * @param int|null $offset
-     * @return $this
-     */
-    public function limit(int $limit, ?int $offset = null): static
-    {
-        $this->limit = $limit;
-        if ($offset) {
-            $this->offset = $offset;
-        }
-        return $this;
-    }
-
-    /**
      * @param string $key
      * @param mixed $value
      * @param string $operator
-     * @return $this
-     * @throws Exception
-     */
-    public function by(string $key, mixed $value, string $operator = Operators::AND): static
-    {
-        $args = [$key, $value];
-        $this->addWhereCondition(
-            (is_array($value)) ? new In($args) : new Equal($args),
-            $operator
-        );
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @param string $operator
+     *
      * @return $this
      * @throws Exception
      */
@@ -100,7 +108,21 @@ abstract class AbstractStatementWithWhere
             (is_array($value)) ? new NotIn($args) : new NotEqual($args),
             $operator
         );
+
         return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param string $operator
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function whereGreaterThen(string $key, mixed $value, string $operator = Operators::AND): static
+    {
+        return $this->where(GreaterThen::class, $key, $value, $operator);
     }
 
     /**
@@ -108,6 +130,7 @@ abstract class AbstractStatementWithWhere
      * @param string $key
      * @param mixed $value
      * @param string $operator
+     *
      * @return $this
      * @throws Exception
      */
@@ -127,6 +150,7 @@ abstract class AbstractStatementWithWhere
             $conditionInstance,
             $operator
         );
+
         return $this;
     }
 
@@ -134,18 +158,7 @@ abstract class AbstractStatementWithWhere
      * @param string $key
      * @param mixed $value
      * @param string $operator
-     * @return $this
-     * @throws Exception
-     */
-    public function whereGreaterThen(string $key, mixed $value, string $operator = Operators::AND): static
-    {
-        return $this->where(GreaterThen::class, $key, $value, $operator);
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @param string $operator
+     *
      * @return $this
      * @throws Exception
      */
@@ -158,6 +171,7 @@ abstract class AbstractStatementWithWhere
      * @param string $key
      * @param mixed $value
      * @param string $operator
+     *
      * @return $this
      * @throws Exception
      */
@@ -170,6 +184,7 @@ abstract class AbstractStatementWithWhere
      * @param string $key
      * @param mixed $value
      * @param string $operator
+     *
      * @return $this
      * @throws Exception
      */

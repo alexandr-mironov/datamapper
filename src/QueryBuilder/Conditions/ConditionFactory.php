@@ -9,6 +9,7 @@ use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class ConditionFactory
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class ConditionFactory extends AbstractCondition
