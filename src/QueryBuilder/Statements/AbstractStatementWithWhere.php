@@ -49,8 +49,8 @@ abstract class AbstractStatementWithWhere
     public function buildWhereStatement(): string
     {
         $query = '';
-        foreach ($this->wheres as $where) {
-            $query .= $where['operator'] . ' ' . $where['condition'];
+        foreach ($this->wheres as $i => $where) {
+            $query .= (!$i ? '' : $where['operator']) . ' ' . $where['condition'];
         }
         return $query;
     }

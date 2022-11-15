@@ -32,7 +32,8 @@ abstract class AbstractCollection implements Iterator
      */
     public function validateItem(object $item): void
     {
-        if ($item instanceof static::COLLECTION_ITEM) {
+        $className = static::class;
+        if ($item instanceof $className::COLLECTION_ITEM) {
             return;
         }
         throw new InvalidArgumentException(

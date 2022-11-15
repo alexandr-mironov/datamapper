@@ -20,18 +20,19 @@ use ReflectionObject;
 
 /**
  * Class DataMapper
+ *
  * @package DataMapper
  */
 class DataMapper
 {
     /**
      * DataMapper constructor.
+     *
      * @param PDO $pdo
      */
     public function __construct(
         private PDO $pdo,
-    )
-    {
+    ) {
 
     }
 
@@ -48,10 +49,40 @@ class DataMapper
         if (!class_exists($className)) {
             throw new Exception('Invalid class provided ' . $className);
         }
+
         return $this->getQueryBuilder()->find(
             $this->getTable(new ReflectionClass($className)),
             $className
         );
+    }
+
+    /**
+     * @return QueryBuilder
+     * @throws UnsupportedException
+     */
+    private function getQueryBuilder(bool $beautify = false): QueryBuilder
+    {
+        return new QueryBuilder($this->pdo, $beautify);
+    }
+
+    /**
+     * @param ReflectionClass $reflection
+     *
+     * @return Entity\Table
+     * @throws QueryBuilderException
+     */
+    private function getTable(ReflectionClass $reflection): Entity\Table
+    {
+        $classAttributes = $reflection->getAttributes(Table::class);
+        if (count($classAttributes)) {
+            foreach ($classAttributes as $attribute) {
+                /** @var Table $table */
+                $table = $attribute->newInstance();
+
+                return $table->getName();
+            }
+        }
+        throw new Exception("model doesn't have required attribute Table");
     }
 
     /**
@@ -83,73 +114,6 @@ class DataMapper
     }
 
     /**
-     * @param object $model
-     *
-     * @return bool
-     *
-     * @throws Exception
-     * @throws Exceptions\Exception
-     */
-    public function delete(object $model): bool
-    {
-        $reflection = new ReflectionObject($model);
-        return $this->getQueryBuilder()
-            ->delete(
-                $this->getTable($reflection),
-                $this->getConditionsByModel($reflection, $model)
-            );
-    }
-
-    /**
-     * @param object|string $class
-     * @param array $options
-     *
-     * @return bool
-     *
-     * @throws QueryBuilderException
-     * @throws ReflectionException
-     * @throws UnsupportedException
-     */
-    public function createTable(object|string $class, array $options = []): bool
-    {
-        $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
-        return $this->getQueryBuilder()
-            ->createTable(
-                $this->getTable($reflection),
-                ColumnHelper::getColumns($reflection),
-                $options
-            );
-    }
-
-    /**
-     * @return QueryBuilder
-     * @throws UnsupportedException
-     */
-    private function getQueryBuilder(): QueryBuilder
-    {
-        return new QueryBuilder($this->pdo);
-    }
-
-    /**
-     * @param ReflectionClass $reflection
-     *
-     * @return Entity\Table
-     * @throws QueryBuilderException
-     */
-    private function getTable(ReflectionClass $reflection): Entity\Table
-    {
-        $classAttributes = $reflection->getAttributes(Table::class);
-        if (count($classAttributes)) {
-            foreach ($classAttributes as $attribute) {
-                /** @var Table $table */
-                $table = $attribute->newInstance();
-                return $table->getName();
-            }
-        }
-        throw new Exception("model doesn't have required attribute Table");
-    }
-
-    /**
      * @param ReflectionClass $reflection
      * @param object $model
      *
@@ -166,16 +130,38 @@ class DataMapper
                     /** @var Column $column */
                     $column = $attribute->newInstance();
                     $columnType = $column->getType();
-                    $collection->push(new Field(
-                        $column->getName(),
-                        $column->castToType($property->getValue($model), $columnType),
-                        $columnType
-                    ));
+                    $collection->push(
+                        new Field(
+                            $column->getName(),
+                            $column->castToType($property->getValue($model), $columnType),
+                            $columnType
+                        )
+                    );
 
                 }
             }
         }
+
         return $collection;
+    }
+
+    /**
+     * @param object $model
+     *
+     * @return bool
+     *
+     * @throws Exception
+     * @throws Exceptions\Exception
+     */
+    public function delete(object $model): bool
+    {
+        $reflection = new ReflectionObject($model);
+
+        return $this->getQueryBuilder()
+            ->delete(
+                $this->getTable($reflection),
+                $this->getConditionsByModel($reflection, $model)
+            );
     }
 
     /**
@@ -188,8 +174,12 @@ class DataMapper
     private function getConditionsByModel(ReflectionObject $reflection, object $model): ConditionCollection
     {
         return match (true) {
-            ColumnHelper::hasPrimaryKey($reflection) => new ConditionCollection([$this->getPrimaryKeyValue($reflection, $model)]),
-            ColumnHelper::hasUnique($reflection) => new ConditionCollection([$this->getUniqueValue($reflection, $model)]),
+            ColumnHelper::hasPrimaryKey($reflection) => new ConditionCollection(
+                [$this->getPrimaryKeyValue($reflection, $model)]
+            ),
+            ColumnHelper::hasUnique($reflection) => new ConditionCollection(
+                [$this->getUniqueValue($reflection, $model)]
+            ),
             default => new ConditionCollection($this->buildConditionArray($reflection, $model))
         };
     }
@@ -205,6 +195,7 @@ class DataMapper
     private function getPrimaryKeyValue(ReflectionObject $reflection, object $model): Equal
     {
         $key = ColumnHelper::getPrimaryKeyColumnName($reflection);
+
         return new Equal([$key, $model->$key]);
     }
 
@@ -219,6 +210,7 @@ class DataMapper
     private function getUniqueValue(ReflectionObject $reflection, object $model): Equal
     {
         $key = ColumnHelper::getFirstUniqueColumnName($reflection);
+
         return new Equal([$key, $model->$key]);
     }
 
@@ -234,11 +226,36 @@ class DataMapper
         $result = [];
         foreach (ColumnHelper::getColumnIterator($reflection) as $column) {
             $key = $column->getName();
-            $result[] = new Equal([
-                $key,
-                $model->$key
-            ]);
+            $result[] = new Equal(
+                [
+                    $key,
+                    $model->$key,
+                ]
+            );
         }
+
         return $result;
+    }
+
+    /**
+     * @param object|string $class
+     * @param array $options
+     *
+     * @return bool
+     *
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     * @throws UnsupportedException
+     */
+    public function createTable(object|string $class, array $options = []): bool
+    {
+        $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
+
+        return $this->getQueryBuilder()
+            ->createTable(
+                $this->getTable($reflection),
+                ColumnHelper::getColumns($reflection),
+                $options
+            );
     }
 }

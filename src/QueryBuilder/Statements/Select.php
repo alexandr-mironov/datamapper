@@ -51,22 +51,20 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
      */
     public function __toString(): string
     {
-        $query = 'SELECT ';
-        $query .= $this->selectExpression;
-        $query .= ' FROM ' . $this->table->getName();
+        $queryParts = ['SELECT', $this->selectExpression, 'FROM ' . $this->table->getName(), 'WHERE'];
         if (count($this->wheres)) {
-            $query .= $this->buildWhereStatement();
+            $queryParts[] = $this->buildWhereStatement();
         }
         if ($this->order) {
-            $query .= ' ORDER BY ' . implode(', ', $this->order);
+            $queryParts[] = ' ORDER BY ' . implode(', ', $this->order);
         }
         if ($this->limit) {
-            $query .= ' LIMIT ' . $this->limit;
+            $queryParts[] = ' LIMIT ' . $this->limit;
             if ($this->offset) {
-                $query .= ' OFFSET ' . $this->offset;
+                $queryParts[] = ' OFFSET ' . $this->offset;
             }
         }
-        return $query;
+        return implode($this->queryBuilder->beautify ? PHP_EOL : ' ', $queryParts);
     }
 
     /**

@@ -41,10 +41,13 @@ class QueryBuilder implements BuilderInterface
 
     /**
      * QueryBuilder constructor.
+     *
      * @param PDO $pdo
+     * @param bool $beautify
+     *
      * @throws UnsupportedException
      */
-    public function __construct(private PDO $pdo)
+    public function __construct(private PDO $pdo, public bool $beautify = false)
     {
         $this->adapter = $this->detectDBMS();
     }

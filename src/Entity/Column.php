@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DataMapper\Entity;
 
+use DataMapper\Attributes\Column as ColumnAttribute;
+
 class Column
 {
     /**
@@ -21,11 +23,11 @@ class Column
     }
 
     /**
-     * @param \DataMapper\Attributes\Column $column
+     * @param ColumnAttribute $column
      *
      * @return static
      */
-    public static function createFromAttribute(\DataMapper\Attributes\Column $column): self
+    public static function createFromAttribute(ColumnAttribute $column): self
     {
         return new self(
             $column->getName(),
