@@ -35,7 +35,7 @@ phpunit:
     - php composer.phar dump
 #    - vendor/bin/codecept build
   script:
-    - php vendor/bin/phpunit test --testdox-xml phpunit.junit.xml # --bootstrap tests/_bootstrap.php
+    - php vendor/bin/phpunit test --log-junit phpunit.junit.xml # --bootstrap tests/_bootstrap.php
   artifacts:
     when: always
     reports:

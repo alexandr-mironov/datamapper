@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
-
 
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class WhereCollection
+ *
  * @package DataMapper\QueryBuilder\Statements
  */
 class WhereCollection
@@ -21,18 +22,19 @@ class WhereCollection
     ];
 
     /**
-     * @var string|mixed
-     */
-    private string $operator = Operators::AND;
-
-    /**
      * @var array
      */
     public array $wheres = [];
 
     /**
+     * @var string|mixed
+     */
+    private string $operator = Operators::AND;
+
+    /**
      * WhereCollection constructor.
-     * @param array $conditions
+     *
+     * @param array<mixed> $conditions
      */
     public function __construct(array $conditions)
     {
@@ -40,8 +42,9 @@ class WhereCollection
     }
 
     /**
-     * @param array $conditions
-     * @return array
+     * @param array<mixed> $conditions
+     *
+     * @return array<string, string>
      */
     private function parseConditions(array $conditions)
     {
@@ -52,26 +55,13 @@ class WhereCollection
             }
             $where[$condition->operator][] = (string)$condition;
         }
+
         return $where;
     }
 
     /**
-     * @param array $wheres
-     * @return string
-     */
-    private function buildString(array $wheres): string
-    {
-        $string = '';
-        foreach ($wheres as $operator => $where) {
-            if (is_array($where)) {
-
-            }
-        }
-        return $string;
-    }
-
-    /**
      * @param string $name
+     *
      * @return mixed
      * @throws Exception
      */
@@ -90,5 +80,22 @@ class WhereCollection
     public function __toString(): string
     {
         return $this->buildString($this->wheres);
+    }
+
+    /**
+     * @param array<string, string> $wheres
+     *
+     * @return string
+     */
+    private function buildString(array $wheres): string
+    {
+        $string = '';
+        foreach ($wheres as $operator => $where) {
+            if (is_array($where)) {
+
+            }
+        }
+
+        return $string;
     }
 }
