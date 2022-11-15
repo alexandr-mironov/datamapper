@@ -23,7 +23,7 @@ class SelectTest extends TestCase
 
     public function testSimpleQueryBuilding()
     {
-        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE  'field'='value'";
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value'";
         $result = (string)$this->dataMapper
             ->find(TestEntity::class)
             ->by('field', 'value');
