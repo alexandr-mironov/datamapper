@@ -26,7 +26,6 @@ final class QueryBuilder extends ParentQueryBuilder
      */
     protected function __construct(private PDO $pdo)
     {
-        parent::__construct($pdo);
     }
 
     /**

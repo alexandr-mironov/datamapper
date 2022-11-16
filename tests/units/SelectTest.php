@@ -29,7 +29,7 @@ class SelectTest extends TestCase
             ->by('field', 'value');
         $this->assertEquals($expectedSimpleQuery, $result);
     }
-    
+
     public function testInjectionResistance()
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='\' OR 1=1 --value\''";

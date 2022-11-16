@@ -4,19 +4,21 @@
 namespace DataMapper\QueryBuilder\MySQL;
 
 
-use PDO;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\PGSQL\Statements\Insert;
 use DataMapper\QueryBuilder\QueryBuilder as ParentQueryBuilder;
+use PDO;
 
 /**
  * Class QueryBuilder
+ *
  * @package DataMapper\QueryBuilder\MySQL
  */
 final class QueryBuilder extends ParentQueryBuilder
 {
     /**
      * QueryBuilder constructor.
+     *
      * @param PDO $pdo
      */
     protected function __construct(private PDO $pdo)
@@ -27,6 +29,7 @@ final class QueryBuilder extends ParentQueryBuilder
     /**
      * @param string $table
      * @param array $values
+     *
      * @return int
      * @throws Exception
      */
