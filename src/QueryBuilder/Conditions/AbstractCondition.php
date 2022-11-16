@@ -8,22 +8,25 @@ use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
  * Class AbstractCondition
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 abstract class AbstractCondition implements ConditionInterface
 {
-    /** @var string */
-    protected string $condition;
-
     /** @var string */
     protected const CONDITION_OPERATOR = '';
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid arguments';
 
+    /** @var string */
+    protected string $condition;
+
     /**
      * AbstractCondition constructor.
+     *
      * @param array $conditionParts
+     *
      * @throws Exception
      */
     public function __construct(array $conditionParts)
@@ -41,15 +44,26 @@ abstract class AbstractCondition implements ConditionInterface
 
     /**
      * @param mixed $value
+     *
      * @return string
      */
     protected function quote(mixed $value): string
     {
         return match (true) {
             //($value instanceof Expression), is_int($value) => $value,
-            is_string($value) => "'" . $value . "'",
+            is_string($value) => $this->quoteValue($value),
             default => $value,
         };
+    }
+
+    public function quoteValue(string $value): string
+    {
+        return "'"
+            . addcslashes(
+                str_replace("'", "''", $value),
+                "\000\n\r\\\032"
+            )
+            . "'";
     }
 
     /**

@@ -28,6 +28,14 @@ class SelectTest extends TestCase
             ->find(TestEntity::class)
             ->by('field', 'value');
         $this->assertEquals($expectedSimpleQuery, $result);
-
+    }
+    
+    public function testInjectionResistance()
+    {
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='\' OR 1=1 --value\''";
+        (string)$this->dataMapper
+            ->find(TestEntity::class)
+            ->by('field', "' OR 1=1 --value'");
+        $this->assertEquals($expectedSimpleQuery, $result);
     }
 }

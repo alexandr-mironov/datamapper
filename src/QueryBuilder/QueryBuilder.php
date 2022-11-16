@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder;
-
 
 use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\ConditionCollection;
@@ -17,6 +17,7 @@ use PDOStatement;
 
 /**
  * Class QueryBuilder
+ *
  * @package DataMapper\QueryBuilder
  */
 class QueryBuilder implements BuilderInterface
@@ -25,16 +26,16 @@ class QueryBuilder implements BuilderInterface
 
     private const MYSQL = 'mysql';
 
+    private const DBMS = [
+        self::PGSQL => PGSQL\QueryBuilder::class,
+        self::MYSQL => MySQL\QueryBuilder::class,
+    ];
+
     /** @var StatementInterface */
     private StatementInterface $statement;
 
     /** @var array|null[] */
     private array $dbInfo = [null, null];
-
-    private const DBMS = [
-        self::PGSQL => PGSQL\QueryBuilder::class,
-        self::MYSQL => MySQL\QueryBuilder::class
-    ];
 
     /** @var BuilderInterface */
     private BuilderInterface $adapter;
@@ -53,6 +54,22 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
+     * @return BuilderInterface
+     * @throws UnsupportedException
+     */
+    private function detectDBMS(): BuilderInterface
+    {
+        // todo replace to extracting dbms type from schema?
+        $dbms = 'pgsql';
+        if (array_key_exists($dbms, self::DBMS)) {
+            $className = self::DBMS[$dbms];
+
+            return new $className($this->pdo);
+        }
+        throw new UnsupportedException('Unsupported DBMS');
+    }
+
+    /**
      * @param Table $table
      * @param string $className
      *
@@ -65,6 +82,7 @@ class QueryBuilder implements BuilderInterface
 
     /**
      * @param string $query
+     *
      * @return PDOStatement
      * @throws Exception
      */
@@ -74,12 +92,13 @@ class QueryBuilder implements BuilderInterface
         if (!$result) {
             throw new Exception('Invalid query');
         }
+
         return $result;
     }
 
     /**
      * @param string $table
-     * @param array $values ['key' => ..., 'value' => ..., 'type' => ...]
+     * @param array{key: string, value: mixed, type: string} $values ['key' => ..., 'value' => ..., 'type' => ...]
      *
      * @return int
      *
@@ -94,6 +113,7 @@ class QueryBuilder implements BuilderInterface
      * @param Table $table
      * @param FieldCollection $values
      * @param array $updatable
+     *
      * @return bool
      * @throws Exception
      */
@@ -105,14 +125,6 @@ class QueryBuilder implements BuilderInterface
 //            $statement->bindParam($value['key'], $value['value'], $this->getType($value['type']));
 //        }
 //        return $statement->execute();
-    }
-
-    /**
-     * @return false|PDOStatement
-     */
-    private function lastInsertId(): false|PDOStatement
-    {
-        return $this->pdo->lastInsertId();
     }
 
     /**
@@ -139,29 +151,9 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @param mixed $type
-     * @return int
-     */
-    protected function getType(mixed $type): int
-    {
-        return match ($type) {
-            'integer', 'float' => PDO::PARAM_INT,
-            'string', 'datetime' => PDO::PARAM_STR,
-            'boolean' => PDO::PARAM_BOOL,
-        };
-    }
-
-    /**
-     * @return array
-     */
-    private function getDBInfo(): array
-    {
-        return $this->dbInfo;
-    }
-
-    /**
      * @param Table $table
      * @param ConditionCollection $conditions
+     *
      * @return bool
      */
     public function delete(Table $table, ConditionCollection $conditions): bool
@@ -172,26 +164,13 @@ class QueryBuilder implements BuilderInterface
             $statement->addWhereCondition($condition);
         }
         $query = $statement->__toString();
+
         return $this->pdo->query($query)->execute();
     }
 
     /**
-     * @return BuilderInterface
-     * @throws UnsupportedException
-     */
-    private function detectDBMS(): BuilderInterface
-    {
-        // todo replace to extracting dbms type from schema?
-        $dbms = 'pgsql';
-        if (array_key_exists($dbms, self::DBMS)) {
-            $className = self::DBMS[$dbms];
-            return new $className($this->pdo);
-        }
-        throw new UnsupportedException('Unsupported DBMS');
-    }
-
-    /**
      * @param Select[] $selects
+     *
      * @return $this
      * @throws Exception
      */
@@ -211,5 +190,35 @@ class QueryBuilder implements BuilderInterface
         $this->statement = new With(...$wrappers);
 
         return $this;
+    }
+
+    /**
+     * @param mixed $type
+     *
+     * @return int
+     */
+    protected function getType(mixed $type): int
+    {
+        return match ($type) {
+            'integer', 'float' => PDO::PARAM_INT,
+            'string', 'datetime' => PDO::PARAM_STR,
+            'boolean' => PDO::PARAM_BOOL,
+        };
+    }
+
+    /**
+     * @return false|PDOStatement
+     */
+    private function lastInsertId(): false|PDOStatement
+    {
+        return $this->pdo->lastInsertId();
+    }
+
+    /**
+     * @return array
+     */
+    private function getDBInfo(): array
+    {
+        return $this->dbInfo;
     }
 }

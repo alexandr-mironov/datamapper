@@ -11,7 +11,7 @@ abstract class AbstractCollection implements Iterator
 {
     public const COLLECTION_ITEM = '';
 
-    /** @var array $collection */
+    /** @var object[] $collection */
     protected array $collection = [];
 
     /** @var int $current current item key (index) */
