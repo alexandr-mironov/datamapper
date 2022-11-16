@@ -30,9 +30,11 @@ class DataMapper
      * DataMapper constructor.
      *
      * @param PDO $pdo
+     * @param bool $beautify
      */
     public function __construct(
         private PDO $pdo,
+        public bool $beautify = false
     ) {
 
     }
@@ -51,13 +53,16 @@ class DataMapper
             throw new Exception('Invalid class provided ' . $className);
         }
 
-        return $this->getQueryBuilder()->find(
-            $this->getTable(new ReflectionClass($className)),
-            $className
-        );
+        return $this->getQueryBuilder($this->beautify)
+            ->find(
+                $this->getTable(new ReflectionClass($className)),
+                $className
+            );
     }
 
     /**
+     * @param bool $beautify
+     *
      * @return QueryBuilder
      * @throws UnsupportedException
      */

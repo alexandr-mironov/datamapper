@@ -59,9 +59,9 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
             $queryParts[] = ' ORDER BY ' . implode(', ', $this->order);
         }
         if ($this->limit) {
-            $queryParts[] = ' LIMIT ' . $this->limit;
+            $queryParts[] = 'LIMIT ' . $this->limit;
             if ($this->offset) {
-                $queryParts[] = ' OFFSET ' . $this->offset;
+                $queryParts[] = 'OFFSET ' . $this->offset;
             }
         }
         return implode($this->queryBuilder->beautify ? PHP_EOL : ' ', $queryParts);

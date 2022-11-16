@@ -40,7 +40,7 @@ abstract class AbstractStatementWithWhere
     {
         $query = '';
         foreach ($this->wheres as $i => $where) {
-            $query .= (!$i ? '' : $where['operator'] . ' ') . $where['condition'];
+            $query .= (!$i ? '' : ' ' . $where['operator'] . ' ') . $where['condition'];
         }
 
         return $query;

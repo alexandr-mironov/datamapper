@@ -21,7 +21,7 @@ class SelectTest extends TestCase
         $this->dataMapper = new DataMapper($this->createMock(PDO::class));
     }
 
-    public function testSimpleQueryBuilding()
+    public function testSimpleQueryBuilding(): void
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value'";
         $result = (string)$this->dataMapper
@@ -30,12 +30,48 @@ class SelectTest extends TestCase
         $this->assertEquals($expectedSimpleQuery, $result);
     }
 
-    public function testInjectionResistance()
+    public function testInjectionResistance(): void
     {
-        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='\' OR 1=1 --value\''";
-        (string)$this->dataMapper
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'=''' OR 1=1 --value'''";
+        $result = (string)$this->dataMapper
             ->find(TestEntity::class)
             ->by('field', "' OR 1=1 --value'");
         $this->assertEquals($expectedSimpleQuery, $result);
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='\" OR 1=1 --value\"'";
+        $result = (string)$this->dataMapper
+            ->find(TestEntity::class)
+            ->by('field', '" OR 1=1 --value"');
+        $this->assertEquals($expectedSimpleQuery, $result);
     }
+
+    public function testLimitQueryBuilding(): void
+    {
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' LIMIT 11";
+        $result = (string)$this->dataMapper
+            ->find(TestEntity::class)
+            ->by('field', 'value')
+            ->limit(11);
+        $this->assertEquals($expectedSimpleQuery, $result);
+    }
+
+    public function testLimitOffsetQueryBuilding(): void
+    {
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' LIMIT 11 OFFSET 4";
+        $result = (string)$this->dataMapper
+            ->find(TestEntity::class)
+            ->by('field', 'value')
+            ->limit(11, 4);
+        $this->assertEquals($expectedSimpleQuery, $result);
+    }
+
+    public function testQueryBuilding(): void
+    {
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' AND 'another_field'='another_value'";
+        $result = (string)$this->dataMapper
+            ->find(TestEntity::class)
+            ->by('field', 'value')
+            ->by('another_field', 'another_value');
+        $this->assertEquals($expectedSimpleQuery, $result);
+    }
+
 }
