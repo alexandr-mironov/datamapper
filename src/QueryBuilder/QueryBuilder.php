@@ -54,10 +54,10 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @return BuilderInterface
+     * @return QueryBuilder
      * @throws UnsupportedException
      */
-    private function detectDBMS(): BuilderInterface
+    private function detectDBMS(): QueryBuilder
     {
         // todo replace to extracting dbms type from schema?
         $dbms = 'pgsql';

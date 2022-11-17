@@ -5,4 +5,5 @@ parameters:
     paths:
         - src
     checkGenericClassInNonGenericObjectType: false
-#    ignoreErrors:
+    ignoreErrors:
+        - '#Property DataMapper\\QueryBuilder\\Statements\\With\:\:\$aliases is never read, only written.#'

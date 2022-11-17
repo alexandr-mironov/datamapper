@@ -10,9 +10,11 @@ use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Expression;
 use Generator;
+use PDO;
 
 /**
  * Class Select
+ *
  * @package DataMapper\QueryBuilder\Statements
  */
 class Select extends AbstractStatementWithWhere implements StatementInterface
@@ -20,26 +22,26 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /** @var string|Expression */
     public string|Expression $selectExpression;
 
-    /** @var array $order */
+    /** @var array<mixed> $order */
     private array $order = [];
 
     /**
      * Select constructor.
+     *
      * @param BuilderInterface $queryBuilder
      * @param Table $table
      * @param string $resultObject
      */
     public function __construct(
         private BuilderInterface $queryBuilder,
-        private Table            $table,
-        private string           $resultObject,
-    )
-    {
+        public Table $table,
+        private string $resultObject,
+    ) {
         $this->selectExpression = new Expression('*');
     }
 
     /**
-     * @param array $fields
+     * @param string[] $fields
      */
     public function fieldSet(array $fields)
     {
@@ -64,7 +66,8 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
                 $queryParts[] = 'OFFSET ' . $this->offset;
             }
         }
-        return implode($this->queryBuilder->beautify ? PHP_EOL : ' ', $queryParts);
+
+        return implode(($this->queryBuilder->beautify ?? false) ? PHP_EOL : ' ', $queryParts);
     }
 
     /**
@@ -76,6 +79,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         $this->limit = 1;
         $result = $this->queryBuilder->execute((string)$this);
         $className = $this->resultObject;
+
         return new $className(...$result);
     }
 
@@ -90,6 +94,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
             default:
                 $this->order = $order;
         }
+
         return $this;
     }
 
@@ -103,11 +108,26 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         foreach ($this->getIterator() as $item) {
             $collection[] = $item;
         }
+
         return $collection;
     }
 
     /**
+     * @return Generator
+     * @throws Exception
+     */
+    public function getIterator(): Generator
+    {
+        $result = $this->queryBuilder->execute((string)$this);
+        $className = $this->resultObject;
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            yield new $className(...$row);
+        }
+    }
+
+    /**
      * @param string $key
+     *
      * @return array
      * @throws Exception
      */
@@ -120,19 +140,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
             }
             $collection[$item->$key] = $item;
         }
-        return $collection;
-    }
 
-    /**
-     * @return Generator
-     * @throws Exception
-     */
-    public function getIterator(): Generator
-    {
-        $result = $this->queryBuilder->execute((string)$this);
-        $className = $this->resultObject;
-        foreach ($result->fetchAll(\PDO::FETCH_ASSOC) as $row) {
-            yield new $className(...$row);
-        }
+        return $collection;
     }
 }

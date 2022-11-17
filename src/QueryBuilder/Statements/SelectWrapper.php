@@ -30,11 +30,11 @@ class SelectWrapper
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      * @throws Exception
      */
-    public function __get($name): mixed
+    public function __get(string $name): mixed
     {
         if (!isset($this->$name)) {
             throw new Exception('Invalid property name');
@@ -48,6 +48,6 @@ class SelectWrapper
      */
     private function createAlias(): string
     {
-        return uniqid($this->statement->tableName . '_');
+        return uniqid($this->statement->table->getName() . '_');
     }
 }
