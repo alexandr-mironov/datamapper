@@ -1,21 +1,22 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
-
 use DataMapper\Entity\Table;
-use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 
 /**
  * Class Delete
+ *
  * @package DataMapper\QueryBuilder\Statements
  */
 class Delete extends AbstractStatementWithWhere implements StatementInterface
 {
     /**
      * Delete constructor.
-     * @param string $table
+     *
+     * @param Table $table
      */
     public function __construct(private Table $table)
     {

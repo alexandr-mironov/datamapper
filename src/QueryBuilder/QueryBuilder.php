@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder;
 
+use DataMapper\Entity\Column as ColumnEntity;
 use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\FieldCollection;
@@ -137,6 +138,7 @@ class QueryBuilder implements BuilderInterface
     public function createTable(Table $name, ColumnCollection $columns, array $options = []): bool
     {
         $createTableStatement = new CreateTable($name, $options);
+        /** @var ColumnEntity $column */
         foreach ($columns as $column) {
             $columnDefinition = new Column(
                 $column->getKey(),
