@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
-
 
 use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class GreaterThen
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class GreaterThen extends Equal

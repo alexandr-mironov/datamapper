@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
 /**
  * Class WhereCondition
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class WhereCondition implements ConditionInterface
@@ -14,7 +16,8 @@ class WhereCondition implements ConditionInterface
 
     /**
      * WhereCondition constructor.
-     * @param array $conditions
+     *
+     * @param array<mixed> $conditions
      */
     public function __construct(array $conditions)
     {

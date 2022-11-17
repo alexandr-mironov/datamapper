@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
-
 
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Operators;

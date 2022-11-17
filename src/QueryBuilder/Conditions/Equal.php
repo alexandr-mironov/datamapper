@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
@@ -8,6 +9,7 @@ use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class Equal
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class Equal extends AbstractCondition
@@ -20,7 +22,9 @@ class Equal extends AbstractCondition
 
     /**
      * Equal constructor.
-     * @param array $conditionParts
+     *
+     * @param array<mixed> $conditionParts
+     *
      * @throws Exception
      */
     public function __construct(array $conditionParts)

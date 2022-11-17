@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
@@ -7,6 +8,7 @@ use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class NotLessThen
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class NotLessThen extends LessThen

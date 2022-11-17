@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
-
 
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class IsNull
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class IsNull extends AbstractCondition
@@ -21,7 +22,9 @@ class IsNull extends AbstractCondition
 
     /**
      * IsNull constructor.
-     * @param array $conditionParts
+     *
+     * @param array<mixed> $conditionParts
+     *
      * @throws Exception
      */
     public function __construct(array $conditionParts)

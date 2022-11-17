@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
-
 
 use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class NotLike
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class NotLike extends Like

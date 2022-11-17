@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
-
 
 use DataMapper\QueryBuilder\MySQL\Operators;
 
 /**
  * Class SoundsLike
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class SoundsLike extends Like

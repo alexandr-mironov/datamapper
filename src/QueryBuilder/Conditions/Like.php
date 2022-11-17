@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
-
 
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class Like
+ *
  * @package DataMapper\QueryBuilder\Conditions
  */
 class Like extends AbstractCondition
@@ -21,7 +22,9 @@ class Like extends AbstractCondition
 
     /**
      * Like constructor.
-     * @param array $conditionParts
+     *
+     * @param array<mixed> $conditionParts
+     *
      * @throws Exception
      */
     public function __construct(array $conditionParts)
