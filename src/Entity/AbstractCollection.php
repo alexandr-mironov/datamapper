@@ -6,6 +6,7 @@ namespace DataMapper\Entity;
 
 use InvalidArgumentException;
 use Iterator;
+use ReflectionClass;
 
 abstract class AbstractCollection implements Iterator
 {
@@ -33,7 +34,9 @@ abstract class AbstractCollection implements Iterator
      */
     public function validateItem(object $item): void
     {
-        if ($item instanceof static::COLLECTION_ITEM) {
+        $reflection = new ReflectionClass(static::class);
+        $className = (string)$reflection->getConstant('COLLECTION_ITEM');
+        if ($item instanceof $className) {
             return;
         }
         throw new InvalidArgumentException(

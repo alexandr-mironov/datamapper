@@ -115,11 +115,11 @@ class Column implements DefinitionInterface
         return match ($type) {
             self::INTEGER => intval($value),
             self::FLOAT => doubleval($value),
-            self::STRING => strval($value),
-            self::VARCHAR => strval($value),
+            self::STRING, self::VARCHAR => strval($value),
             self::BOOLEAN => boolval($value),
             self::JSON, self::JSONB => json_encode($value),
             self::DATETIME => $this->castDateTimeToString($value),
+            default => $value,
         };
     }
 
@@ -143,6 +143,7 @@ class Column implements DefinitionInterface
     {
         return match ($type) {
             self::JSON, self::JSONB => json_decode($value, true),
+            default => $value
         };
     }
 

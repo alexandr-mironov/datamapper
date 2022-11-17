@@ -6,9 +6,9 @@ namespace DataMapper\QueryBuilder\Statements;
 
 
 use DataMapper\Entity\Table;
-use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Expression;
+use DataMapper\QueryBuilder\QueryBuilder;
 use Generator;
 use PDO;
 
@@ -28,12 +28,12 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /**
      * Select constructor.
      *
-     * @param BuilderInterface $queryBuilder
+     * @param QueryBuilder $queryBuilder
      * @param Table $table
      * @param string $resultObject
      */
     public function __construct(
-        private BuilderInterface $queryBuilder,
+        private QueryBuilder $queryBuilder,
         public Table $table,
         private string $resultObject,
     ) {
@@ -43,7 +43,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /**
      * @param string[] $fields
      */
-    public function fieldSet(array $fields)
+    public function fieldSet(array $fields): void
     {
         $this->selectExpression = implode(', ', $fields);
     }
@@ -83,6 +83,11 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         return new $className(...$result);
     }
 
+    /**
+     * @param string|array<mixed> $order
+     *
+     * @return $this
+     */
     public function order(string|array $order): static
     {
         switch (true) {
@@ -99,7 +104,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     }
 
     /**
-     * @return array
+     * @return object[]
      * @throws Exception
      */
     public function getArray(): array
@@ -128,7 +133,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /**
      * @param string $key
      *
-     * @return array
+     * @return array<string, object>
      * @throws Exception
      */
     public function getMap(string $key): array
