@@ -57,7 +57,8 @@ class ColumnHelper
             if (count($columnAttributes)) {
                 foreach ($columnAttributes as $attribute) {
                     /** @var Column $column */
-                    yield $attribute->newInstance();
+                    $column = $attribute->newInstance();
+                    yield $column;
                 }
             }
         }

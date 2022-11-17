@@ -35,7 +35,7 @@ class Field
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getValue(): mixed
     {

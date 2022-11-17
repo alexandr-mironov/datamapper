@@ -118,7 +118,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     }
 
     /**
-     * @return Generator
+     * @return Generator<object>
      * @throws Exception
      */
     public function getIterator(): Generator
@@ -143,7 +143,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
             if (!property_exists($item, $key)) {
                 throw new Exception('`' . $key . '` is not in field list');
             }
-            $collection[$item->$key] = $item;
+            $collection[(string)$item->$key] = $item;
         }
 
         return $collection;

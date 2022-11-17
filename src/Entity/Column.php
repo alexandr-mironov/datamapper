@@ -11,21 +11,20 @@ class Column
     /**
      * @param string $key
      * @param string $type
-     * @param array $options
+     * @param array<mixed> $options
      */
     public function __construct(
         private string $key,
         private string $type,
-        private array  $options = [],
-    )
-    {
+        private array $options = [],
+    ) {
 
     }
 
     /**
      * @param ColumnAttribute $column
      *
-     * @return static
+     * @return self
      */
     public static function createFromAttribute(ColumnAttribute $column): self
     {
@@ -53,7 +52,7 @@ class Column
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getOptions(): array
     {

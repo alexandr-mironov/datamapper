@@ -35,7 +35,7 @@ interface BuilderInterface
     /**
      * @param Table $table
      * @param FieldCollection $values
-     * @param array $updatable
+     * @param string[] $updatable
      *
      * @return bool
      * @throws Exception

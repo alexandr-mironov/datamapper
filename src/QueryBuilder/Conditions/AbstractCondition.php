@@ -25,7 +25,7 @@ abstract class AbstractCondition implements ConditionInterface
     /**
      * AbstractCondition constructor.
      *
-     * @param array $conditionParts
+     * @param array<mixed> $conditionParts
      *
      * @throws Exception
      */
