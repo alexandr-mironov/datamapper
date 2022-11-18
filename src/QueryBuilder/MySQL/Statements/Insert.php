@@ -76,7 +76,7 @@ class Insert implements StatementInterface
         $keysForUpdate = [];
         /**
          * @var string $key
-         * @var string|class-string $value
+         * @var string|Expression $value
          */
         foreach ($this->updatable as $key => $value) {
             if ($value instanceof Expression) {

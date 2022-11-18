@@ -23,7 +23,7 @@ class AlterDropColumn extends AlterOption
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return "DROP COLUMN {$this->columnName}";
     }

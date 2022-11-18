@@ -6,6 +6,7 @@ namespace DataMapper\QueryBuilder\Statements;
 
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Definitions\Column;
+use Exception;
 
 /**
  * Class CreateTable
@@ -13,10 +14,10 @@ use DataMapper\QueryBuilder\Definitions\Column;
  */
 class CreateTable implements StatementInterface
 {
-    /** @var bool|mixed */
+    /** @var bool*/
     public bool $temporary = false;
 
-    /** @var bool|mixed */
+    /** @var bool */
     public bool $ifNotExists = false;
 
     /** @var array */
@@ -31,15 +32,15 @@ class CreateTable implements StatementInterface
     /**
      * CreateTable constructor.
      * @param Table $tableName
-     * @param array $options
+     * @param array<mixed> $options
      */
     public function __construct(
         private Table $tableName,
         array $options = [],
     )
     {
-        $this->temporary = $options['temporary'] ?? false;
-        $this->ifNotExists = $options['ifNotExists'] ?? false;
+        $this->temporary = (bool)($options['temporary'] ?? false);
+        $this->ifNotExists = (bool)($options['ifNotExists'] ?? false);
     }
 
     /**
@@ -55,7 +56,7 @@ class CreateTable implements StatementInterface
         if ($this->ifNotExists) {
             $query .= 'IF NOT EXISTS ';
         }
-        $query .= $this->tableName . " (\n" . implode(",\n", $this->columns) . "\n)";
+        $query .= $this->tableName->getName() . " (\n" . implode(",\n", $this->columns) . "\n)";
 
         if ($this->options) {
             $query .= "\n" . implode(" ", $this->options);
@@ -70,16 +71,20 @@ class CreateTable implements StatementInterface
 
     /**
      * @param Column $columnDefinition
+     *
+     * @throws Exception
      */
-    public function addColumn(Column $columnDefinition)
+    public function addColumn(Column $columnDefinition): void
     {
         $this->columns[] = $columnDefinition->__toString();
     }
 
     /**
      * @param Column ...$columns
+     *
+     * @throws Exception
      */
-    public function addColumns(Column ...$columns)
+    public function addColumns(Column ...$columns): void
     {
         foreach ($columns as $column) {
             $this->columns[] = $column->__toString();
