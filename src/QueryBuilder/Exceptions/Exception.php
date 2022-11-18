@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Exceptions;
 
+use JsonSerializable;
+
 /**
  * Class Exception
+ *
  * @package DataMapper\QueryBuilder\Exceptions
  */
-class Exception extends \Exception implements \JsonSerializable
+class Exception extends \Exception implements JsonSerializable
 {
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function jsonSerialize(): array
     {

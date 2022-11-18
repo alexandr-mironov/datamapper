@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\Helpers;
 
-use Exception;
+use \DataMapper\QueryBuilder\Exceptions\Exception;
 
 trait ColumnTrait
 {

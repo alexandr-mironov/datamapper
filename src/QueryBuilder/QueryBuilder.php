@@ -209,9 +209,9 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
-     * @return false|PDOStatement
+     * @return false|string
      */
-    private function lastInsertId(): false|PDOStatement
+    private function lastInsertId(): false|string
     {
         return $this->pdo->lastInsertId();
     }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DataMapper\QueryBuilder\PGSQL;
 
 use DataMapper\QueryBuilder\Exceptions\Exception;
-use DataMapper\QueryBuilder\Exceptions\UnsupportedException;
 use DataMapper\QueryBuilder\PGSQL\Statements\Insert;
 use DataMapper\QueryBuilder\QueryBuilder as ParentQueryBuilder;
 use PDO;
@@ -22,7 +21,6 @@ final class QueryBuilder extends ParentQueryBuilder
      *
      * @param PDO $pdo
      *
-     * @throws UnsupportedException
      */
     protected function __construct(private PDO $pdo)
     {

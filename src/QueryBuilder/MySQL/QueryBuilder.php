@@ -28,7 +28,7 @@ final class QueryBuilder extends ParentQueryBuilder
 
     /**
      * @param string $table
-     * @param array $values
+     * @param array<mixed> $values
      *
      * @return int
      * @throws Exception
@@ -37,6 +37,11 @@ final class QueryBuilder extends ParentQueryBuilder
     {
         $insertStatement = new Insert($table, $values);
         $statement = $this->pdo->query((string)$insertStatement);
+
+        if (!$statement) {
+            throw new Exception('Invalid query ' . $insertStatement);
+        }
+
         foreach ($values as $value) {
             $statement->bindParam($value['key'], $value['value'], $this->getType($value['type']));
         }
