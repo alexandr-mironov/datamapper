@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
-
 
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Definitions\Column;
@@ -20,13 +20,13 @@ class CreateTable implements StatementInterface
     /** @var bool */
     public bool $ifNotExists = false;
 
-    /** @var array */
+    /** @var string[] */
     private array $columns = [];
 
-    /** @var array */
+    /** @var array<mixed> */
     public array $options = [];
 
-    /** @var array */
+    /** @var string[] */
     public array $partitionOptions = [];
 
     /**

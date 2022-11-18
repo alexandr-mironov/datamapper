@@ -26,7 +26,7 @@ class DropTable implements StatementInterface
     /**
      * DropTable constructor.
      *
-     * @param array ...$tables
+     * @param string[] ...$tables
      */
     public function __construct(array ...$tables)
     {
@@ -41,7 +41,7 @@ class DropTable implements StatementInterface
     public function __toString(): string
     {
         return "DROP "
-            . (($this->temporary) ? 'TEMPORARY ' : '') 
+            . (($this->temporary) ? 'TEMPORARY ' : '')
             .  "TABLE "
             . (($this->ifExists) ? 'IF EXISTS ' : '')
             . implode(', ', $this->tableNames)
