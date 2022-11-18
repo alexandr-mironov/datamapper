@@ -48,23 +48,32 @@ class QueryBuilder implements BuilderInterface
      */
     public function __construct(private PDO $pdo, public bool $beautify = false)
     {
-        $this->adapter = $this->detectDBMS();
+        $this->adapter = $this->getAdapter();
     }
 
     /**
      * @return QueryBuilder
      * @throws UnsupportedException
      */
-    private function detectDBMS(): QueryBuilder
+    private function getAdapter(): QueryBuilder
     {
-        // todo replace to extracting dbms type from schema?
-        $dbms = 'pgsql';
+        $dbms = $this->detectDBMS();
         if (array_key_exists($dbms, self::DBMS)) {
             $className = self::DBMS[$dbms];
 
             return new $className($this->pdo);
         }
         throw new UnsupportedException('Unsupported DBMS');
+    }
+
+    /**
+     * @return string
+     */
+    private function detectDBMS(): string
+    {
+        // todo replace to extracting dbms type from schema?
+        return 'pgsql';
+
     }
 
     /**
@@ -126,6 +135,7 @@ class QueryBuilder implements BuilderInterface
      * @param array<mixed> $options
      *
      * @return bool
+     * @throws Exception
      */
     public function createTable(Table $name, ColumnCollection $columns, array $options = []): bool
     {
@@ -141,7 +151,13 @@ class QueryBuilder implements BuilderInterface
             $createTableStatement->addColumn($columnDefinition);
         }
 
-        return $this->pdo->query((string)$createTableStatement)->execute();
+        $pdoStatement = $this->pdo->query((string)$createTableStatement);
+
+        if (!$pdoStatement) {
+            throw new Exception('Invalid query ' . (string)$createTableStatement);
+        }
+
+        return $pdoStatement->execute();
     }
 
     /**
@@ -206,13 +222,5 @@ class QueryBuilder implements BuilderInterface
             'string', 'datetime' => PDO::PARAM_STR,
             default => PDO::PARAM_STR,
         };
-    }
-
-    /**
-     * @return false|string
-     */
-    private function lastInsertId(): false|string
-    {
-        return $this->pdo->lastInsertId();
     }
 }

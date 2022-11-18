@@ -77,7 +77,7 @@ class AlterOption
         return '';//return "{$this->action} ";
     }
 
-    public function init()
+    public function init(): string
     {
         $alterOption = new AlterAddColumn();
         return (string)$alterOption;

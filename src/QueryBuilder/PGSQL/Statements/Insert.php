@@ -75,6 +75,10 @@ class Insert implements StatementInterface
     private function getUpdateStatement(): string
     {
         $keysForUpdate = [];
+        /**
+         * @var string $key
+         * @var string|class-string $value
+         */
         foreach ($this->updatable as $key => $value) {
             if ($value instanceof Expression) {
                 $keysForUpdate[] = $key . ' = ' . $value;
