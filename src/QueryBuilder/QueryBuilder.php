@@ -35,9 +35,6 @@ class QueryBuilder implements BuilderInterface
     /** @var StatementInterface */
     private StatementInterface $statement;
 
-    /** @var array|null[] */
-    private array $dbInfo = [null, null];
-
     /** @var BuilderInterface */
     private BuilderInterface $adapter;
 
@@ -113,7 +110,7 @@ class QueryBuilder implements BuilderInterface
     /**
      * @param Table $table
      * @param FieldCollection $values
-     * @param array $updatable
+     * @param string[] $updatable
      *
      * @return bool
      * @throws Exception
@@ -121,17 +118,12 @@ class QueryBuilder implements BuilderInterface
     public function insertUpdate(Table $table, FieldCollection $values, array $updatable): bool
     {
         return $this->adapter->insertUpdate($table, $values, $updatable);
-//        $statement = $this->pdo->query((string)new Insert($table, $values, $updatable));
-//        foreach ($values as $value) {
-//            $statement->bindParam($value['key'], $value['value'], $this->getType($value['type']));
-//        }
-//        return $statement->execute();
     }
 
     /**
      * @param Table $name
      * @param ColumnCollection $columns
-     * @param array $options
+     * @param array<mixed> $options
      *
      * @return bool
      */
@@ -157,6 +149,7 @@ class QueryBuilder implements BuilderInterface
      * @param ConditionCollection $conditions
      *
      * @return bool
+     * @throws Exception
      */
     public function delete(Table $table, ConditionCollection $conditions): bool
     {
@@ -167,7 +160,13 @@ class QueryBuilder implements BuilderInterface
         }
         $query = $statement->__toString();
 
-        return $this->pdo->query($query)->execute();
+        $pdoStatement = $this->pdo->query($query);
+
+        if (!$pdoStatement) {
+            throw new Exception('Invalid query ' . $query);
+        }
+
+        return $pdoStatement->execute();
     }
 
     /**
@@ -203,8 +202,9 @@ class QueryBuilder implements BuilderInterface
     {
         return match ($type) {
             'integer', 'float' => PDO::PARAM_INT,
-            'string', 'datetime' => PDO::PARAM_STR,
             'boolean' => PDO::PARAM_BOOL,
+            'string', 'datetime' => PDO::PARAM_STR,
+            default => PDO::PARAM_STR,
         };
     }
 
@@ -214,13 +214,5 @@ class QueryBuilder implements BuilderInterface
     private function lastInsertId(): false|string
     {
         return $this->pdo->lastInsertId();
-    }
-
-    /**
-     * @return array
-     */
-    private function getDBInfo(): array
-    {
-        return $this->dbInfo;
     }
 }

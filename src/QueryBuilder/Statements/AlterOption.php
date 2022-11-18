@@ -73,7 +73,8 @@ class AlterOption
 
     public function __toString()
     {
-        return "{$this->action} ";
+        // todo: check this logic
+        return '';//return "{$this->action} ";
     }
 
     public function init()

@@ -11,8 +11,6 @@ use Exception;
  * Class Column
  *
  * @package DataMapper\QueryBuilder
- *
- *
  */
 class Column implements DefinitionInterface
 {
@@ -45,7 +43,7 @@ class Column implements DefinitionInterface
     /**
      * @param array<mixed> $options
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = array_merge($this->options, $options);
     }

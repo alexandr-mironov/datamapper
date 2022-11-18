@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\MySQL\Statements;
-
 
 use DataMapper\QueryBuilder\Expression;
 use DataMapper\QueryBuilder\Statements\StatementInterface;
 
 /**
  * Class Insert
+ *
  * @package DataMapper\QueryBuilder\MySQL\Statements
  */
 class Insert implements StatementInterface
@@ -21,16 +22,16 @@ class Insert implements StatementInterface
 
     /**
      * Insert constructor.
+     *
      * @param string $tableName
-     * @param array $fields
-     * @param array $updatable
+     * @param array<mixed> $fields
+     * @param string[] $updatable
      */
     public function __construct(
         private string $tableName,
         private array $fields,
         private array $updatable = [],
-    )
-    {
+    ) {
         $this->isUpdatable = (bool)$this->updatable;
     }
 
@@ -42,9 +43,12 @@ class Insert implements StatementInterface
         $keys = array_column($this->fields, 'key');
         $columnsString = implode(',', $keys);
         $keysClone = $keys;
-        array_walk($keysClone, function (&$value, $key) {
-            $value = ':' . $value;
-        });
+        array_walk(
+            $keysClone,
+            function (&$value, $key) {
+                $value = ':' . $value;
+            }
+        );
 
         $valuesString = implode(',', array_keys($keysClone));
 

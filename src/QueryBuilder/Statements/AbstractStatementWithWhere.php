@@ -24,7 +24,7 @@ use DataMapper\QueryBuilder\Operators;
  */
 abstract class AbstractStatementWithWhere
 {
-    /** @var array */
+    /** @var array<array{operator: string, condition: string}> */
     public array $wheres = [];
 
     /** @var int|null $limit */
@@ -70,7 +70,7 @@ abstract class AbstractStatementWithWhere
      * @return $this
      * @throws Exception
      */
-    public function by(string $key, mixed $value, string $operator = Operators::AND): static
+    public function by(string $key, mixed $value, string $operator = Operators:: AND): static
     {
         $args = [$key, $value];
         $this->addWhereCondition(
@@ -85,7 +85,7 @@ abstract class AbstractStatementWithWhere
      * @param ConditionInterface $condition
      * @param string $operator
      */
-    public function addWhereCondition(ConditionInterface $condition, string $operator = Operators::AND)
+    public function addWhereCondition(ConditionInterface $condition, string $operator = Operators:: AND): void
     {
         $this->wheres[] = [
             'operator' => $operator,
@@ -101,7 +101,7 @@ abstract class AbstractStatementWithWhere
      * @return $this
      * @throws Exception
      */
-    public function byNot(string $key, mixed $value, string $operator = Operators::AND): static
+    public function byNot(string $key, mixed $value, string $operator = Operators:: AND): static
     {
         $args = [$key, $value];
         $this->addWhereCondition(
@@ -120,7 +120,7 @@ abstract class AbstractStatementWithWhere
      * @return $this
      * @throws Exception
      */
-    public function whereGreaterThen(string $key, mixed $value, string $operator = Operators::AND): static
+    public function whereGreaterThen(string $key, mixed $value, string $operator = Operators:: AND): static
     {
         return $this->where(GreaterThen::class, $key, $value, $operator);
     }
@@ -134,7 +134,7 @@ abstract class AbstractStatementWithWhere
      * @return $this
      * @throws Exception
      */
-    public function where(string $condition, string $key, mixed $value, string $operator = Operators::AND): static
+    public function where(string $condition, string $key, mixed $value, string $operator = Operators:: AND): static
     {
         if (!class_exists($condition)) {
             throw new Exception('invalid condition provided');
@@ -162,7 +162,7 @@ abstract class AbstractStatementWithWhere
      * @return $this
      * @throws Exception
      */
-    public function whereGreaterThenOrEqual(string $key, mixed $value, string $operator = Operators::AND): static
+    public function whereGreaterThenOrEqual(string $key, mixed $value, string $operator = Operators:: AND): static
     {
         return $this->where(GreaterThenOrEqual::class, $key, $value, $operator);
     }
@@ -175,7 +175,7 @@ abstract class AbstractStatementWithWhere
      * @return $this
      * @throws Exception
      */
-    public function whereLessThen(string $key, mixed $value, string $operator = Operators::AND): static
+    public function whereLessThen(string $key, mixed $value, string $operator = Operators:: AND): static
     {
         return $this->where(LessThen::class, $key, $value, $operator);
     }
@@ -188,7 +188,7 @@ abstract class AbstractStatementWithWhere
      * @return $this
      * @throws Exception
      */
-    public function whereLessThenOrEqual(string $key, mixed $value, string $operator = Operators::AND): static
+    public function whereLessThenOrEqual(string $key, mixed $value, string $operator = Operators:: AND): static
     {
         return $this->where(LessThenOrEqual::class, $key, $value, $operator);
     }
