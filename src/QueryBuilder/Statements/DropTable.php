@@ -26,9 +26,9 @@ class DropTable implements StatementInterface
     /**
      * DropTable constructor.
      *
-     * @param string[] ...$tables
+     * @param string ...$tables
      */
-    public function __construct(array ...$tables)
+    public function __construct(string ...$tables)
     {
         $this->tableNames = $tables;
     }

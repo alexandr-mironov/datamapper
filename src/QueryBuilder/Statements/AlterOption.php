@@ -71,11 +71,11 @@ class AlterOption
         self::ACTION_CHANGE,
     ];
 
-//    public function __toString()
-//    {
-//        // todo: check this logic
-//        return '';//return "{$this->action} ";
-//    }
+    public function __toString()
+    {
+        // todo: check this logic
+        return '';//return "{$this->action} ";
+    }
 //
 //    public function init(): string
 //    {
