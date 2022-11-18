@@ -4,8 +4,10 @@
 namespace DataMapper\Attributes;
 
 use Attribute;
+use DataMapper\Helpers\ColumnTrait;
 use DataMapper\QueryBuilder\Definitions\DefinitionInterface;
 use DateTime;
+use Exception;
 
 /**
  * Class Column
@@ -15,6 +17,8 @@ use DateTime;
 #[Attribute]
 class Column implements DefinitionInterface
 {
+    use ColumnTrait;
+
     /** @var string */
     public const PRIMARY_KEY = 'PRIMARY KEY';
 
@@ -149,6 +153,7 @@ class Column implements DefinitionInterface
 
     /**
      * @return string
+     * @throws Exception
      */
     public function __toString(): string
     {
@@ -159,18 +164,6 @@ class Column implements DefinitionInterface
             $this->length = self::DEFAULT_LENGTH[$this->type];
         }
 
-        if ($this->length) {
-            $definition .= '(' . $this->length . ')';
-        }
-
-        if (!is_null($this->default)) {
-            $definition .= ' DEFAULT ' . $this->default;
-        }
-
-        if ($this->options) {
-            $definition .= ' ' . implode(' ', $this->options);
-        }
-
-        return $definition;
+        return $this->enrichColumnDefinition($definition);
     }
 }

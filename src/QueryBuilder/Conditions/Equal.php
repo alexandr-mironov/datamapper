@@ -30,8 +30,8 @@ class Equal extends AbstractCondition
     public function __construct(array $conditionParts)
     {
         [$left, $right] = $conditionParts;
-        if (!$left || !isset($left, $right)) {
-            throw new Exception(static::EXCEPTION_MESSAGE ?? 'Invalid argument');
+        if (!isset($left, $right) || !$left) {
+            throw new Exception(static::EXCEPTION_MESSAGE);
         }
         parent::__construct([$left, $right]);
     }
