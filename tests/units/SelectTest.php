@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Test\units;
 
 use DataMapper\DataMapper;
+use DataMapper\QueryBuilder\Operators;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use Test\TestEntity;
@@ -74,4 +75,23 @@ class SelectTest extends TestCase
         $this->assertEquals($expectedSimpleQuery, $result);
     }
 
+    public function testQueryBuilderOr(): void
+    {
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' OR 'another_field'='another_value'";
+        $result = (string)$this->dataMapper
+            ->find(TestEntity::class)
+            ->by('field', 'value', Operators::OR)
+            ->by('another_field', 'another_value', Operators::OR);
+        $this->assertEquals($expectedSimpleQuery, $result);
+    }
+
+    public function testQueryBuilderXor(): void
+    {
+        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' XOR 'another_field'='another_value'";
+        $result = (string)$this->dataMapper
+            ->find(TestEntity::class)
+            ->by('field', 'value', Operators::OR)
+            ->by('another_field', 'another_value', Operators::XOR);
+        $this->assertEquals($expectedSimpleQuery, $result);
+    }
 }
