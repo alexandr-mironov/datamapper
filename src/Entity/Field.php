@@ -10,9 +10,9 @@ class Field
      * @param string $type
      */
     public function __construct(
-        private string $key,
-        private mixed  $value,
-        private string $type,
+        public string $key,
+        public mixed  $value,
+        public string $type,
     )
     {
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\PGSQL;
 
+use DataMapper\Entity\FieldCollection;
+use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\PGSQL\Statements\Insert;
 use DataMapper\QueryBuilder\QueryBuilder as ParentQueryBuilder;
@@ -51,5 +53,10 @@ final class QueryBuilder extends ParentQueryBuilder
         }
 
         return $statement->fetch();
+    }
+
+    public function getInsert(Table $table, FieldCollection $values, array $updatable): Insert
+    {
+        return new Insert($table->getName(), $values->getCollectionItems(), $updatable);
     }
 }

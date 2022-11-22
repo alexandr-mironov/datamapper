@@ -14,7 +14,6 @@ use DataMapper\QueryBuilder\Statements\StatementInterface;
  */
 class Insert implements StatementInterface
 {
-
     /** @var bool */
     public bool $isUpdatable = false;
 
@@ -51,7 +50,7 @@ class Insert implements StatementInterface
             }
         );
 
-        $valuesString = implode(',', array_keys($keysClone));
+        $valuesString = implode(', ', $keysClone);
 
         $postgresqlIgnore = '';
 
@@ -83,12 +82,12 @@ class Insert implements StatementInterface
             if ($value instanceof Expression) {
                 $keysForUpdate[] = $key . ' = ' . $value;
             } else {
-                $keysForUpdate[] = $key . ' = :' . $key;
+                $keysForUpdate[] = $key . '= :' . $key;
             }
         }
 
         $updateStatement = ' ON CONFLICT DO UPDATE SET ';
 
-        return $updateStatement . implode(',', $keysForUpdate);
+        return $updateStatement . implode(', ', $keysForUpdate);
     }
 }

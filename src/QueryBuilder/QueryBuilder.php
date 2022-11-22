@@ -36,7 +36,7 @@ class QueryBuilder implements BuilderInterface
     private StatementInterface $statement;
 
     /** @var BuilderInterface */
-    private BuilderInterface $adapter;
+    public BuilderInterface $adapter;
 
     /**
      * QueryBuilder constructor.
@@ -97,7 +97,7 @@ class QueryBuilder implements BuilderInterface
     {
         $result = $this->pdo->query($query);
         if (!$result) {
-            throw new Exception('Invalid query');
+            throw new Exception('Invalid query ' . $query);
         }
 
         return $result;
@@ -126,7 +126,10 @@ class QueryBuilder implements BuilderInterface
      */
     public function insertUpdate(Table $table, FieldCollection $values, array $updatable): bool
     {
-        return $this->adapter->insertUpdate($table, $values, $updatable);
+        $query = (string)$this->adapter->getInsert($table, $values, $updatable);
+        $statement = $this->execute($query);
+
+        return $statement->execute();
     }
 
     /**

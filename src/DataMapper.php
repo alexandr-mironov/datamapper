@@ -53,7 +53,7 @@ class DataMapper
             throw new Exception('Invalid class provided ' . $className);
         }
 
-        return $this->getQueryBuilder($this->beautify)
+        return $this->getQueryBuilder()
             ->find(
                 $this->getTable(new ReflectionClass($className)),
                 $className
@@ -61,14 +61,12 @@ class DataMapper
     }
 
     /**
-     * @param bool $beautify
-     *
      * @return QueryBuilder
      * @throws UnsupportedException
      */
-    private function getQueryBuilder(bool $beautify = false): QueryBuilder
+    private function getQueryBuilder(): QueryBuilder
     {
-        return new QueryBuilder($this->pdo, $beautify);
+        return new QueryBuilder($this->pdo, $this->beautify);
     }
 
     /**
@@ -112,11 +110,12 @@ class DataMapper
             unset($fieldsForUpdate[$index]);
         }
 
-        return $this->getQueryBuilder()->insertUpdate(
-            $this->getTable($reflection),
-            $fields,
-            $fieldsForUpdate
-        );
+        return $this->getQueryBuilder()
+            ->insertUpdate(
+                $this->getTable($reflection),
+                $fields,
+                $fieldsForUpdate
+            );
     }
 
     /**
