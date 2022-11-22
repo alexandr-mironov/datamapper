@@ -52,20 +52,18 @@ class Insert implements StatementInterface
 
         $valuesString = implode(', ', $keysClone);
 
-        $postgresqlIgnore = '';
+        $onConflict = '';
 
         if ($this->ignore) {
             $this->isUpdatable = false;
-            $postgresqlIgnore = ' ON CONFLICT DO NOTHING';
+            $onConflict = ' ON CONFLICT DO NOTHING';
         }
 
-        $query = "INSERT INTO {$this->tableName} ({$columnsString}) VALUES ({$valuesString}){$postgresqlIgnore} RETURN {$this->tableName}.id;";
-
-        if ($this->isUpdatable) {
-            $query .= $this->getUpdateStatement();
+        if (!$this->ignore && $this->isUpdatable) {
+            $onConflict .= $this->getUpdateStatement();
         }
 
-        return $query;
+        return "INSERT INTO {$this->tableName} ({$columnsString}) VALUES ({$valuesString}){$onConflict} RETURN {$this->tableName}.id;";
     }
 
     /**
@@ -82,7 +80,7 @@ class Insert implements StatementInterface
             if ($value instanceof Expression) {
                 $keysForUpdate[] = $key . ' = ' . $value;
             } else {
-                $keysForUpdate[] = $key . '= :' . $key;
+                $keysForUpdate[] = $value . '=:' . $value;
             }
         }
 

@@ -127,9 +127,13 @@ class QueryBuilder implements BuilderInterface
     public function insertUpdate(Table $table, FieldCollection $values, array $updatable): bool
     {
         $query = (string)$this->adapter->getInsert($table, $values, $updatable);
-        $statement = $this->execute($query);
+        $statement = $this->pdo->prepare($query);
 
-        return $statement->execute();
+        if (!$statement) {
+            throw new Exception('Invalid query ' . $query);
+        }
+
+        return $statement->execute($values->getCollectionItems());
     }
 
     /**
