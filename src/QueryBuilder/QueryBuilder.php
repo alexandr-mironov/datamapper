@@ -21,7 +21,7 @@ use PDOStatement;
  *
  * @package DataMapper\QueryBuilder
  */
-class QueryBuilder implements BuilderInterface
+class QueryBuilder implements BuilderWrapperInterface
 {
     private const PGSQL = 'pgsql';
 

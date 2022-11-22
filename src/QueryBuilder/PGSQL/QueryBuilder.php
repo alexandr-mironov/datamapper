@@ -6,6 +6,7 @@ namespace DataMapper\QueryBuilder\PGSQL;
 
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
+use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\PGSQL\Statements\Insert;
 use DataMapper\QueryBuilder\QueryBuilder as ParentQueryBuilder;
@@ -16,7 +17,7 @@ use PDO;
  *
  * @package DataMapper\QueryBuilder\PGSQL
  */
-final class QueryBuilder extends ParentQueryBuilder
+final class QueryBuilder extends ParentQueryBuilder implements BuilderInterface
 {
     /**
      * QueryBuilder constructor.

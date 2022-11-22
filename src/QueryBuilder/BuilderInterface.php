@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder;
 
+use DataMapper\Entity\FieldCollection;
+use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Statements\StatementInterface;
 
 /**
@@ -13,5 +15,12 @@ use DataMapper\QueryBuilder\Statements\StatementInterface;
  */
 interface BuilderInterface extends BuilderWrapperInterface
 {
-    public function getInsert(): StatementInterface;
+    /**
+     * @param Table $table
+     * @param FieldCollection $values
+     * @param string[] $updatable
+     *
+     * @return StatementInterface
+     */
+    public function getInsert(Table $table, FieldCollection $values, array $updatable): StatementInterface;
 }
