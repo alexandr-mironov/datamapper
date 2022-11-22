@@ -104,6 +104,9 @@ abstract class AbstractCollection implements Iterator
         $this->current = 0;
     }
 
+    /**
+     * @return object[]
+     */
     public function getCollectionItems(): array
     {
         return $this->collection;

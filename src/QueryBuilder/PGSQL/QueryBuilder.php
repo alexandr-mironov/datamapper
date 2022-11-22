@@ -55,6 +55,13 @@ final class QueryBuilder extends ParentQueryBuilder
         return $statement->fetch();
     }
 
+    /**
+     * @param Table $table
+     * @param FieldCollection $values
+     * @param string[] $updatable
+     *
+     * @return Insert
+     */
     public function getInsert(Table $table, FieldCollection $values, array $updatable): Insert
     {
         return new Insert($table->getName(), $values->getCollectionItems(), $updatable);
