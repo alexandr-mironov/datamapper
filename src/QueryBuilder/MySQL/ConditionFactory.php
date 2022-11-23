@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\MySQL;
-
 
 use DataMapper\QueryBuilder\Conditions\{Between,
     ConditionFactory as ConditionFactoryParent,
@@ -26,6 +26,7 @@ use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
  * Class ConditionFactory
+ *
  * @package DataMapper\QueryBuilder\MySQL
  */
 class ConditionFactory extends ConditionFactoryParent

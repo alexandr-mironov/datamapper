@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DataMapper\Helpers;
 
 use DataMapper\Attributes\Column;
@@ -23,25 +25,8 @@ class ColumnHelper
             /** @var Column $column */
             $collection->push(\DataMapper\Entity\Column::createFromAttribute($column));
         }
-        return $collection;
-    }
 
-    /**
-     * @param ReflectionClass $reflection
-     * @param string $option
-     *
-     * @return bool
-     */
-    public static function hasOption(ReflectionClass $reflection, string $option): bool
-    {
-        foreach (self::getColumnIterator($reflection) as $column) {
-            /** @var Column $column */
-            $options = $column->getOptions();
-            if ($options && in_array($option, $options, true)) {
-                return true;
-            }
-        }
-        return false;
+        return $collection;
     }
 
     /**
@@ -75,6 +60,25 @@ class ColumnHelper
     }
 
     /**
+     * @param ReflectionClass $reflection
+     * @param string $option
+     *
+     * @return bool
+     */
+    public static function hasOption(ReflectionClass $reflection, string $option): bool
+    {
+        foreach (self::getColumnIterator($reflection) as $column) {
+            /** @var Column $column */
+            $options = $column->getOptions();
+            if ($options && in_array($option, $options, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param ReflectionObject $reflection
      *
      * @return bool
@@ -96,17 +100,6 @@ class ColumnHelper
     }
 
     /**
-     * @param ReflectionObject $reflection
-     *
-     * @return string
-     * @throws Exception
-     */
-    public static function getFirstUniqueColumnName(ReflectionObject $reflection): string
-    {
-        return self::getColumnNameByOption($reflection, Column::UNIQUE);
-    }
-
-    /**
      * @param ReflectionClass $reflection
      * @param string $option
      *
@@ -123,5 +116,16 @@ class ColumnHelper
             }
         }
         throw new Exception('Model does not have a option ' . $option);
+    }
+
+    /**
+     * @param ReflectionObject $reflection
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function getFirstUniqueColumnName(ReflectionObject $reflection): string
+    {
+        return self::getColumnNameByOption($reflection, Column::UNIQUE);
     }
 }

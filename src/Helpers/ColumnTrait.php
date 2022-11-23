@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\Helpers;
 
-use \DataMapper\QueryBuilder\Exceptions\Exception;
+use DataMapper\QueryBuilder\Exceptions\Exception;
 
 trait ColumnTrait
 {
@@ -21,7 +21,9 @@ trait ColumnTrait
             || !property_exists(static::class, 'default')
             || !property_exists(static::class, 'options')
         ) {
-            throw new Exception('Usage on this instance is unavailable, instance SHOULD contain properties: lentgh, default and options');
+            throw new Exception(
+                'Usage on this instance is unavailable, instance SHOULD contain properties: lentgh, default and options'
+            );
         }
 
         if ($this->length) {

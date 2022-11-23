@@ -86,7 +86,6 @@ abstract class AbstractCollection implements Iterator
     public function next(): void
     {
         ++$this->current;
-
     }
 
     public function key(): int

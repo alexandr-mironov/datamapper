@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\Attributes;
-
 
 use Attribute;
 
 /**
  * Class Table
+ *
  * @package DataMapper\Attributes
  */
 #[Attribute]
@@ -15,14 +16,14 @@ class Table
 {
     /**
      * Table constructor.
+     *
      * @param string $name
      * @param string $schema
      */
     public function __construct(
         public string $name,
         public string $schema = 'public'
-    )
-    {
+    ) {
 
     }
 

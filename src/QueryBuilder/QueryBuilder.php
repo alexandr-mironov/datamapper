@@ -52,10 +52,10 @@ class QueryBuilder implements BuilderWrapperInterface
     }
 
     /**
-     * @return QueryBuilder
+     * @return BuilderInterface
      * @throws UnsupportedException
      */
-    private function getAdapter(): QueryBuilder
+    private function getAdapter(): BuilderInterface
     {
         $dbms = $this->detectDBMS();
         if (array_key_exists($dbms, self::DBMS)) {

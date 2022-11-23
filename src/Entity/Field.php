@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DataMapper\Entity;
 
 class Field
@@ -11,10 +13,9 @@ class Field
      */
     public function __construct(
         public string $key,
-        public mixed  $value,
+        public mixed $value,
         public string $type,
-    )
-    {
+    ) {
 
     }
 
