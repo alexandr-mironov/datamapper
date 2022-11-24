@@ -39,6 +39,24 @@ class DataMapper
 
     }
 
+    public static function init(
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        ?array $options = null,
+        bool $beautify = false
+    ): self
+    {
+        $dataMapper = new self(
+            new PDO($dsn, $username, $password, $options),
+            $beautify
+        );
+
+        $dataMapper->detectDbmsByDsn($dsn);
+
+        return $dataMapper;
+    }
+
     /**
      * @param string $className
      *
@@ -262,5 +280,11 @@ class DataMapper
                 ColumnHelper::getColumns($reflection),
                 $options
             );
+    }
+
+    private function detectDbmsByDsn(string $dsn)
+    {
+        $scheme = parse_url($dsn, PHP_URL_SCHEME);
+
     }
 }
