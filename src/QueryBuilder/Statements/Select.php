@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
-
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Expression;

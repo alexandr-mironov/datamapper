@@ -1,25 +1,28 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
 /**
  * Class With
+ *
  * @package DataMapper\QueryBuilder\Statements
  */
 class With implements StatementInterface
 {
+    /** @var bool */
+    public bool $recursive = false;
+
     /** @var SelectWrapper[] */
     private array $selects = [];
 
     /** @var string[] */
     private array $aliases = [];
 
-    /** @var bool */
-    public bool $recursive = false;
-
     /**
      * With constructor.
+     *
      * @param SelectWrapper ...$selects
      */
     public function __construct(SelectWrapper ...$selects)

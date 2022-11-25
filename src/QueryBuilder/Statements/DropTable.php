@@ -1,18 +1,18 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
-
 class DropTable implements StatementInterface
 {
-    /** @var bool  */
+    /** @var bool */
     public bool $ifExists = false;
 
-    /** @var bool  */
+    /** @var bool */
     public bool $temporary = false;
 
-    /** @var bool  */
+    /** @var bool */
     public bool $restrict = false;
 
     /**
@@ -20,7 +20,7 @@ class DropTable implements StatementInterface
      */
     public bool $cascade = false;
 
-    /** @var string[]  */
+    /** @var string[] */
     private array $tableNames;
 
     /**
@@ -42,11 +42,11 @@ class DropTable implements StatementInterface
     {
         return "DROP "
             . (($this->temporary) ? 'TEMPORARY ' : '')
-            .  "TABLE "
+            . "TABLE "
             . (($this->ifExists) ? 'IF EXISTS ' : '')
             . implode(', ', $this->tableNames)
             . (($this->restrict && $this->cascade === false) ? ' RESTRICT' : '')
-            . (($this->cascade) ? ' CASCADE': '')
+            . (($this->cascade) ? ' CASCADE' : '')
             . ';';
     }
 }

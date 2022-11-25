@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
 /**
  * Class DropIndex
+ *
  * @package DataMapper\QueryBuilder\Statements
  *
  * DROP INDEX index_name ON tbl_name
@@ -24,10 +26,10 @@ class DropIndex implements StatementInterface
     public function __construct(
         private string $indexName,
         private string $tableName,
-    )
-    {
+    ) {
 
     }
+
     /**
      * @inheritDoc
      */

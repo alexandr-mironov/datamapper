@@ -10,18 +10,16 @@ use Exception;
 
 /**
  * Class CreateTable
+ *
  * @package DataMapper\QueryBuilder\Statements
  */
 class CreateTable implements StatementInterface
 {
-    /** @var bool*/
+    /** @var bool */
     public bool $temporary = false;
 
     /** @var bool */
     public bool $ifNotExists = false;
-
-    /** @var string[] */
-    private array $columns = [];
 
     /** @var array<mixed> */
     public array $options = [];
@@ -29,16 +27,19 @@ class CreateTable implements StatementInterface
     /** @var string[] */
     public array $partitionOptions = [];
 
+    /** @var string[] */
+    private array $columns = [];
+
     /**
      * CreateTable constructor.
+     *
      * @param Table $tableName
      * @param array<mixed> $options
      */
     public function __construct(
         private Table $tableName,
         array $options = [],
-    )
-    {
+    ) {
         $this->temporary = (bool)($options['temporary'] ?? false);
         $this->ifNotExists = (bool)($options['ifNotExists'] ?? false);
     }

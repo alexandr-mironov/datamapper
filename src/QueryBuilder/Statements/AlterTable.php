@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
 /**
  * Class AlterTable
+ *
  * @package DataMapper\QueryBuilder\Statements
  */
 class AlterTable implements StatementInterface
@@ -14,14 +16,14 @@ class AlterTable implements StatementInterface
 
     /**
      * AlterTable constructor.
+     *
      * @param string $tableName
      * @param AlterOption ...$options
      */
     public function __construct(
         private string $tableName,
         AlterOption ...$options
-    )
-    {
+    ) {
         $this->options = $options;
     }
 

@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
 /**
  * Class Truncate
+ *
  * @package DataMapper\QueryBuilder\Statements
  */
 class Truncate implements StatementInterface
 {
     /**
      * Truncate constructor.
+     *
      * @param string $table
      */
     public function __construct(
         private string $table
-    )
-    {
+    ) {
 
     }
 
