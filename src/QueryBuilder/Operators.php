@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder;
 
 /**
  * Class Operators
+ *
  * @package DataMapper\QueryBuilder
  */
 class Operators
@@ -23,6 +25,7 @@ class Operators
     public const NOT = 'NOT';
 
     // comparison operators
+
     /** @var string */
     public const EQUAL = '=';
 

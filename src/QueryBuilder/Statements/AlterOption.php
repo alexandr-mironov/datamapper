@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
-use DataMapper\QueryBuilder\Definitions\DefinitionInterface;
-
 /**
  * Class AlterOption
+ *
  * @package DataMapper\QueryBuilder\Statements
  *
  * alter_option: {

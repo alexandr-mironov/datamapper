@@ -32,11 +32,11 @@ class QueryBuilder implements BuilderWrapperInterface
         self::MYSQL => MySQL\QueryBuilder::class,
     ];
 
-    /** @var StatementInterface */
-    private StatementInterface $statement;
-
     /** @var BuilderInterface */
     public BuilderInterface $adapter;
+
+    /** @var StatementInterface */
+    private StatementInterface $statement;
 
     /**
      * QueryBuilder constructor.
