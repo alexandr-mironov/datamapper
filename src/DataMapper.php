@@ -12,8 +12,8 @@ use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
+use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
 use PDO;
@@ -71,7 +71,8 @@ class DataMapper
 
         $this->queryBuilder = match ($scheme) {
             QueryBuilder::POSTGRESQL => new PostgreSQLQueryBuilder($this->pdo),
-            default => new QueryBuilder($this->pdo, $this->beautify)
+            QueryBuilder::SQL1999 => new QueryBuilder($this->pdo, $this->beautify),
+            default => throw new UnsupportedException('Unsupported DBMS')
         };
     }
 
@@ -97,12 +98,11 @@ class DataMapper
     }
 
     /**
-     * @return QueryBuilder
-     * @throws UnsupportedException
+     * @return BuilderInterface
      */
-    private function getQueryBuilder(): QueryBuilder
+    private function getQueryBuilder(): BuilderInterface
     {
-        return new QueryBuilder($this->pdo, $this->beautify);
+        return $this->queryBuilder;
     }
 
     /**
@@ -184,6 +184,21 @@ class DataMapper
         }
 
         return $collection;
+    }
+
+    public function add(object $model): object
+    {
+        $reflection = new ReflectionObject($model);
+        $fields = $this->getFields($reflection, $model);
+
+        $insertStatement = $this->getQueryBuilder()
+            ->insert(
+                $this->getTable($reflection),
+                $fields,
+                $fieldsForUpdate
+            );
+
+        return $model;
     }
 
     /**

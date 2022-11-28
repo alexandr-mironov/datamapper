@@ -63,7 +63,7 @@ final class QueryBuilder extends ParentQueryBuilder implements BuilderInterface
      *
      * @return Insert
      */
-    public function getInsert(Table $table, FieldCollection $values, array $updatable): Insert
+    public function insert(Table $table, FieldCollection $values, array $updatable): Insert
     {
         return new Insert($table->getName(), $values->getCollectionItems(), $updatable);
     }

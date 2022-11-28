@@ -15,6 +15,7 @@ use DataMapper\QueryBuilder\Exceptions\{Exception, UnsupportedException};
 use DataMapper\QueryBuilder\Statements\{CreateTable,
     Delete,
     DropTable,
+    Insert,
     Select,
     SelectWrapper,
     StatementInterface,
@@ -27,7 +28,7 @@ use PDOStatement;
  *
  * @package DataMapper\QueryBuilder
  */
-class QueryBuilder implements BuilderWrapperInterface
+class QueryBuilder implements BuilderInterface
 {
     private const PGSQL = 'pgsql';
 
@@ -51,38 +52,14 @@ class QueryBuilder implements BuilderWrapperInterface
     /**
      * QueryBuilder constructor.
      *
-     * @param PDO $pdo
+     * @param PDO $pdo todo remove PDO dependency from constructor - Query builders only build queries, they didn't execute any queries or something
      * @param bool $beautify
      *
-     * @throws UnsupportedException
      */
-    public function __construct(private PDO $pdo, public bool $beautify = false)
-    {
-        $this->adapter = $this->getAdapter();
-    }
-
-    /**
-     * @return BuilderInterface
-     * @throws UnsupportedException
-     */
-    private function getAdapter(): BuilderInterface
-    {
-        $dbms = $this->detectDBMS();
-        if (array_key_exists($dbms, self::DBMS)) {
-            $className = self::DBMS[$dbms];
-
-            return new $className($this->pdo);
-        }
-        throw new UnsupportedException('Unsupported DBMS');
-    }
-
-    /**
-     * @return string
-     */
-    private function detectDBMS(): string
-    {
-        // todo replace to extracting dbms type from schema?
-        return 'pgsql';
+    public function __construct(
+        protected PDO $pdo,
+        public bool $beautify = false
+    ) {
 
     }
 
@@ -114,16 +91,15 @@ class QueryBuilder implements BuilderWrapperInterface
     }
 
     /**
-     * @param string $table
+     * @param Table $table
      * @param array{key: string, value: mixed, type: string} $values ['key' => ..., 'value' => ..., 'type' => ...]
      *
-     * @return int
+     * @return Insert
      *
-     * @throws Exception
      */
-    public function insert(string $table, array $values): int
+    public function insert(Table $table, array $values): Insert
     {
-        return $this->adapter->insert($table, $values);
+        return new Insert($table, $values);
     }
 
     /**
@@ -136,7 +112,7 @@ class QueryBuilder implements BuilderWrapperInterface
      */
     public function insertUpdate(Table $table, FieldCollection $values, array $updatable): bool
     {
-        $query = (string)$this->adapter->getInsert($table, $values, $updatable);
+        $query = (string)$this->adapter->insert($table, $values, $updatable);
         $statement = $this->pdo->prepare($query);
 
         if (!$statement) {

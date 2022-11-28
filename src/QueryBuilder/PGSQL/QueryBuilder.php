@@ -20,23 +20,13 @@ use PDO;
 final class QueryBuilder extends ParentQueryBuilder implements BuilderInterface
 {
     /**
-     * QueryBuilder constructor.
-     *
-     * @param PDO $pdo
-     *
-     */
-    public function __construct(private PDO $pdo)
-    {
-    }
-
-    /**
-     * @param string $table
+     * @param Table $table
      * @param array<mixed> $values
      *
      * @return int
      * @throws Exception
      */
-    public function insert(string $table, array $values): int
+    public function insert(Table $table, array $values): int
     {
         $insertStatement = new Insert($table, $values);
         $statement = $this->pdo->query((string)$insertStatement);
@@ -63,7 +53,7 @@ final class QueryBuilder extends ParentQueryBuilder implements BuilderInterface
      *
      * @return Insert
      */
-    public function getInsert(Table $table, FieldCollection $values, array $updatable): Insert
+    public function insertUpdate(Table $table, FieldCollection $values, array $updatable): Insert
     {
         return new Insert($table->getName(), $values->getCollectionItems(), $updatable);
     }

@@ -13,7 +13,7 @@ use DataMapper\QueryBuilder\Statements\StatementInterface;
  *
  * @package DataMapper\QueryBuilder
  */
-interface BuilderInterface extends BuilderWrapperInterface
+interface BuilderInterface
 {
     /**
      * @param Table $table
@@ -22,5 +22,5 @@ interface BuilderInterface extends BuilderWrapperInterface
      *
      * @return StatementInterface
      */
-    public function getInsert(Table $table, FieldCollection $values, array $updatable): StatementInterface;
+    public function insert(Table $table, FieldCollection $values, array $updatable): StatementInterface;
 }
