@@ -12,11 +12,12 @@ use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
+use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, Exception, UnsupportedException};
 use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
 use PDO;
+use PDOStatement;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionObject;
@@ -33,45 +34,41 @@ class DataMapper
     /**
      * DataMapper constructor.
      *
-     * @param PDO $pdo
+     * @param string $dsn
+     * @param string|null $username
+     * @param string|null $password
+     * @param array|null $options
      * @param bool $beautify
+     *
+     * @throws UnsupportedException
      */
     public function __construct(
-        private PDO $pdo,
-        public bool $beautify = false
-    ) {
-
-    }
-
-    public static function init(
         string $dsn,
         ?string $username = null,
         ?string $password = null,
         ?array $options = null,
-        bool $beautify = false
-    ): self {
-        $dataMapper = new self(
-            new PDO($dsn, $username, $password, $options),
-            $beautify
-        );
+        public bool $beautify = false
+    ) {
+        $this->pdo = new PDO($dsn, $username, $password, $options);
+        $dbms = $this->detectDBMS($dsn);
 
-        $dataMapper->detectDBMS($dsn);
-
-        return $dataMapper;
+        $this->queryBuilder = new $dbms($this->beautify);
     }
 
     /**
      * @param string $dsn
      *
+     * @return class-string
      * @throws UnsupportedException
      */
-    private function detectDBMS(string $dsn)
+    private function detectDBMS(string $dsn): string
     {
         $scheme = parse_url($dsn, PHP_URL_SCHEME);
 
-        $this->queryBuilder = match ($scheme) {
-            QueryBuilder::POSTGRESQL => new PostgreSQLQueryBuilder($this->pdo),
-            QueryBuilder::SQL1999 => new QueryBuilder($this->pdo, $this->beautify),
+        return match ($scheme) {
+            // todo: add mysql and other adapters
+            QueryBuilder::POSTGRESQL => PostgreSQLQueryBuilder::class,
+            QueryBuilder::SQL1999 => QueryBuilder::class,
             default => throw new UnsupportedException('Unsupported DBMS')
         };
     }
@@ -82,7 +79,7 @@ class DataMapper
      * @return Select
      *
      * @throws QueryBuilderException
-     * @throws UnsupportedException|ReflectionException
+     * @throws ReflectionException
      */
     public function find(string $className): Select
     {
@@ -91,7 +88,7 @@ class DataMapper
         }
 
         return $this->getQueryBuilder()
-            ->find(
+            ->select(
                 $this->getTable(new ReflectionClass($className)),
                 $className
             );
@@ -131,7 +128,6 @@ class DataMapper
      * @return bool
      *
      * @throws QueryBuilderException
-     * @throws UnsupportedException
      * @throws Exceptions\Exception
      */
     public function store(object $model): bool
@@ -194,8 +190,7 @@ class DataMapper
         $insertStatement = $this->getQueryBuilder()
             ->insert(
                 $this->getTable($reflection),
-                $fields,
-                $fieldsForUpdate
+                $fields
             );
 
         return $model;
@@ -333,5 +328,21 @@ class DataMapper
                 $this->getTable($reflection),
                 $options
             );
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return PDOStatement
+     * @throws Exception
+     */
+    public function execute(string $query): PDOStatement
+    {
+        $result = $this->pdo->query($query);
+        if (!$result) {
+            throw new Exception('Invalid query ' . $query);
+        }
+
+        return $result;
     }
 }

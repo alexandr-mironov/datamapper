@@ -69,26 +69,12 @@ class QueryBuilder implements BuilderInterface
      *
      * @return Select
      */
-    public function find(Table $table, string $className): Select
+    public function select(Table $table, string $className): Select
     {
         return new Select($this, $table, $className);
     }
 
-    /**
-     * @param string $query
-     *
-     * @return PDOStatement
-     * @throws Exception
-     */
-    public function execute(string $query): PDOStatement
-    {
-        $result = $this->pdo->query($query);
-        if (!$result) {
-            throw new Exception('Invalid query ' . $query);
-        }
 
-        return $result;
-    }
 
     /**
      * @param Table $table
@@ -227,5 +213,10 @@ class QueryBuilder implements BuilderInterface
             'string', 'datetime' => PDO::PARAM_STR,
             default => PDO::PARAM_STR,
         };
+    }
+
+    public function alterTable(): StatementInterface
+    {
+        // TODO: Implement alterTable() method.
     }
 }
