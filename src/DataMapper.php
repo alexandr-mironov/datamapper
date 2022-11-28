@@ -9,8 +9,10 @@ use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\Field;
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Helpers\ColumnHelper;
+use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
+use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -26,6 +28,8 @@ use ReflectionObject;
  */
 class DataMapper
 {
+    private BuilderInterface $queryBuilder;
+
     /**
      * DataMapper constructor.
      *
@@ -51,15 +55,24 @@ class DataMapper
             $beautify
         );
 
-        $dataMapper->detectDbmsByDsn($dsn);
+        $dataMapper->detectDBMS($dsn);
 
         return $dataMapper;
     }
 
-    private function detectDbmsByDsn(string $dsn)
+    /**
+     * @param string $dsn
+     *
+     * @throws UnsupportedException
+     */
+    private function detectDBMS(string $dsn)
     {
         $scheme = parse_url($dsn, PHP_URL_SCHEME);
 
+        $this->queryBuilder = match ($scheme) {
+            QueryBuilder::POSTGRESQL => new PostgreSQLQueryBuilder($this->pdo),
+            default => new QueryBuilder($this->pdo, $this->beautify)
+        };
     }
 
     /**

@@ -25,7 +25,7 @@ final class QueryBuilder extends ParentQueryBuilder implements BuilderInterface
      * @param PDO $pdo
      *
      */
-    protected function __construct(private PDO $pdo)
+    public function __construct(private PDO $pdo)
     {
     }
 

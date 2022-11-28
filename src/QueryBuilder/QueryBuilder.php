@@ -33,6 +33,10 @@ class QueryBuilder implements BuilderWrapperInterface
 
     private const MYSQL = 'mysql';
 
+    public const SQL1999 = 'SQL:1999';
+
+    public const POSTGRESQL = 'postgresql';
+
     private const DBMS = [
         self::PGSQL => PGSQL\QueryBuilder::class,
         self::MYSQL => MySQL\QueryBuilder::class,
