@@ -286,4 +286,24 @@ class DataMapper
                 $options
             );
     }
+
+    /**
+     * @param object|string $class
+     * @param array $options
+     *
+     * @return bool
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     * @throws UnsupportedException
+     */
+    public function dropTable(object|string $class, array $options = []): bool
+    {
+        $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
+
+        return $this->getQueryBuilder()
+            ->dropTable(
+                $this->getTable($reflection),
+                $options
+            );
+    }
 }

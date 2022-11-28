@@ -12,7 +12,13 @@ use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Definitions\Column;
 use DataMapper\QueryBuilder\Exceptions\{Exception, UnsupportedException};
-use DataMapper\QueryBuilder\Statements\{CreateTable, Delete, Select, SelectWrapper, StatementInterface, With};
+use DataMapper\QueryBuilder\Statements\{CreateTable,
+    Delete,
+    DropTable,
+    Select,
+    SelectWrapper,
+    StatementInterface,
+    With};
 use PDO;
 use PDOStatement;
 
@@ -214,6 +220,18 @@ class QueryBuilder implements BuilderWrapperInterface
         $this->statement = new With(...$wrappers);
 
         return $this;
+    }
+
+    public function dropTable(Table $table, array $options): bool
+    {
+        $dropTableStatement = new DropTable($table->getName());
+        $pdoStatement = $this->pdo->query((string)$dropTableStatement);
+
+        if (!$pdoStatement) {
+            throw new Exception('Invalid query ' . (string)$dropTableStatement);
+        }
+
+        return $pdoStatement->execute();
     }
 
     /**
