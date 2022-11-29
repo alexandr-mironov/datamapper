@@ -12,10 +12,13 @@ use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
+use DataMapper\QueryBuilder\Statements\StatementInterface;
+use DataMapper\QueryBuilder\Statements\WhereTrait;
 use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, Exception, UnsupportedException};
 use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
+use Generator;
 use PDO;
 use PDOStatement;
 use ReflectionClass;
@@ -29,7 +32,13 @@ use ReflectionObject;
  */
 class DataMapper
 {
+    use WhereTrait;
+
     private BuilderInterface $queryBuilder;
+
+    private PDO $pdo;
+
+    private ?StatementInterface $statement = null;
 
     /**
      * DataMapper constructor.
@@ -81,17 +90,15 @@ class DataMapper
      * @throws QueryBuilderException
      * @throws ReflectionException
      */
-    public function find(string $className): Select
+    public function find(string $className): self
     {
         if (!class_exists($className)) {
             throw new Exception('Invalid class provided ' . $className);
         }
 
-        return $this->getQueryBuilder()
-            ->select(
-                $this->getTable(new ReflectionClass($className)),
-                $className
-            );
+        $this->statement = $this->queryBuilder->select($this->getTable(new ReflectionClass($className)), $className);
+
+        return $this;
     }
 
     /**
@@ -344,5 +351,83 @@ class DataMapper
         }
 
         return $result;
+    }
+
+    /**
+     * @return object
+     * @throws Exception
+     */
+    public function getOne(): object
+    {
+        $this->limit = 1;
+        $result = $this->queryBuilder->execute((string)$this);
+        $className = $this->resultObject;
+
+        return new $className(...$result);
+    }
+
+    /**
+     * @param string|array<mixed> $order
+     *
+     * @return $this
+     */
+    public function order(string|array $order): static
+    {
+        switch (true) {
+            case is_string($order):
+                $this->order[] = [
+                    $order => 'DESC',
+                ];
+                break;
+            default:
+                $this->order = $order;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return object[]
+     * @throws Exception
+     */
+    public function getArray(): array
+    {
+        $collection = [];
+        foreach ($this->getIterator() as $item) {
+            $collection[] = $item;
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @return Generator<object>
+     */
+    public function getIterator(): Generator
+    {
+        $result = $this->queryBuilder->execute((string)$this->statement);
+        $className = $this->resultObject;
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            yield new $className(...$row);
+        }
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return array<string, object>
+     * @throws Exception
+     */
+    public function getMap(string $key): array
+    {
+        $collection = [];
+        foreach ($this->getIterator() as $item) {
+            if (!property_exists($item, $key)) {
+                throw new Exception('`' . $key . '` is not in field list');
+            }
+            $collection[(string)$item->$key] = $item;
+        }
+
+        return $collection;
     }
 }

@@ -18,7 +18,8 @@ class InsertTest extends TestCase
 
     public function setUp(): void
     {
-        $this->dataMapper = new DataMapper($this->createMock(PDO::class));
+        $this->dataMapper = new DataMapper('postgresql://');
+        $this->dataMapper->find('')->by('', '')->limit(1)->getArray();
     }
 
     public function testSimpleQueryBuilder(): void
