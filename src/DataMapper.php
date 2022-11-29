@@ -367,28 +367,9 @@ class DataMapper
     }
 
     /**
-     * @param string|array<mixed> $order
-     *
-     * @return $this
-     */
-    public function order(string|array $order): static
-    {
-        switch (true) {
-            case is_string($order):
-                $this->order[] = [
-                    $order => 'DESC',
-                ];
-                break;
-            default:
-                $this->order = $order;
-        }
-
-        return $this;
-    }
-
-    /**
      * @return object[]
      * @throws Exception
+     * @throws Exceptions\Exception
      */
     public function getArray(): array
     {
@@ -402,11 +383,19 @@ class DataMapper
 
     /**
      * @return Generator<object>
+     * @throws Exceptions\Exception
      */
     public function getIterator(): Generator
     {
+        if (!$this->statement instanceof Select) {
+            throw new Exceptions\Exception('This method only available for Select statements');
+        }
+
+        $this->statement->limit = $this->limit;
+        $this->statement->offset = $this->offset;
+
         $result = $this->queryBuilder->execute((string)$this->statement);
-        $className = $this->resultObject;
+        $className = $this->statement->resultObject;
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
             yield new $className(...$row);
         }
@@ -417,6 +406,7 @@ class DataMapper
      *
      * @return array<string, object>
      * @throws Exception
+     * @throws Exceptions\Exception
      */
     public function getMap(string $key): array
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
+use DataMapper\DataMapper;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Conditions\GreaterThen;
@@ -26,6 +27,8 @@ trait WhereTrait
 
     /** @var int|null $offset */
     public ?int $offset = null;
+
+    public array $order = [];
 
     /**
      * @return string
@@ -51,6 +54,26 @@ trait WhereTrait
         $this->limit = $limit;
         if ($offset) {
             $this->offset = $offset;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string|array<mixed> $order
+     *
+     * @return $this
+     */
+    public function order(string|array $order): static
+    {
+        switch (true) {
+            case is_string($order):
+                $this->order[] = [
+                    $order => 'DESC',
+                ];
+                break;
+            default:
+                $this->order = $order;
         }
 
         return $this;

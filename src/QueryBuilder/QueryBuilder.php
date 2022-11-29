@@ -71,7 +71,7 @@ class QueryBuilder implements BuilderInterface
      */
     public function select(Table $table, string $className): Select
     {
-        return new Select($this, $table, $className);
+        return new Select($table, $className);
     }
 
 

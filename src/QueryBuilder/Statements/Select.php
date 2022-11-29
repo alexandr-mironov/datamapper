@@ -27,14 +27,12 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     /**
      * Select constructor.
      *
-     * @param QueryBuilder $queryBuilder
      * @param Table $table
      * @param string $resultObject
      */
     public function __construct(
-        private QueryBuilder $queryBuilder,
         public Table $table,
-        private string $resultObject,
+        public string $resultObject,
     ) {
         $this->selectExpression = new Expression('*');
     }
