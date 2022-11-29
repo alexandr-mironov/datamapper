@@ -22,7 +22,7 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
     public string|Expression $selectExpression;
 
     /** @var array<mixed> $order */
-    private array $order = [];
+    public array $order = [];
 
     /**
      * Select constructor.

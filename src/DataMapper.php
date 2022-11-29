@@ -12,12 +12,12 @@ use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\Statements\StatementInterface;
-use DataMapper\QueryBuilder\Statements\WhereTrait;
-use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, Exception, UnsupportedException};
+use DataMapper\QueryBuilder\Exceptions\{Exception, Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
+use DataMapper\QueryBuilder\Statements\StatementInterface;
+use DataMapper\QueryBuilder\Statements\WhereTrait;
 use Generator;
 use PDO;
 use PDOStatement;
@@ -102,14 +102,6 @@ class DataMapper
     }
 
     /**
-     * @return BuilderInterface
-     */
-    private function getQueryBuilder(): BuilderInterface
-    {
-        return $this->queryBuilder;
-    }
-
-    /**
      * @param ReflectionClass $reflection
      *
      * @return Entity\Table
@@ -189,6 +181,14 @@ class DataMapper
         return $collection;
     }
 
+    /**
+     * @return BuilderInterface
+     */
+    private function getQueryBuilder(): BuilderInterface
+    {
+        return $this->queryBuilder;
+    }
+
     public function add(object $model): object
     {
         $reflection = new ReflectionObject($model);
@@ -199,6 +199,8 @@ class DataMapper
                 $this->getTable($reflection),
                 $fields
             );
+
+        // todo: add logic here
 
         return $model;
     }
@@ -215,11 +217,13 @@ class DataMapper
     {
         $reflection = new ReflectionObject($model);
 
-        return $this->getQueryBuilder()
+        $deleteStatement = $this->getQueryBuilder()
             ->delete(
                 $this->getTable($reflection),
                 $this->getConditionsByModel($reflection, $model)
             );
+
+        return (bool)$this->execute((string)$deleteStatement);
     }
 
     /**
@@ -296,48 +300,6 @@ class DataMapper
     }
 
     /**
-     * @param object|class-string $class
-     * @param array<mixed> $options
-     *
-     * @return bool
-     *
-     * @throws QueryBuilderException
-     * @throws ReflectionException
-     * @throws UnsupportedException
-     */
-    public function createTable(object|string $class, array $options = []): bool
-    {
-        $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
-
-        return $this->getQueryBuilder()
-            ->createTable(
-                $this->getTable($reflection),
-                ColumnHelper::getColumns($reflection),
-                $options
-            );
-    }
-
-    /**
-     * @param object|string $class
-     * @param array $options
-     *
-     * @return bool
-     * @throws QueryBuilderException
-     * @throws ReflectionException
-     * @throws UnsupportedException
-     */
-    public function dropTable(object|string $class, array $options = []): bool
-    {
-        $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
-
-        return $this->getQueryBuilder()
-            ->dropTable(
-                $this->getTable($reflection),
-                $options
-            );
-    }
-
-    /**
      * @param string $query
      *
      * @return PDOStatement
@@ -354,21 +316,70 @@ class DataMapper
     }
 
     /**
+     * @param object|class-string $class
+     * @param array<mixed> $options
+     *
+     * @return bool
+     *
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
+    public function createTable(object|string $class, array $options = []): bool
+    {
+        $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
+
+        $createTableStatement = $this->getQueryBuilder()
+            ->createTable(
+                $this->getTable($reflection),
+                ColumnHelper::getColumns($reflection),
+                $options
+            );
+
+        return (bool)$this->execute((string)$createTableStatement);
+    }
+
+    /**
+     * @param object|string $class
+     * @param array $options
+     *
+     * @return bool
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
+    public function dropTable(object|string $class, array $options = []): bool
+    {
+        $reflection = new ReflectionClass((is_object($class)) ? $class::class : $class);
+
+        $dropTableStatement = $this->queryBuilder
+            ->dropTable(
+                $this->getTable($reflection),
+                $options
+            );
+
+        return (bool)$this->execute((string)$dropTableStatement);
+    }
+
+    /**
      * @return object
-     * @throws Exception
+     * @throws Exceptions\Exception
      */
     public function getOne(): object
     {
-        $this->limit = 1;
+        $this->validateStatement();
+
+        $this->statement->limit = 1;
+        $this->statement->offset = $this->offset;
+        $this->statement->wheres = $this->wheres;
+        $this->statement->order = $this->order;
+
         $result = $this->queryBuilder->execute((string)$this);
-        $className = $this->resultObject;
+        $className = $this->statement->resultObject;
 
         return new $className(...$result);
     }
 
     /**
      * @return object[]
-     * @throws Exception
      * @throws Exceptions\Exception
      */
     public function getArray(): array
@@ -387,12 +398,12 @@ class DataMapper
      */
     public function getIterator(): Generator
     {
-        if (!$this->statement instanceof Select) {
-            throw new Exceptions\Exception('This method only available for Select statements');
-        }
+        $this->validateStatement();
 
         $this->statement->limit = $this->limit;
         $this->statement->offset = $this->offset;
+        $this->statement->wheres = $this->wheres;
+        $this->statement->order = $this->order;
 
         $result = $this->queryBuilder->execute((string)$this->statement);
         $className = $this->statement->resultObject;
@@ -419,5 +430,15 @@ class DataMapper
         }
 
         return $collection;
+    }
+
+    /**
+     * @throws Exceptions\Exception
+     */
+    public function validateStatement(): void
+    {
+        if (!$this->statement instanceof Select) {
+            throw new Exceptions\Exception('This method only available for Select statements');
+        }
     }
 }
