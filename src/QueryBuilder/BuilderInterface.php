@@ -8,6 +8,7 @@ use DataMapper\Entity\ColumnCollection;
 use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
+use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Statements\AlterTable;
 use DataMapper\QueryBuilder\Statements\CreateTable;
 use DataMapper\QueryBuilder\Statements\Delete;
@@ -31,7 +32,7 @@ interface BuilderInterface
      */
     public function insert(Table $table, FieldCollection $values, array $updatable = []): Insert;
 
-    public function select(Table $table, string $className): Select;
+    public function select(Table $table, ConditionInterface ...$conditions): Select;
 
     public function delete(Table $table, ConditionCollection $conditions): Delete;
 

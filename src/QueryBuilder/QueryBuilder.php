@@ -65,13 +65,13 @@ class QueryBuilder implements BuilderInterface
 
     /**
      * @param Table $table
-     * @param string $className
+     * @param ConditionInterface ...$conditions
      *
      * @return Select
      */
-    public function select(Table $table, string $className): Select
+    public function select(Table $table, ConditionInterface ...$conditions): Select
     {
-        return new Select($table, $className);
+        return new Select($table, ...$conditions);
     }
 
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DataMapper\QueryBuilder\Statements;
 
 use DataMapper\Entity\Table;
+use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\Expression;
 use DataMapper\QueryBuilder\QueryBuilder;
@@ -28,13 +29,17 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
      * Select constructor.
      *
      * @param Table $table
-     * @param string $resultObject
+     * @param ConditionInterface ...$conditions
      */
     public function __construct(
         public Table $table,
-        public string $resultObject,
+        ConditionInterface ...$conditions
     ) {
         $this->selectExpression = new Expression('*');
+
+        foreach ($conditions as $condition) {
+            $this->addWhereCondition($condition);
+        }
     }
 
     /**
@@ -65,84 +70,5 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
         }
 
         return implode(($this->queryBuilder->beautify ?? false) ? PHP_EOL : ' ', $queryParts);
-    }
-
-    /**
-     * @return object
-     * @throws Exception
-     */
-    public function getOne(): object
-    {
-        $this->limit = 1;
-        $result = $this->queryBuilder->execute((string)$this);
-        $className = $this->resultObject;
-
-        return new $className(...$result);
-    }
-
-    /**
-     * @param string|array<mixed> $order
-     *
-     * @return $this
-     */
-    public function order(string|array $order): static
-    {
-        switch (true) {
-            case is_string($order):
-                $this->order[] = [
-                    $order => 'DESC',
-                ];
-                break;
-            default:
-                $this->order = $order;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return object[]
-     * @throws Exception
-     */
-    public function getArray(): array
-    {
-        $collection = [];
-        foreach ($this->getIterator() as $item) {
-            $collection[] = $item;
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @return Generator<object>
-     * @throws Exception
-     */
-    public function getIterator(): Generator
-    {
-        $result = $this->queryBuilder->execute((string)$this);
-        $className = $this->resultObject;
-        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            yield new $className(...$row);
-        }
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return array<string, object>
-     * @throws Exception
-     */
-    public function getMap(string $key): array
-    {
-        $collection = [];
-        foreach ($this->getIterator() as $item) {
-            if (!property_exists($item, $key)) {
-                throw new Exception('`' . $key . '` is not in field list');
-            }
-            $collection[(string)$item->$key] = $item;
-        }
-
-        return $collection;
     }
 }

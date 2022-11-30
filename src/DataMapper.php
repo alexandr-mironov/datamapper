@@ -12,7 +12,7 @@ use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\Exceptions\{Exception, Exception, Exception as QueryBuilderException, UnsupportedException};
+use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -39,6 +39,9 @@ class DataMapper
     private PDO $pdo;
 
     private ?StatementInterface $statement = null;
+
+    /** @var class-string $entityClass used as return type of select statements */
+    private string $entityClass;
 
     /**
      * DataMapper constructor.
@@ -84,19 +87,22 @@ class DataMapper
 
     /**
      * @param string $className
+     * @param ConditionInterface ...$conditions
      *
-     * @return Select
+     * @return DataMapper
      *
      * @throws QueryBuilderException
      * @throws ReflectionException
      */
-    public function find(string $className): self
+    public function find(string $className, ConditionInterface ...$conditions): self
     {
         if (!class_exists($className)) {
             throw new Exception('Invalid class provided ' . $className);
         }
 
-        $this->statement = $this->queryBuilder->select($this->getTable(new ReflectionClass($className)), $className);
+        $this->entityClass = $className;
+
+        $this->statement = $this->queryBuilder->select($this->getTable(new ReflectionClass($className)), ...$conditions);
 
         return $this;
     }
@@ -189,6 +195,12 @@ class DataMapper
         return $this->queryBuilder;
     }
 
+    /**
+     * @param object $model
+     *
+     * @return object
+     * @throws QueryBuilderException
+     */
     public function add(object $model): object
     {
         $reflection = new ReflectionObject($model);
@@ -372,10 +384,20 @@ class DataMapper
         $this->statement->wheres = $this->wheres;
         $this->statement->order = $this->order;
 
-        $result = $this->queryBuilder->execute((string)$this);
+        $result = $this->queryBuilder->execute((string)$this->statement);
         $className = $this->statement->resultObject;
 
         return new $className(...$result);
+    }
+
+    /**
+     * @throws Exceptions\Exception
+     */
+    public function validateStatement(): void
+    {
+        if (!$this->statement instanceof Select) {
+            throw new Exceptions\Exception('This method only available for Select statements');
+        }
     }
 
     /**
@@ -430,15 +452,5 @@ class DataMapper
         }
 
         return $collection;
-    }
-
-    /**
-     * @throws Exceptions\Exception
-     */
-    public function validateStatement(): void
-    {
-        if (!$this->statement instanceof Select) {
-            throw new Exceptions\Exception('This method only available for Select statements');
-        }
     }
 }
