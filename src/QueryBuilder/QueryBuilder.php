@@ -92,11 +92,10 @@ class QueryBuilder implements BuilderInterface
      * @param ColumnCollection $columns
      * @param array<mixed> $options
      *
-     * @return bool
-     * @throws Exception
+     * @return CreateTable
      * @throws \Exception
      */
-    public function createTable(Table $table, ColumnCollection $columns, array $options = []): bool
+    public function createTable(Table $table, ColumnCollection $columns, array $options = []): CreateTable
     {
         $createTableStatement = new CreateTable($table, $options);
         /** @var ColumnEntity $column */
@@ -110,38 +109,18 @@ class QueryBuilder implements BuilderInterface
             $createTableStatement->addColumn($columnDefinition);
         }
 
-        $pdoStatement = $this->pdo->query((string)$createTableStatement);
-
-        if (!$pdoStatement) {
-            throw new Exception('Invalid query ' . (string)$createTableStatement);
-        }
-
-        return $pdoStatement->execute();
+        return $createTableStatement;
     }
 
     /**
      * @param Table $table
-     * @param ConditionCollection $conditions
+     * @param ConditionInterface ...$conditions
      *
-     * @return bool
-     * @throws Exception
+     * @return Delete
      */
-    public function delete(Table $table, ConditionCollection $conditions): bool
+    public function delete(Table $table, ConditionInterface ...$conditions): Delete
     {
-        $statement = new Delete($table);
-        /** @var ConditionInterface $condition */
-        foreach ($conditions as $condition) {
-            $statement->addWhereCondition($condition);
-        }
-        $query = $statement->__toString();
-
-        $pdoStatement = $this->pdo->query($query);
-
-        if (!$pdoStatement) {
-            throw new Exception('Invalid query ' . $query);
-        }
-
-        return $pdoStatement->execute();
+        return new Delete($table, ...$conditions);
     }
 
     /**
@@ -168,24 +147,19 @@ class QueryBuilder implements BuilderInterface
         return $this;
     }
 
-    public function dropTable(Table $table, array $options): bool
+    public function dropTable(Table $table, array $options): DropTable
     {
-        $dropTableStatement = new DropTable($table->getName());
-        $pdoStatement = $this->pdo->query((string)$dropTableStatement);
-
-        if (!$pdoStatement) {
-            throw new Exception('Invalid query ' . (string)$dropTableStatement);
-        }
-
-        return $pdoStatement->execute();
+        return new DropTable($table, $options);
     }
 
     /**
+     * @param Table $table
+     *
      * @return AlterTable
      */
-    public function alterTable(): AlterTable
+    public function alterTable(Table $table): AlterTable
     {
-        return new AlterTable();
+        return new AlterTable($table);
     }
 
     /**

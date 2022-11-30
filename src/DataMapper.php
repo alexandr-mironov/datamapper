@@ -12,7 +12,7 @@ use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, Exception, UnsupportedException};
+use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -113,7 +113,7 @@ class DataMapper
      * @return Entity\Table
      * @throws QueryBuilderException
      */
-    private function getTable(ReflectionClass $reflection): Entity\Table
+    public function getTable(ReflectionClass $reflection): Entity\Table
     {
         $classAttributes = $reflection->getAttributes(Table::class);
         if (count($classAttributes)) {
@@ -433,7 +433,6 @@ class DataMapper
      *
      * @return array<string, object>
      * @throws Exception
-     * @throws Exceptions\Exception
      */
     public function getMap(string $key): array
     {

@@ -42,11 +42,11 @@ interface BuilderInterface
 
     /**
      * @param Table $table
-     * @param ConditionCollection $conditions
+     * @param ConditionInterface ...$conditions
      *
      * @return Delete
      */
-    public function delete(Table $table, ConditionCollection $conditions): Delete;
+    public function delete(Table $table, ConditionInterface ...$conditions): Delete;
 
     /**
      * @param Table $table

@@ -6,27 +6,36 @@ namespace Test\units;
 
 use DataMapper\DataMapper;
 use DataMapper\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\QueryBuilder;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use Test\TestEntity;
 
 class SelectTest extends TestCase
 {
     /**
-     * @var DataMapper
+     * @var QueryBuilder
      */
-    private DataMapper $dataMapper;
+    private QueryBuilder $queryBuilder;
 
     public function setUp(): void
     {
-        $this->dataMapper = new DataMapper($this->createMock(PDO::class));
+        $this->queryBuilder = $this->createMock(QueryBuilder::class);
+    }
+
+    public function testAttributeTable(): void
+    {
+        $dataMapper = $this->createMock(DataMapper::class);
+        $table = $dataMapper->getTable(new ReflectionClass(TestEntity::class));
+        $this->assertEquals('`some_database`', $table->getName());
     }
 
     public function testSimpleQueryBuilding(): void
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value'";
-        $result = (string)$this->dataMapper
-            ->find(TestEntity::class)
+        $result = (string)$this->queryBuilder
+            ->select(TestEntity::class)
             ->by('field', 'value');
         $this->assertEquals($expectedSimpleQuery, $result);
     }
