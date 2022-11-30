@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace DataMapper;
 
 use DataMapper\Attributes\{Column, Table};
-use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\Field;
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
+use DataMapper\QueryBuilder\MySQL\QueryBuilder as MySQLQueryBuilder;
+use DataMapper\Exceptions\Exception;
+use DataMapper\QueryBuilder\Exceptions\{
+    Exception as QueryBuilderException,
+    UnsupportedException};
 use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -69,7 +72,13 @@ class DataMapper
             throw new QueryBuilderException('Invalid DBMS class provided ' . $dbms);
         }
 
-        $this->queryBuilder = new $dbms($this->beautify);
+        $dbmsInstance = new $dbms($this->beautify);
+
+        if (!$dbmsInstance instanceof BuilderInterface) {
+            throw new QueryBuilderException('Invalid DBMS class provided ' . $dbms);
+        }
+
+        $this->queryBuilder = $dbmsInstance;
     }
 
     /**
@@ -83,9 +92,10 @@ class DataMapper
         $scheme = parse_url($dsn, PHP_URL_SCHEME);
 
         return match ($scheme) {
-            // todo: add mysql and other adapters
+            // todo: other adapters
             QueryBuilder::POSTGRESQL => PostgreSQLQueryBuilder::class,
             QueryBuilder::SQL1999 => QueryBuilder::class,
+            QueryBuilder::MYSQL => MySQLQueryBuilder::class,
             default => throw new UnsupportedException('Unsupported DBMS')
         };
     }
@@ -230,9 +240,9 @@ class DataMapper
      *
      * @return bool
      *
-     * @throws Exceptions\Exception
      * @throws QueryBuilderException
      * @throws ReflectionException
+     * @throws Exception
      */
     public function delete(object|string $model, ConditionInterface ...$conditions): bool
     {

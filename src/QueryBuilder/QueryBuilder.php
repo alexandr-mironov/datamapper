@@ -6,7 +6,6 @@ namespace DataMapper\QueryBuilder;
 
 use DataMapper\Entity\Column as ColumnEntity;
 use DataMapper\Entity\ColumnCollection;
-use DataMapper\Entity\ConditionCollection;
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
@@ -20,7 +19,8 @@ use DataMapper\QueryBuilder\Statements\{AlterTable,
     Select,
     SelectWrapper,
     StatementInterface,
-    With};
+    With
+};
 use PDO;
 
 /**
@@ -30,18 +30,11 @@ use PDO;
  */
 class QueryBuilder implements BuilderInterface
 {
-    private const PGSQL = 'pgsql';
-
-    private const MYSQL = 'mysql';
+    public const MYSQL = 'mysql';
 
     public const SQL1999 = 'SQL:1999';
 
     public const POSTGRESQL = 'postgresql';
-
-    private const DBMS = [
-        self::PGSQL => PGSQL\QueryBuilder::class,
-        self::MYSQL => MySQL\QueryBuilder::class,
-    ];
 
     /** @var BuilderInterface */
     public BuilderInterface $adapter;
@@ -52,13 +45,10 @@ class QueryBuilder implements BuilderInterface
     /**
      * QueryBuilder constructor.
      *
-     * @param PDO $pdo todo remove PDO dependency from constructor - Query builders only build queries, they didn't
-     *     execute any queries or something
      * @param bool $beautify
      *
      */
     public function __construct(
-        protected PDO $pdo,
         public bool $beautify = false
     ) {
 
@@ -147,7 +137,13 @@ class QueryBuilder implements BuilderInterface
         return $this;
     }
 
-    public function dropTable(Table $table, array $options): DropTable
+    /**
+     * @param Table $table
+     * @param array $options
+     *
+     * @return DropTable
+     */
+    public function dropTable(Table $table, array $options = []): DropTable
     {
         return new DropTable($table, $options);
     }
