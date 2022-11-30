@@ -28,6 +28,7 @@ trait WhereTrait
     /** @var int|null $offset */
     public ?int $offset = null;
 
+    /** @var array<mixed>  */
     public array $order = [];
 
     /**

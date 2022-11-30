@@ -53,6 +53,7 @@ class DataMapper
      * @param bool $beautify
      *
      * @throws UnsupportedException
+     * @throws QueryBuilderException
      */
     public function __construct(
         string $dsn,
@@ -63,6 +64,10 @@ class DataMapper
     ) {
         $this->pdo = new PDO($dsn, $username, $password, $options);
         $dbms = $this->detectDBMS($dsn);
+
+        if (!class_exists($dbms)) {
+            throw new QueryBuilderException('Invalid DBMS class provided ' . $dbms);
+        }
 
         $this->queryBuilder = new $dbms($this->beautify);
     }
@@ -147,12 +152,14 @@ class DataMapper
             unset($fieldsForUpdate[$index]);
         }
 
-        return $this->getQueryBuilder()
-            ->insertUpdate(
+        $insertStatement = $this->getQueryBuilder()
+            ->insert(
                 $this->getTable($reflection),
                 $fields,
                 $fieldsForUpdate
             );
+
+        return (bool)$this->execute((string)$insertStatement);
     }
 
     /**
@@ -218,21 +225,25 @@ class DataMapper
     }
 
     /**
-     * @param object $model
+     * @param object|class-string $model
+     * @param ConditionInterface ...$conditions
      *
      * @return bool
      *
-     * @throws Exception
      * @throws Exceptions\Exception
+     * @throws QueryBuilderException
+     * @throws ReflectionException
      */
-    public function delete(object $model): bool
+    public function delete(object|string $model, ConditionInterface ...$conditions): bool
     {
-        $reflection = new ReflectionObject($model);
+        $reflection = new ReflectionClass((is_object($model)) ? $model::class : $model);
+
+        $conditions = is_object($model) ? $this->getConditionsByModel($reflection, $model) : $conditions;
 
         $deleteStatement = $this->getQueryBuilder()
             ->delete(
                 $this->getTable($reflection),
-                $this->getConditionsByModel($reflection, $model)
+                $conditions
             );
 
         return (bool)$this->execute((string)$deleteStatement);
@@ -242,19 +253,15 @@ class DataMapper
      * @param ReflectionObject $reflection
      * @param object $model
      *
-     * @return ConditionCollection
+     * @return ConditionInterface[]
      * @throws Exceptions\Exception|QueryBuilderException
      */
-    private function getConditionsByModel(ReflectionObject $reflection, object $model): ConditionCollection
+    private function getConditionsByModel(ReflectionObject $reflection, object $model): array
     {
         return match (true) {
-            ColumnHelper::hasPrimaryKey($reflection) => new ConditionCollection(
-                [$this->getPrimaryKeyValue($reflection, $model)]
-            ),
-            ColumnHelper::hasUnique($reflection) => new ConditionCollection(
-                [$this->getUniqueValue($reflection, $model)]
-            ),
-            default => new ConditionCollection($this->buildConditionArray($reflection, $model))
+            ColumnHelper::hasPrimaryKey($reflection) => [$this->getPrimaryKeyValue($reflection, $model)],
+            ColumnHelper::hasUnique($reflection) => [$this->getUniqueValue($reflection, $model)],
+            default => $this->buildConditionArray($reflection, $model)
         };
     }
 
@@ -351,8 +358,8 @@ class DataMapper
     }
 
     /**
-     * @param object|string $class
-     * @param array $options
+     * @param object|class-string $class
+     * @param array<mixed> $options
      *
      * @return bool
      * @throws QueryBuilderException
@@ -386,7 +393,7 @@ class DataMapper
         $this->statement->wheres = $this->wheres;
         $this->statement->order = $this->order;
 
-        $result = $this->queryBuilder->execute((string)$this->statement);
+        $result = $this->execute((string)$this->statement);
         $className = $this->entityClass;
 
         return new $className(...$result);
@@ -421,7 +428,7 @@ class DataMapper
         $this->statement->wheres = $this->wheres;
         $this->statement->order = $this->order;
 
-        $result = $this->queryBuilder->execute((string)$this->statement);
+        $result = $this->execute((string)$this->statement);
         $className = $this->entityClass;
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
             yield new $className(...$row);

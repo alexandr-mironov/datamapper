@@ -20,9 +20,13 @@ class Delete extends AbstractStatementWithWhere implements StatementInterface
      * @param Table $table
      * @param ConditionInterface ...$conditions
      */
-    public function __construct(private Table $table, ConditionInterface ...$conditions)
-    {
-
+    public function __construct(
+        private Table $table,
+        ConditionInterface ...$conditions
+    ) {
+        foreach ($conditions as $condition) {
+            $this->addWhereCondition($condition);
+        }
     }
 
     /**

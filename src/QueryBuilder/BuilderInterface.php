@@ -51,7 +51,7 @@ interface BuilderInterface
     /**
      * @param Table $table
      * @param ColumnCollection $columns
-     * @param array $options
+     * @param array<mixed> $options
      *
      * @return CreateTable
      */
@@ -59,7 +59,7 @@ interface BuilderInterface
 
     /**
      * @param Table $table
-     * @param array $options
+     * @param array<mixed> $options
      *
      * @return DropTable
      */
