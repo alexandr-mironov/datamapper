@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
+use DataMapper\Entity\Table;
+
 /**
  * Class AlterTable
  *
@@ -17,11 +19,11 @@ class AlterTable implements StatementInterface
     /**
      * AlterTable constructor.
      *
-     * @param string $tableName
+     * @param Table $table
      * @param AlterOption ...$options
      */
     public function __construct(
-        private string $tableName,
+        private Table $table,
         AlterOption ...$options
     ) {
         $this->options = $options;
@@ -40,6 +42,6 @@ class AlterTable implements StatementInterface
      */
     public function __toString(): string
     {
-        return "ALTER TABLE {$this->tableName} " . implode(', ', $this->options);
+        return "ALTER TABLE {$this->table->getName()} " . implode(', ', $this->options);
     }
 }

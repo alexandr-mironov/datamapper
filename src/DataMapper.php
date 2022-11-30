@@ -12,7 +12,7 @@ use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
-use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, UnsupportedException};
+use DataMapper\QueryBuilder\Exceptions\{Exception, Exception as QueryBuilderException, Exception, UnsupportedException};
 use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -49,7 +49,7 @@ class DataMapper
      * @param string $dsn
      * @param string|null $username
      * @param string|null $password
-     * @param array|null $options
+     * @param array<mixed>|null $options
      * @param bool $beautify
      *
      * @throws UnsupportedException
@@ -373,11 +373,13 @@ class DataMapper
 
     /**
      * @return object
-     * @throws Exceptions\Exception
+     * @throws Exception
      */
     public function getOne(): object
     {
-        $this->validateStatement();
+        if (!$this->statement instanceof Select) {
+            throw new Exception('This method only available for Select statements');
+        }
 
         $this->statement->limit = 1;
         $this->statement->offset = $this->offset;
@@ -385,24 +387,14 @@ class DataMapper
         $this->statement->order = $this->order;
 
         $result = $this->queryBuilder->execute((string)$this->statement);
-        $className = $this->statement->resultObject;
+        $className = $this->entityClass;
 
         return new $className(...$result);
     }
 
     /**
-     * @throws Exceptions\Exception
-     */
-    public function validateStatement(): void
-    {
-        if (!$this->statement instanceof Select) {
-            throw new Exceptions\Exception('This method only available for Select statements');
-        }
-    }
-
-    /**
      * @return object[]
-     * @throws Exceptions\Exception
+     * @throws Exception
      */
     public function getArray(): array
     {
@@ -416,11 +408,13 @@ class DataMapper
 
     /**
      * @return Generator<object>
-     * @throws Exceptions\Exception
+     * @throws Exception
      */
     public function getIterator(): Generator
     {
-        $this->validateStatement();
+        if (!$this->statement instanceof Select) {
+            throw new Exception('This method only available for Select statements');
+        }
 
         $this->statement->limit = $this->limit;
         $this->statement->offset = $this->offset;
@@ -428,7 +422,7 @@ class DataMapper
         $this->statement->order = $this->order;
 
         $result = $this->queryBuilder->execute((string)$this->statement);
-        $className = $this->statement->resultObject;
+        $className = $this->entityClass;
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
             yield new $className(...$row);
         }

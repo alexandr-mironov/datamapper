@@ -11,8 +11,9 @@ use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Definitions\Column;
-use DataMapper\QueryBuilder\Exceptions\{Exception, UnsupportedException};
-use DataMapper\QueryBuilder\Statements\{CreateTable,
+use DataMapper\QueryBuilder\Exceptions\{Exception};
+use DataMapper\QueryBuilder\Statements\{AlterTable,
+    CreateTable,
     Delete,
     DropTable,
     Insert,
@@ -21,7 +22,6 @@ use DataMapper\QueryBuilder\Statements\{CreateTable,
     StatementInterface,
     With};
 use PDO;
-use PDOStatement;
 
 /**
  * Class QueryBuilder
@@ -52,7 +52,8 @@ class QueryBuilder implements BuilderInterface
     /**
      * QueryBuilder constructor.
      *
-     * @param PDO $pdo todo remove PDO dependency from constructor - Query builders only build queries, they didn't execute any queries or something
+     * @param PDO $pdo todo remove PDO dependency from constructor - Query builders only build queries, they didn't
+     *     execute any queries or something
      * @param bool $beautify
      *
      */
@@ -74,51 +75,30 @@ class QueryBuilder implements BuilderInterface
         return new Select($table, ...$conditions);
     }
 
-
-
-    /**
-     * @param Table $table
-     * @param array{key: string, value: mixed, type: string} $values ['key' => ..., 'value' => ..., 'type' => ...]
-     *
-     * @return Insert
-     *
-     */
-    public function insert(Table $table, array $values): Insert
-    {
-        return new Insert($table, $values);
-    }
-
     /**
      * @param Table $table
      * @param FieldCollection $values
      * @param string[] $updatable
      *
-     * @return bool
-     * @throws Exception
+     * @return Insert
      */
-    public function insertUpdate(Table $table, FieldCollection $values, array $updatable): bool
+    public function insert(Table $table, FieldCollection $values, array $updatable = []): Insert
     {
-        $query = (string)$this->adapter->insert($table, $values, $updatable);
-        $statement = $this->pdo->prepare($query);
-
-        if (!$statement) {
-            throw new Exception('Invalid query ' . $query);
-        }
-
-        return $statement->execute($values->getCollectionItems());
+        return $this->adapter->insert($table, $values, $updatable);
     }
 
     /**
-     * @param Table $name
+     * @param Table $table
      * @param ColumnCollection $columns
      * @param array<mixed> $options
      *
      * @return bool
      * @throws Exception
+     * @throws \Exception
      */
-    public function createTable(Table $name, ColumnCollection $columns, array $options = []): bool
+    public function createTable(Table $table, ColumnCollection $columns, array $options = []): bool
     {
-        $createTableStatement = new CreateTable($name, $options);
+        $createTableStatement = new CreateTable($table, $options);
         /** @var ColumnEntity $column */
         foreach ($columns as $column) {
             $columnDefinition = new Column(
@@ -201,6 +181,14 @@ class QueryBuilder implements BuilderInterface
     }
 
     /**
+     * @return AlterTable
+     */
+    public function alterTable(): AlterTable
+    {
+        return new AlterTable();
+    }
+
+    /**
      * @param mixed $type
      *
      * @return int
@@ -213,10 +201,5 @@ class QueryBuilder implements BuilderInterface
             'string', 'datetime' => PDO::PARAM_STR,
             default => PDO::PARAM_STR,
         };
-    }
-
-    public function alterTable(): StatementInterface
-    {
-        // TODO: Implement alterTable() method.
     }
 }
