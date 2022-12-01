@@ -38,8 +38,6 @@ class DataMapper
 
     private BuilderInterface $queryBuilder;
 
-    private PDO $pdo;
-
     private ?StatementInterface $statement = null;
 
     /** @var class-string $entityClass used as return type of select statements */
@@ -48,24 +46,19 @@ class DataMapper
     /**
      * DataMapper constructor.
      *
-     * @param string $dsn
-     * @param string|null $username
-     * @param string|null $password
-     * @param array<mixed>|null $options
+     * @param PDO $pdo
+     * @param string $dbmsAlias
      * @param bool $beautify
      *
-     * @throws UnsupportedException
      * @throws QueryBuilderException
+     * @throws UnsupportedException
      */
     public function __construct(
-        string $dsn,
-        ?string $username = null,
-        ?string $password = null,
-        ?array $options = null,
+        private PDO $pdo,
+        string $dbmsAlias = QueryBuilder::SQL1999,
         public bool $beautify = false
     ) {
-        $this->pdo = new PDO($dsn, $username, $password, $options);
-        $dbms = $this->detectDBMS($dsn);
+        $dbms = $this->getBuilderClassNameByAlias($dbmsAlias);
 
         if (!class_exists($dbms)) {
             throw new QueryBuilderException('Invalid DBMS class provided ' . $dbms);
@@ -82,15 +75,52 @@ class DataMapper
 
     /**
      * @param string $dsn
+     * @param string|null $username
+     * @param string|null $password
+     * @param array|null $options
+     * @param bool $beautify
+     *
+     * @return static
+     */
+    public static function init(
+        string $dsn,
+        ?string $username = null,
+        ?string $password = null,
+        ?array $options = null,
+        bool $beautify = false
+    ): self
+    {
+        $pdo = new PDO($dsn, $username, $password, $options);
+
+        return self::construct($pdo, (string)parse_url($dsn, PHP_URL_SCHEME), $beautify);
+    }
+
+    /**
+     * @param PDO $pdo
+     * @param string $dbmsAlias
+     * @param bool $beautify
+     *
+     * @return static
+     * @throws QueryBuilderException
+     * @throws UnsupportedException
+     */
+    public static function construct(
+        PDO $pdo,
+        string $dbmsAlias = QueryBuilder::SQL1999,
+        bool $beautify = false
+    ): self {
+        return new self($pdo, $dbmsAlias, $beautify);
+    }
+
+    /**
+     * @param string $alias
      *
      * @return class-string
      * @throws UnsupportedException
      */
-    private function detectDBMS(string $dsn): string
+    private static function getBuilderClassNameByAlias(string $alias): string
     {
-        $scheme = parse_url($dsn, PHP_URL_SCHEME);
-
-        return match ($scheme) {
+        return match ($alias) {
             // todo: other adapters
             QueryBuilder::POSTGRESQL => PostgreSQLQueryBuilder::class,
             QueryBuilder::SQL1999 => QueryBuilder::class,
@@ -125,7 +155,7 @@ class DataMapper
      * @param ReflectionClass $reflection
      *
      * @return Entity\Table
-     * @throws QueryBuilderException
+     * @throws Exception
      */
     public function getTable(ReflectionClass $reflection): Entity\Table
     {
@@ -215,7 +245,7 @@ class DataMapper
      * @param object $model
      *
      * @return object
-     * @throws QueryBuilderException
+     * @throws Exception
      */
     public function add(object $model): object
     {
@@ -352,6 +382,7 @@ class DataMapper
      *
      * @throws QueryBuilderException
      * @throws ReflectionException
+     * @throws Exception
      */
     public function createTable(object|string $class, array $options = []): bool
     {
@@ -374,6 +405,7 @@ class DataMapper
      * @return bool
      * @throws QueryBuilderException
      * @throws ReflectionException
+     * @throws Exception
      */
     public function dropTable(object|string $class, array $options = []): bool
     {

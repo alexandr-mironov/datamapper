@@ -33,11 +33,11 @@ class SelectTest extends TestCase
 
     public function testSimpleQueryBuilding(): void
     {
-        $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value'";
-        $result = (string)$this->queryBuilder
-            ->select(TestEntity::class)
+        $dataMapper = $this->createMock(DataMapper::class);
+        $result = (string)$dataMapper
+            ->find(TestEntity::class)
             ->by('field', 'value');
-        $this->assertEquals($expectedSimpleQuery, $result);
+        $this->assertEquals("SELECT * FROM `some_database`.`user` WHERE 'field'='value'", $result);
     }
 
     public function testInjectionResistance(): void
