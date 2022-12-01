@@ -7,15 +7,13 @@ namespace DataMapper;
 use DataMapper\Attributes\{Column, Table};
 use DataMapper\Entity\Field;
 use DataMapper\Entity\FieldCollection;
+use DataMapper\Exceptions\Exception;
 use DataMapper\Helpers\ColumnHelper;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
+use DataMapper\QueryBuilder\Exceptions\{Exception as QueryBuilderException, UnsupportedException};
 use DataMapper\QueryBuilder\MySQL\QueryBuilder as MySQLQueryBuilder;
-use DataMapper\Exceptions\Exception;
-use DataMapper\QueryBuilder\Exceptions\{
-    Exception as QueryBuilderException,
-    UnsupportedException};
 use DataMapper\QueryBuilder\PGSQL\QueryBuilder as PostgreSQLQueryBuilder;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -74,13 +72,32 @@ class DataMapper
     }
 
     /**
+     * @param string $alias
+     *
+     * @return class-string
+     * @throws UnsupportedException
+     */
+    private static function getBuilderClassNameByAlias(string $alias): string
+    {
+        return match ($alias) {
+            // todo: other adapters
+            QueryBuilder::POSTGRESQL => PostgreSQLQueryBuilder::class,
+            QueryBuilder::SQL1999 => QueryBuilder::class,
+            QueryBuilder::MYSQL => MySQLQueryBuilder::class,
+            default => throw new UnsupportedException('Unsupported DBMS')
+        };
+    }
+
+    /**
      * @param string $dsn
      * @param string|null $username
      * @param string|null $password
-     * @param array|null $options
+     * @param array<mixed>|null $options
      * @param bool $beautify
      *
-     * @return static
+     * @return DataMapper
+     * @throws QueryBuilderException
+     * @throws UnsupportedException
      */
     public static function init(
         string $dsn,
@@ -88,8 +105,7 @@ class DataMapper
         ?string $password = null,
         ?array $options = null,
         bool $beautify = false
-    ): self
-    {
+    ): self {
         $pdo = new PDO($dsn, $username, $password, $options);
 
         return self::construct($pdo, (string)parse_url($dsn, PHP_URL_SCHEME), $beautify);
@@ -113,29 +129,12 @@ class DataMapper
     }
 
     /**
-     * @param string $alias
-     *
-     * @return class-string
-     * @throws UnsupportedException
-     */
-    private static function getBuilderClassNameByAlias(string $alias): string
-    {
-        return match ($alias) {
-            // todo: other adapters
-            QueryBuilder::POSTGRESQL => PostgreSQLQueryBuilder::class,
-            QueryBuilder::SQL1999 => QueryBuilder::class,
-            QueryBuilder::MYSQL => MySQLQueryBuilder::class,
-            default => throw new UnsupportedException('Unsupported DBMS')
-        };
-    }
-
-    /**
      * @param string $className
      * @param ConditionInterface ...$conditions
      *
      * @return DataMapper
      *
-     * @throws QueryBuilderException
+     * @throws Exception
      * @throws ReflectionException
      */
     public function find(string $className, ConditionInterface ...$conditions): self
@@ -146,7 +145,15 @@ class DataMapper
 
         $this->entityClass = $className;
 
-        $this->statement = $this->queryBuilder->select($this->getTable(new ReflectionClass($className)), ...$conditions);
+        $this->wheres = [];
+        $this->order = [];
+        $this->limit = null;
+        $this->offset = null;
+
+        $this->statement = $this->queryBuilder->select(
+            $this->getTable(new ReflectionClass($className)),
+            ...$conditions
+        );
 
         return $this;
     }
@@ -239,6 +246,22 @@ class DataMapper
     private function getQueryBuilder(): BuilderInterface
     {
         return $this->queryBuilder;
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return PDOStatement
+     * @throws Exception
+     */
+    public function execute(string $query): PDOStatement
+    {
+        $result = $this->pdo->query($query);
+        if (!$result) {
+            throw new Exception('Invalid query ' . $query);
+        }
+
+        return $result;
     }
 
     /**
@@ -359,22 +382,6 @@ class DataMapper
     }
 
     /**
-     * @param string $query
-     *
-     * @return PDOStatement
-     * @throws Exception
-     */
-    public function execute(string $query): PDOStatement
-    {
-        $result = $this->pdo->query($query);
-        if (!$result) {
-            throw new Exception('Invalid query ' . $query);
-        }
-
-        return $result;
-    }
-
-    /**
      * @param object|class-string $class
      * @param array<mixed> $options
      *
@@ -403,7 +410,6 @@ class DataMapper
      * @param array<mixed> $options
      *
      * @return bool
-     * @throws QueryBuilderException
      * @throws ReflectionException
      * @throws Exception
      */
@@ -432,7 +438,7 @@ class DataMapper
 
         $this->statement->limit = 1;
         $this->statement->offset = $this->offset;
-        $this->statement->wheres = $this->wheres;
+        $this->statement->wheres += $this->wheres;
         $this->statement->order = $this->order;
 
         $result = $this->execute((string)$this->statement);
@@ -467,7 +473,7 @@ class DataMapper
 
         $this->statement->limit = $this->limit;
         $this->statement->offset = $this->offset;
-        $this->statement->wheres = $this->wheres;
+        $this->statement->wheres += $this->wheres;
         $this->statement->order = $this->order;
 
         $result = $this->execute((string)$this->statement);
@@ -501,10 +507,10 @@ class DataMapper
         if ($this->statement instanceof Select) {
             $this->statement->limit = $this->limit;
             $this->statement->offset = $this->offset;
-            $this->statement->wheres = $this->wheres;
+            $this->statement->wheres += $this->wheres;
             $this->statement->order = $this->order;
         }
-        
+
         return (string)$this->statement;
     }
 }

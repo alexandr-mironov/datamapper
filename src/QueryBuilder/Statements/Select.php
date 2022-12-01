@@ -55,9 +55,10 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
      */
     public function __toString(): string
     {
-        $queryParts = ['SELECT', $this->selectExpression, 'FROM ' . $this->table->getName(), 'WHERE'];
+        // todo: don't add WHERE keyword if has no where statements
+        $queryParts = ['SELECT', $this->selectExpression, 'FROM ' . $this->table->getName()];
         if (count($this->wheres)) {
-            $queryParts[] = $this->buildWhereStatement();
+            $queryParts[] = 'WHERE ' . $this->buildWhereStatement();
         }
         if ($this->order) {
             $queryParts[] = ' ORDER BY ' . implode(', ', $this->order);

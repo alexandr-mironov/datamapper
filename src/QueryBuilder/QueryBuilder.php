@@ -74,7 +74,7 @@ class QueryBuilder implements BuilderInterface
      */
     public function insert(Table $table, FieldCollection $values, array $updatable = []): Insert
     {
-        return $this->adapter->insert($table, $values, $updatable);
+        return new Insert($table->getName(), $values, $updatable);
     }
 
     /**
