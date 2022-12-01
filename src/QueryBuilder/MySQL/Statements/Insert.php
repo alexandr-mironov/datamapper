@@ -21,21 +21,6 @@ class Insert extends \DataMapper\QueryBuilder\Statements\Insert implements State
     public bool $ignore = false;
 
     /**
-     * Insert constructor.
-     *
-     * @param string $tableName
-     * @param array<mixed> $fields
-     * @param string[] $updatable
-     */
-    public function __construct(
-        private string $tableName,
-        private array $fields,
-        private array $updatable = [],
-    ) {
-        $this->isUpdatable = (bool)$this->updatable;
-    }
-
-    /**
      * @return string
      */
     private function getUpdateStatement(): string

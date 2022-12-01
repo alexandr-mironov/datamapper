@@ -27,9 +27,9 @@ class Insert implements StatementInterface
      * @param string[] $updatable
      */
     public function __construct(
-        private string $tableName,
-        private array $fields,
-        private array $updatable = [],
+        protected string $tableName,
+        protected array $fields,
+        protected array $updatable = [],
     ) {
         $this->isUpdatable = (bool)$this->updatable;
     }
