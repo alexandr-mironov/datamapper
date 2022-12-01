@@ -495,4 +495,16 @@ class DataMapper
 
         return $collection;
     }
+
+    public function getSQL(): string
+    {
+        if ($this->statement instanceof Select) {
+            $this->statement->limit = $this->limit;
+            $this->statement->offset = $this->offset;
+            $this->statement->wheres = $this->wheres;
+            $this->statement->order = $this->order;
+        }
+        
+        return (string)$this->statement;
+    }
 }

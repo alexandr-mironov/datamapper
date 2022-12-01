@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Test\units;
 
 use DataMapper\DataMapper;
+use DataMapper\QueryBuilder\QueryBuilder;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use Test\TestEntity;
@@ -18,7 +19,8 @@ class InsertTest extends TestCase
 
     public function setUp(): void
     {
-        $this->dataMapper = new DataMapper('postgresql://');
+        $pdo = $this->createMock(PDO::class);
+        $this->dataMapper = DataMapper::construct($pdo, QueryBuilder::SQL1999, false);
     }
 
     public function testSimpleQueryBuilder(): void

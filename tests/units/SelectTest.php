@@ -15,26 +15,25 @@ use Test\TestEntity;
 class SelectTest extends TestCase
 {
     /**
-     * @var QueryBuilder
+     * @var DataMapper
      */
-    private QueryBuilder $queryBuilder;
+    private DataMapper $dataMapper;
 
     public function setUp(): void
     {
-        $this->queryBuilder = $this->createMock(QueryBuilder::class);
+        $pdo = $this->createMock(PDO::class);
+        $this->dataMapper = DataMapper::construct($pdo, QueryBuilder::SQL1999, false);
     }
 
     public function testAttributeTable(): void
     {
-        $dataMapper = $this->createMock(DataMapper::class);
-        $table = $dataMapper->getTable(new ReflectionClass(TestEntity::class));
-        $this->assertEquals('`some_database`', $table->getName());
+        $table = $this->dataMapper->getTable(new ReflectionClass(TestEntity::class));
+        $this->assertEquals('`some_database`.`user`', $table->getName());
     }
 
     public function testSimpleQueryBuilding(): void
     {
-        $dataMapper = $this->createMock(DataMapper::class);
-        $result = (string)$dataMapper
+        $result = (string)$this->dataMapper
             ->find(TestEntity::class)
             ->by('field', 'value');
         $this->assertEquals("SELECT * FROM `some_database`.`user` WHERE 'field'='value'", $result);
