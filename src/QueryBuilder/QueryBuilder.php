@@ -139,13 +139,43 @@ class QueryBuilder implements BuilderInterface
 
     /**
      * @param Table $table
-     * @param array $options
+     * @param array<mixed> $options
      *
      * @return DropTable
      */
     public function dropTable(Table $table, array $options = []): DropTable
     {
-        return new DropTable($table, $options);
+        $dropTableStatement = new DropTable($table);
+
+        if (
+            array_key_exists('cascade', $options)
+            && $options['cascade']
+        ) {
+            $dropTableStatement->cascade = true;
+        }
+
+        if (
+            array_key_exists('temporary', $options)
+            && $options['temporary']
+        ) {
+            $dropTableStatement->temporary = true;
+        }
+
+        if (
+            array_key_exists('ifExists', $options)
+            && $options['ifExists']
+        ) {
+            $dropTableStatement->ifExists = true;
+        }
+
+        if (
+            array_key_exists('restrict', $options)
+            && $options['restrict']
+        ) {
+            $dropTableStatement->restrict = true;
+        }
+
+        return $dropTableStatement;
     }
 
     /**

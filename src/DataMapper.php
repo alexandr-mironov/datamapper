@@ -26,7 +26,6 @@ use PDO;
 use PDOStatement;
 use ReflectionClass;
 use ReflectionException;
-use ReflectionObject;
 
 /**
  * Class DataMapper
@@ -152,7 +151,7 @@ class DataMapper
      */
     public function store(object $model): bool
     {
-        $reflection = new ReflectionObject($model);
+        $reflection = new ReflectionClass($model);
         $fields = $this->getFields($reflection, $model);
         $fieldsForUpdate = $fields->getKeys();
 
@@ -220,7 +219,7 @@ class DataMapper
      */
     public function add(object $model): object
     {
-        $reflection = new ReflectionObject($model);
+        $reflection = new ReflectionClass($model);
         $fields = $this->getFields($reflection, $model);
 
         $insertStatement = $this->getQueryBuilder()
@@ -253,20 +252,21 @@ class DataMapper
         $deleteStatement = $this->getQueryBuilder()
             ->delete(
                 $this->getTable($reflection),
-                $conditions
+                ...$conditions
             );
 
         return (bool)$this->execute((string)$deleteStatement);
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      * @param object $model
      *
      * @return ConditionInterface[]
-     * @throws Exceptions\Exception|QueryBuilderException
+     * @throws Exception
+     * @throws QueryBuilderException
      */
-    private function getConditionsByModel(ReflectionObject $reflection, object $model): array
+    private function getConditionsByModel(ReflectionClass $reflection, object $model): array
     {
         return match (true) {
             ColumnHelper::hasPrimaryKey($reflection) => [$this->getPrimaryKeyValue($reflection, $model)],
@@ -276,14 +276,14 @@ class DataMapper
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      * @param object $model
      *
      * @return Equal
      * @throws QueryBuilderException
      * @throws Exceptions\Exception
      */
-    private function getPrimaryKeyValue(ReflectionObject $reflection, object $model): Equal
+    private function getPrimaryKeyValue(ReflectionClass $reflection, object $model): Equal
     {
         $key = ColumnHelper::getPrimaryKeyColumnName($reflection);
 
@@ -291,14 +291,14 @@ class DataMapper
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      * @param object $model
      *
      * @return Equal
      * @throws QueryBuilderException
      * @throws Exceptions\Exception
      */
-    private function getUniqueValue(ReflectionObject $reflection, object $model): Equal
+    private function getUniqueValue(ReflectionClass $reflection, object $model): Equal
     {
         $key = ColumnHelper::getFirstUniqueColumnName($reflection);
 
@@ -306,13 +306,13 @@ class DataMapper
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      * @param object $model
      *
      * @return ConditionInterface[]
      * @throws QueryBuilderException
      */
-    private function buildConditionArray(ReflectionObject $reflection, object $model): array
+    private function buildConditionArray(ReflectionClass $reflection, object $model): array
     {
         $result = [];
         foreach (ColumnHelper::getColumnIterator($reflection) as $column) {

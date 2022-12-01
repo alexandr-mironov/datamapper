@@ -9,7 +9,6 @@ use DataMapper\Entity\ColumnCollection;
 use DataMapper\Exceptions\Exception;
 use Generator;
 use ReflectionClass;
-use ReflectionObject;
 
 class ColumnHelper
 {
@@ -50,11 +49,11 @@ class ColumnHelper
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      *
      * @return bool
      */
-    public static function hasPrimaryKey(ReflectionObject $reflection): bool
+    public static function hasPrimaryKey(ReflectionClass $reflection): bool
     {
         return self::hasOption($reflection, Column::PRIMARY_KEY);
     }
@@ -79,22 +78,22 @@ class ColumnHelper
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      *
      * @return bool
      */
-    public static function hasUnique(ReflectionObject $reflection): bool
+    public static function hasUnique(ReflectionClass $reflection): bool
     {
         return self::hasOption($reflection, Column::UNIQUE);
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      *
      * @return string
      * @throws Exception
      */
-    public static function getPrimaryKeyColumnName(ReflectionObject $reflection): string
+    public static function getPrimaryKeyColumnName(ReflectionClass $reflection): string
     {
         return self::getColumnNameByOption($reflection, Column::PRIMARY_KEY);
     }
@@ -119,12 +118,12 @@ class ColumnHelper
     }
 
     /**
-     * @param ReflectionObject $reflection
+     * @param ReflectionClass $reflection
      *
      * @return string
      * @throws Exception
      */
-    public static function getFirstUniqueColumnName(ReflectionObject $reflection): string
+    public static function getFirstUniqueColumnName(ReflectionClass $reflection): string
     {
         return self::getColumnNameByOption($reflection, Column::UNIQUE);
     }

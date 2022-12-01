@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
+use DataMapper\Entity\Table;
+
 class DropTable implements StatementInterface
 {
     /** @var bool */
@@ -26,11 +28,13 @@ class DropTable implements StatementInterface
     /**
      * DropTable constructor.
      *
-     * @param string ...$tables
+     * @param Table ...$tables
      */
-    public function __construct(string ...$tables)
+    public function __construct(Table ...$tables)
     {
-        $this->tableNames = $tables;
+        foreach ($tables as $table) {
+            $this->tableNames[] = $table->getName();
+        }
     }
 
     /**

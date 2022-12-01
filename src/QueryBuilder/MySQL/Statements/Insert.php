@@ -12,7 +12,7 @@ use DataMapper\QueryBuilder\Statements\StatementInterface;
  *
  * @package DataMapper\QueryBuilder\MySQL\Statements
  */
-class Insert implements StatementInterface
+class Insert extends \DataMapper\QueryBuilder\Statements\Insert implements StatementInterface
 {
     /** @var bool */
     public bool $isUpdatable = false;
