@@ -38,39 +38,6 @@ class Insert extends \DataMapper\QueryBuilder\Statements\Insert implements State
     /**
      * @return string
      */
-    public function __toString(): string
-    {
-        $keys = array_column($this->fields, 'key');
-        $columnsString = implode(',', $keys);
-        $keysClone = $keys;
-        array_walk(
-            $keysClone,
-            function (&$value, $key) {
-                $value = ':' . $value;
-            }
-        );
-
-        $valuesString = implode(',', array_keys($keysClone));
-
-        $mysqlIgnore = '';
-
-        if ($this->ignore) {
-            $this->isUpdatable = false;
-            $mysqlIgnore = 'IGNORE ';
-        }
-
-        $query = "INSERT {$mysqlIgnore}INTO {$this->tableName} ({$columnsString}) VALUES ({$valuesString});";
-
-        if ($this->isUpdatable) {
-            $query .= $this->getUpdateStatement();
-        }
-
-        return $query;
-    }
-
-    /**
-     * @return string
-     */
     private function getUpdateStatement(): string
     {
         $keysForUpdate = [];

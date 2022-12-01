@@ -116,7 +116,7 @@ class DataMapper
      * @param string $dbmsAlias
      * @param bool $beautify
      *
-     * @return static
+     * @return DataMapper
      * @throws QueryBuilderException
      * @throws UnsupportedException
      */
@@ -387,7 +387,6 @@ class DataMapper
      *
      * @return bool
      *
-     * @throws QueryBuilderException
      * @throws ReflectionException
      * @throws Exception
      */
