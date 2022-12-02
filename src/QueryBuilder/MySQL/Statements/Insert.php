@@ -23,7 +23,7 @@ class Insert extends \DataMapper\QueryBuilder\Statements\Insert implements State
     /**
      * @return string
      */
-    private function getUpdateStatement(): string
+    protected function getUpdateStatement(): string
     {
         $keysForUpdate = [];
         /**
