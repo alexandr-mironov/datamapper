@@ -21,6 +21,9 @@ class Insert extends InsertStatement implements StatementInterface
     /** @var bool */
     public bool $ignore = false;
 
+    /** @var string primary key field */
+    private string $returnField = 'id';
+
     /**
      * @return string
      */
@@ -49,13 +52,20 @@ class Insert extends InsertStatement implements StatementInterface
             $onConflict .= $this->getUpdateStatement();
         }
 
-        return "INSERT INTO {$this->tableName} ({$columnsString}) VALUES ({$valuesString}){$onConflict} RETURN {$this->tableName}.id;";
+        return "INSERT INTO {$this->tableName} ({$columnsString}) VALUES ({$valuesString}){$onConflict} RETURN {$this->tableName}.{$this->returnField};";
+    }
+
+    public function setReturnField(string $returnField): static
+    {
+        $this->returnField = $returnField;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    private function getUpdateStatement(): string
+    protected function getUpdateStatement(): string
     {
         $keysForUpdate = [];
         /**

@@ -66,7 +66,12 @@ class Insert implements StatementInterface
 
         return $query;
     }
-    
+
+    /**
+     * @param bool $flag
+     *
+     * @return $this
+     */
     public function ignore(bool $flag = true): static
     {
         $this->ignore = $flag;
@@ -74,9 +79,26 @@ class Insert implements StatementInterface
         return $this;
     }
 
+    /**
+     * @param bool $flag
+     *
+     * @return $this
+     */
     public function onDuplicateUpdate(bool $flag = true): static
     {
         $this->isUpdatable = $flag;
+
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     *
+     * @return $this
+     */
+    public function addValues(array $values): static
+    {
+        $this->fields = array_merge($this->fields, $values);
 
         return $this;
     }
