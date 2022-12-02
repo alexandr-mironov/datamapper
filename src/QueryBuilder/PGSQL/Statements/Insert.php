@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DataMapper\QueryBuilder\PGSQL\Statements;
 
 use DataMapper\QueryBuilder\Expression;
+use DataMapper\QueryBuilder\Statements\Insert as InsertStatement;
 use DataMapper\QueryBuilder\Statements\StatementInterface;
 
 /**
@@ -12,7 +13,7 @@ use DataMapper\QueryBuilder\Statements\StatementInterface;
  *
  * @package DataMapper\QueryBuilder\PGSQL\Statements
  */
-class Insert extends \DataMapper\QueryBuilder\Statements\Insert implements StatementInterface
+class Insert extends InsertStatement implements StatementInterface
 {
     /** @var bool */
     public bool $isUpdatable = false;

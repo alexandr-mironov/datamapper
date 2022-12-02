@@ -66,11 +66,25 @@ class Insert implements StatementInterface
 
         return $query;
     }
+    
+    public function ignore(bool $flag = true): static
+    {
+        $this->ignore = $flag;
+
+        return $this;
+    }
+
+    public function onDuplicateUpdate(bool $flag = true): static
+    {
+        $this->isUpdatable = $flag;
+
+        return $this;
+    }
 
     /**
      * @return string
      */
-    private function getUpdateStatement(): string
+    protected function getUpdateStatement(): string
     {
         $keysForUpdate = [];
         /**
