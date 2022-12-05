@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Test\units;
 
 use DataMapper\DataMapper;
+use DataMapper\Exceptions\Exception;
 use DataMapper\QueryBuilder\Conditions\Equal;
+use DataMapper\QueryBuilder\Exceptions\Exception as QueryBuilderException;
 use DataMapper\QueryBuilder\Operators;
 use DataMapper\QueryBuilder\QueryBuilder;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionException;
 use Test\TestEntity;
 
 class SelectTest extends TestCase
@@ -26,12 +29,22 @@ class SelectTest extends TestCase
         $this->dataMapper = DataMapper::construct($pdo, QueryBuilder::SQL1999, false);
     }
 
+    /**
+     * @covers \DataMapper\DataMapper::getTable
+     * @throws Exception
+     */
     public function testAttributeTable(): void
     {
         $table = $this->dataMapper->getTable(new ReflectionClass(TestEntity::class));
         $this->assertEquals('`some_database`.`user`', $table->getName());
     }
 
+    /**
+     * @covers \DataMapper\DataMapper::find
+     * @throws Exception
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
     public function testSimpleQueryBuilding(): void
     {
         $result = $this->dataMapper
@@ -45,6 +58,12 @@ class SelectTest extends TestCase
         $this->assertEquals("SELECT * FROM `some_database`.`user` WHERE 'field'='value'", $result);
     }
 
+    /**
+     * @covers \DataMapper\QueryBuilder\Statements\WhereTrait::by
+     * @throws Exception
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
     public function testInjectionResistance(): void
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'=''' OR 1=1 --value'''";
@@ -61,6 +80,12 @@ class SelectTest extends TestCase
         $this->assertEquals($expectedSimpleQuery, $result);
     }
 
+    /**
+     * @covers \DataMapper\QueryBuilder\Statements\WhereTrait::limit
+     * @throws Exception
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
     public function testLimitQueryBuilding(): void
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' LIMIT 11";
@@ -72,6 +97,12 @@ class SelectTest extends TestCase
         $this->assertEquals($expectedSimpleQuery, $result);
     }
 
+    /**
+     * @covers \DataMapper\QueryBuilder\Statements\WhereTrait::limit
+     * @throws Exception
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
     public function testLimitOffsetQueryBuilding(): void
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' LIMIT 11 OFFSET 4";
@@ -83,6 +114,12 @@ class SelectTest extends TestCase
         $this->assertEquals($expectedSimpleQuery, $result);
     }
 
+    /**
+     * @covers \DataMapper\QueryBuilder\Statements\WhereTrait::by
+     * @throws Exception
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
     public function testQueryBuilding(): void
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' AND 'another_field'='another_value'";
@@ -94,6 +131,12 @@ class SelectTest extends TestCase
         $this->assertEquals($expectedSimpleQuery, $result);
     }
 
+    /**
+     * @covers \DataMapper\QueryBuilder\Statements\WhereTrait::by
+     * @throws Exception
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
     public function testQueryBuilderOr(): void
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' OR 'another_field'='another_value'";
@@ -105,6 +148,12 @@ class SelectTest extends TestCase
         $this->assertEquals($expectedSimpleQuery, $result);
     }
 
+    /**
+     * @covers \DataMapper\QueryBuilder\Statements\WhereTrait::by
+     * @throws Exception
+     * @throws QueryBuilderException
+     * @throws ReflectionException
+     */
     public function testQueryBuilderXor(): void
     {
         $expectedSimpleQuery = "SELECT * FROM `some_database`.`user` WHERE 'field'='value' XOR 'another_field'='another_value'";
