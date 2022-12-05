@@ -28,11 +28,13 @@ phpunit:
     paths:
       - .composer-cache/
   before_script:
+    - pecl install xdebug
+    - docker-php-ext-enable xdebug
     - curl -s https://getcomposer.org/installer | php -- --filename=composer.phar
     - php composer.phar i
     - php composer.phar dump
   script:
-    - php vendor/bin/phpunit tests --log-junit phpunit.junit.xml
+    - php vendor/bin/phpunit tests --log-junit phpunit.junit.xml --coverage-text --colors=never
   artifacts:
     when: always
     reports:
