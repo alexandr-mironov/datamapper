@@ -34,7 +34,7 @@ phpunit:
     - php composer.phar i
     - php composer.phar dump
   script:
-    - php vendor/bin/phpunit tests --log-junit phpunit.junit.xml --coverage-text --colors=never
+    - XDEBUG_MODE=coverage php -n -dzend_extension=xdebug vendor/bin/phpunit tests --log-junit phpunit.junit.xml --coverage-text --colors=never
   artifacts:
     when: always
     reports:
