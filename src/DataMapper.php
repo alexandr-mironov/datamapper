@@ -242,7 +242,7 @@ class DataMapper
     /**
      * @param ReflectionClass $reflection
      *
-     * @return array<string, string>
+     * @return array<string, Column>
      */
     private function getFieldsMap(ReflectionClass $reflection): array
     {
@@ -254,7 +254,7 @@ class DataMapper
                 foreach ($columnAttributes as $attribute) {
                     /** @var Column $column */
                     $column = $attribute->newInstance();
-                    $map[$property->getName()] = $column->getName();
+                    $map[$property->getName()] = $column;
                 }
             }
         }
@@ -264,7 +264,7 @@ class DataMapper
 
     /**
      * @param ReflectionClass $reflection
-     * @param array<string, string> $fieldsMap
+     * @param array<string, Column> $fieldsMap
      * @param array<string, mixed> $values
      *
      * @return object
@@ -277,10 +277,9 @@ class DataMapper
     ): object {
         $instance = $reflection->newInstance();
 
-        foreach ($values as $key => $value) {
-            if (array_key_exists($key, $fieldsMap) && property_exists($instance, $fieldsMap[$key])) {
-                // todo: add value conversion here
-                $instance->$fieldsMap[$key] = $value;
+        foreach ($fieldsMap as $propName => $column) {
+            if (property_exists($instance, $propName) && array_key_exists($column->getName(), $values)) {
+                $instance->$propName = $column->castFromType($values[$column->getName()], $column->getType());
             }
         }
 
@@ -496,6 +495,7 @@ class DataMapper
     /**
      * @return object
      * @throws Exception
+     * @throws ReflectionException
      */
     public function getOne(): object
     {
@@ -509,9 +509,13 @@ class DataMapper
         $this->statement->order = $this->order;
 
         $result = $this->execute((string)$this->statement);
-        $className = $this->entityReflection;
+        $fieldsMap = $this->getFieldsMap($this->entityReflection);
 
-        return new $className(...$result);
+        return $this->getMappedValuesToEntity(
+            $this->entityReflection,
+            $fieldsMap,
+            $result->fetch(PDO::FETCH_ASSOC)
+        );
     }
 
     /**
@@ -545,7 +549,7 @@ class DataMapper
         $this->statement->order = $this->order;
 
         $result = $this->execute((string)$this->statement);
-        $fieldsMap = array_flip($this->getFieldsMap($this->entityReflection));
+        $fieldsMap = $this->getFieldsMap($this->entityReflection);
         /** @var array<string, mixed> $row */
         foreach ($result->getIterator() as $row) {
             yield $this->getMappedValuesToEntity($this->entityReflection, $fieldsMap, $row);
