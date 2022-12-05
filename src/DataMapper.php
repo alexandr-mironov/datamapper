@@ -151,7 +151,7 @@ class DataMapper
         $this->offset = null;
 
         $this->statement = $this->queryBuilder->select(
-            $this->getTable(),
+            $this->getTable($this->entityReflection),
             ...$conditions
         );
 
