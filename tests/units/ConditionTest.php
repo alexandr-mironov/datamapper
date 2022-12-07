@@ -9,6 +9,9 @@ use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Conditions\Exists;
 use DataMapper\QueryBuilder\Conditions\GreaterThen;
 use DataMapper\QueryBuilder\Conditions\GreaterThenOrEqual;
+use DataMapper\QueryBuilder\Conditions\In;
+use DataMapper\QueryBuilder\Conditions\IsNotNull;
+use DataMapper\QueryBuilder\Conditions\IsNull;
 use DataMapper\QueryBuilder\Conditions\LessThen;
 use DataMapper\QueryBuilder\Conditions\LessThenOrEqual;
 use DataMapper\QueryBuilder\Exceptions\Exception;
@@ -87,6 +90,42 @@ class ConditionTest extends TestCase
         $this->assertEquals(
             "'column_name' >= 13",
             (string)new GreaterThenOrEqual(['column_name', 13])
+        );
+    }
+
+    /**
+     * @covers \DataMapper\QueryBuilder\Conditions\In
+     * @throws Exception
+     */
+    public function testIn(): void
+    {
+        $this->assertEquals(
+            "'column_name' IN ('value','0)'' OR 1=1 --',13,'''')",
+            (string)new In(['column_name', ['value', "0)' OR 1=1 --", 13, "'"]])
+        );
+    }
+
+    /**
+     * @covers \DataMapper\QueryBuilder\Conditions\IsNotNull
+     * @throws Exception
+     */
+    public function testIsNotNull(): void
+    {
+        $this->assertEquals(
+            "'column_name' IS NOT NULL",
+            (string)new IsNotNull(['column_name'])
+        );
+    }
+
+    /**
+     * @covers \DataMapper\QueryBuilder\Conditions\IsNull
+     * @throws Exception
+     */
+    public function testIsNull(): void
+    {
+        $this->assertEquals(
+            "'column_name' IS NULL",
+            (string)new IsNull(['column_name'])
         );
     }
 

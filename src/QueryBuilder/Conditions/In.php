@@ -32,10 +32,11 @@ class In extends AbstractCondition
         foreach ($right as &$el) {
             $el = $this->quote($el);
         }
-        $this->condition = $this->quote($left)
-            . static::CONDITION_OPERATOR
-            . '('
-            . implode(',', $right)
-            . ')';
+
+        $this->condition = $this->glueParts(
+            $this->quote($left),
+            static::CONDITION_OPERATOR,
+            '(' . implode(',', $right) . ')'
+        );
     }
 }

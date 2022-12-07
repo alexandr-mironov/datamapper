@@ -34,6 +34,6 @@ class IsNull extends AbstractCondition
             throw new Exception(static::EXCEPTION_MESSAGE);
         }
 
-        $this->condition = $this->quote($left) . ' ' . static::CONDITION_OPERATOR;
+        $this->condition = $this->glueParts($this->quote($left), static::CONDITION_OPERATOR);
     }
 }

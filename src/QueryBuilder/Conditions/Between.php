@@ -29,14 +29,12 @@ class Between extends AbstractCondition
         if (!isset($value, $from, $to)) {
             throw new Exception(static::EXCEPTION_MESSAGE);
         }
-        $this->condition = $this->quote($value)
-            . ' '
-            . static::CONDITION_OPERATOR
-            . ' '
-            . $this->quote($from)
-            . ' '
-            . Operators:: AND
-            . ' '
-            . $this->quote($to);
+        $this->condition = $this->glueParts(
+            $this->quote($value),
+            static::CONDITION_OPERATOR,
+            $this->quote($from),
+            Operators::AND,
+            $this->quote($to)
+        );
     }
 }

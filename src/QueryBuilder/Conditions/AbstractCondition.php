@@ -39,13 +39,10 @@ abstract class AbstractCondition implements ConditionInterface
             throw new Exception(static::EXCEPTION_MESSAGE);
         }
 
-        $this->condition = implode(
-            $this->separator,
-            [
-                $this->quote($left),
-                static::CONDITION_OPERATOR,
-                $this->quote($right)
-            ]
+        $this->condition = $this->glueParts(
+            $this->quote($left),
+            static::CONDITION_OPERATOR,
+            $this->quote($right)
         );
     }
 
@@ -63,6 +60,11 @@ abstract class AbstractCondition implements ConditionInterface
         };
     }
 
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
     public function quoteValue(string $value): string
     {
         return "'"
@@ -71,6 +73,16 @@ abstract class AbstractCondition implements ConditionInterface
                 "\000\n\r\\\032"
             )
             . "'";
+    }
+
+    /**
+     * @param mixed ...$args
+     *
+     * @return string
+     */
+    protected function glueParts(...$args): string
+    {
+        return implode($this->separator, $args);
     }
 
     /**
