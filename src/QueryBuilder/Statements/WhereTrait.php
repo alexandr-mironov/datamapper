@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
-use DataMapper\DataMapper;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
 use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Conditions\GreaterThen;
