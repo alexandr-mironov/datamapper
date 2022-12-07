@@ -22,6 +22,8 @@ abstract class AbstractCondition implements ConditionInterface
     /** @var string */
     protected string $condition;
 
+    public string $separator = ' ';
+
     /**
      * AbstractCondition constructor.
      *
@@ -37,17 +39,22 @@ abstract class AbstractCondition implements ConditionInterface
             throw new Exception(static::EXCEPTION_MESSAGE);
         }
 
-        $this->condition = $this->quote($left)
-            . static::CONDITION_OPERATOR
-            . $this->quote($right);
+        $this->condition = implode(
+            $this->separator,
+            [
+                $this->quote($left),
+                static::CONDITION_OPERATOR,
+                $this->quote($right)
+            ]
+        );
     }
 
     /**
      * @param mixed $value
      *
-     * @return string
+     * @return mixed
      */
-    protected function quote(mixed $value): string
+    protected function quote(mixed $value): mixed
     {
         return match (true) {
             //($value instanceof Expression), is_int($value) => $value,
