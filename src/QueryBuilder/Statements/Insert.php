@@ -44,7 +44,7 @@ class Insert implements StatementInterface
         $columnsString = implode(', ', $keys);
         array_walk(
             $keys,
-            function (&$value, $key) {
+            static function (&$value, $key) {
                 $value = ':' . $value;
             }
         );

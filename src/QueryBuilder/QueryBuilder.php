@@ -6,6 +6,7 @@ namespace DataMapper\QueryBuilder;
 
 use DataMapper\Entity\Column as ColumnEntity;
 use DataMapper\Entity\ColumnCollection;
+use DataMapper\Entity\Field;
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\Conditions\ConditionInterface;
@@ -74,7 +75,9 @@ class QueryBuilder implements BuilderInterface
      */
     public function insert(Table $table, FieldCollection $values, array $updatable = []): Insert
     {
-        return new Insert($table->getName(), $values->getCollectionItems(), $updatable);
+        /** @var Field[] $fieldCollection */
+        $fieldCollection = $values->getCollectionItems();
+        return new Insert($table->getName(), $fieldCollection, $updatable);
     }
 
     /**

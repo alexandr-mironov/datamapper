@@ -15,6 +15,7 @@ use DataMapper\QueryBuilder\Statements\Insert;
 use DataMapper\QueryBuilder\Statements\Select;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use Test\TestEntity;
 
 class QueryBuilderTest extends TestCase
@@ -45,14 +46,14 @@ class QueryBuilderTest extends TestCase
     public function testSelect(): void
     {
         $queryBuilder = new QueryBuilder();
-        $reflection = new \ReflectionClass(TestEntity::class);
+        $reflection = new ReflectionClass(TestEntity::class);
 
         $select = $queryBuilder->select($this->dataMapper->getTable($reflection));
         $this->assertTrue($select instanceof Select);
         $this->assertEquals('SELECT * FROM `some_database`.`user`', (string)$select);
         $select->by('some_field', 'some_value');
         $this->assertEquals("SELECT * FROM `some_database`.`user` WHERE 'some_field' = 'some_value'", (string)$select);
-        $select->addWhereCondition(new NotEqual(['another_column', 'another_value']), Operators::OR);
+        $select->addWhereCondition(new NotEqual(['another_column', 'another_value']), Operators:: OR);
         $this->assertEquals(
             "SELECT * FROM `some_database`.`user` WHERE 'some_field' = 'some_value' OR 'another_column' != 'another_value'",
             (string)$select
@@ -67,12 +68,14 @@ class QueryBuilderTest extends TestCase
      */
     public function testInsert(): void
     {
-        $reflection = new \ReflectionClass(TestEntity::class);
+        $reflection = new ReflectionClass(TestEntity::class);
         $table = $this->dataMapper->getTable($reflection);
 
-        $insert = new Insert($table->getName(), [
-            new Field('id', 13, 'integer')
-        ]);
+        $insert = new Insert(
+            $table->getName(), [
+            new Field('id', 13, 'integer'),
+        ]
+        );
         $this->assertEquals("INSERT INTO `some_database`.`user` (id) VALUES (:id);", (string)$insert);
 
         $insert->addValues(new Field('username', 'some_username', 'string'));
