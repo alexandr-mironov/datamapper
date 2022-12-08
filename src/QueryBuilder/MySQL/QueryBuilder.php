@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\MySQL;
 
+use DataMapper\Entity\Field;
 use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\BuilderInterface;
@@ -26,6 +27,8 @@ final class QueryBuilder extends ParentQueryBuilder implements BuilderInterface
      */
     public function insert(Table $table, FieldCollection $values, array $updatable = []): Insert
     {
-        return new Insert($table->getName(), $values->getCollectionItems(), $updatable);
+        /** @var Field[] $fieldCollection */
+        $fieldCollection = $values->getCollectionItems();
+        return new Insert($table->getName(), $fieldCollection, $updatable);
     }
 }
