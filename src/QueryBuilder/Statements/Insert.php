@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Statements;
 
+use DataMapper\Entity\Field;
 use DataMapper\QueryBuilder\Expression;
 
 /**
@@ -23,7 +24,7 @@ class Insert implements StatementInterface
      * Insert constructor.
      *
      * @param string $tableName
-     * @param array<mixed> $fields
+     * @param Field[] $fields
      * @param string[] $updatable
      */
     public function __construct(
@@ -39,17 +40,16 @@ class Insert implements StatementInterface
      */
     public function __toString(): string
     {
-        $keys = array_column($this->fields, 'key');
-        $columnsString = implode(',', $keys);
-        $keysClone = $keys;
+        $keys = array_unique(array_column($this->fields, 'key'));
+        $columnsString = implode(', ', $keys);
         array_walk(
-            $keysClone,
+            $keys,
             function (&$value, $key) {
                 $value = ':' . $value;
             }
         );
 
-        $valuesString = implode(',', array_keys($keysClone));
+        $valuesString = implode(', ', $keys);
 
         $mysqlIgnore = '';
 
@@ -92,13 +92,15 @@ class Insert implements StatementInterface
     }
 
     /**
-     * @param array<string, mixed> $values
+     * @param Field ...$values
      *
      * @return $this
      */
-    public function addValues(array $values): static
+    public function addValues(Field ...$values): static
     {
-        $this->fields = array_merge($this->fields, $values);
+        foreach ($values as $value) {
+            $this->fields[$value->getKey()] = $value;
+        }
 
         return $this;
     }
