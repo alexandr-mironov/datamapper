@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\PGSQL;
 
-use DataMapper\Entity\Field;
-use DataMapper\Entity\FieldCollection;
 use DataMapper\Entity\Table;
 use DataMapper\QueryBuilder\BuilderInterface;
 use DataMapper\QueryBuilder\PGSQL\Statements\Insert;
@@ -20,15 +18,13 @@ final class QueryBuilder extends ParentQueryBuilder implements BuilderInterface
 {
     /**
      * @param Table $table
-     * @param FieldCollection $values
+     * @param string[] $keys
      * @param string[] $updatable
      *
      * @return Insert
      */
-    public function insert(Table $table, FieldCollection $values, array $updatable = []): Insert
+    public function insert(Table $table, array $keys, array $updatable = []): Insert
     {
-        /** @var Field[] $fieldCollection */
-        $fieldCollection = $values->getCollectionItems();
-        return new Insert($table->getName(), $fieldCollection, $updatable);
+        return new Insert($table->getName(), $keys, $updatable);
     }
 }

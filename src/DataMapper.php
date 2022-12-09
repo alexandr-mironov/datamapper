@@ -189,7 +189,7 @@ class DataMapper
     {
         $reflection = new ReflectionClass($model);
         $fields = $this->getFields($reflection, $model);
-        $fieldsForUpdate = $fields->getKeys();
+        $fieldsForUpdate = $keys = $fields->getKeys();
 
         if (ColumnHelper::hasPrimaryKey($reflection)) {
             $key = ColumnHelper::getPrimaryKeyColumnName($reflection);
@@ -200,7 +200,7 @@ class DataMapper
         $insertStatement = $this->getQueryBuilder()
             ->insert(
                 $this->getTable($reflection),
-                $fields,
+                $keys,
                 $fieldsForUpdate
             );
 

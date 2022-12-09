@@ -25,12 +25,12 @@ interface BuilderInterface
 {
     /**
      * @param Table $table
-     * @param FieldCollection $values
+     * @param string[] $keys
      * @param string[] $updatable
      *
      * @return Insert
      */
-    public function insert(Table $table, FieldCollection $values, array $updatable = []): Insert;
+    public function insert(Table $table, array $keys, array $updatable = []): Insert;
 
     /**
      * @param Table $table

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Test\units;
 
 use DataMapper\DataMapper;
-use DataMapper\Entity\Field;
 use DataMapper\Exceptions\Exception;
 use DataMapper\QueryBuilder\Conditions\NotEqual;
 use DataMapper\QueryBuilder\Exceptions\UnsupportedException;
@@ -72,22 +71,18 @@ class QueryBuilderTest extends TestCase
         $table = $this->dataMapper->getTable($reflection);
 
         $insert = new Insert(
-            $table->getName(), [
-            new Field('id', 13, 'integer'),
-        ]
+            $table->getName(),
+            ['id'],
         );
         $this->assertEquals("INSERT INTO `some_database`.`user` (id) VALUES (:id);", (string)$insert);
 
-        $insert->addValues(new Field('username', 'some_username', 'string'));
+        $insert->addValues('username');
         $this->assertEquals(
             "INSERT INTO `some_database`.`user` (id, username) VALUES (:id, :username);",
             (string)$insert
         );
 
-        $insert->addValues(
-            new Field('firstname', 'some_firstname', 'string'),
-            new Field('lastname', 'some_lastname', 'string')
-        );
+        $insert->addValues('firstname', 'lastname');
         $this->assertEquals(
             "INSERT INTO `some_database`.`user` (id, username, firstname, lastname) VALUES (:id, :username, :firstname, :lastname);",
             (string)$insert

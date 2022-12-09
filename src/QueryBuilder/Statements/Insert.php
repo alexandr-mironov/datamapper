@@ -24,12 +24,12 @@ class Insert implements StatementInterface
      * Insert constructor.
      *
      * @param string $tableName
-     * @param Field[] $fields
+     * @param string[] $keys
      * @param string[] $updatable
      */
     public function __construct(
         protected string $tableName,
-        protected array $fields,
+        protected array $keys,
         protected array $updatable = [],
     ) {
         $this->isUpdatable = (bool)$this->updatable;
@@ -40,7 +40,7 @@ class Insert implements StatementInterface
      */
     public function __toString(): string
     {
-        $keys = array_unique(array_column($this->fields, 'key'));
+        $keys = array_unique($this->keys);
         $columnsString = implode(', ', $keys);
         array_walk(
             $keys,
@@ -92,15 +92,13 @@ class Insert implements StatementInterface
     }
 
     /**
-     * @param Field ...$values
+     * @param string ...$values
      *
      * @return $this
      */
-    public function addValues(Field ...$values): static
+    public function addValues(string ...$values): static
     {
-        foreach ($values as $value) {
-            $this->fields[$value->getKey()] = $value;
-        }
+        $this->keys = array_unique(array_merge($this->keys, $values));
 
         return $this;
     }

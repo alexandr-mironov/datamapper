@@ -29,7 +29,7 @@ class Insert extends InsertStatement implements StatementInterface
      */
     public function __toString(): string
     {
-        $keys = array_column($this->fields, 'key');
+        $keys = array_column($this->keys, 'key');
         $columnsString = implode(',', $keys);
         $keysClone = $keys;
         array_walk(
