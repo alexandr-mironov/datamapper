@@ -341,11 +341,12 @@ class DataMapper
     {
         $reflection = new ReflectionClass($model);
         $fields = $this->getFields($reflection, $model);
+        $keys = $fields->getKeys();
 
         $insertStatement = $this->getQueryBuilder()
             ->insert(
                 $this->getTable($reflection),
-                $fields
+                $keys
             );
 
         // todo: add logic here
