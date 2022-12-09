@@ -20,9 +20,9 @@ class ColumnHelper
     public static function getColumns(ReflectionClass $reflection): ColumnCollection
     {
         $collection = new ColumnCollection();
-        foreach (self::getColumnIterator($reflection) as $column) {
+        foreach (self::getColumnIterator($reflection) as $propName => $column) {
             /** @var Column $column */
-            $collection->push(\DataMapper\Entity\Column::createFromAttribute($column));
+            $collection->addItem($propName, \DataMapper\Entity\Column::createFromAttribute($column));
         }
 
         return $collection;
@@ -42,7 +42,7 @@ class ColumnHelper
                 foreach ($columnAttributes as $attribute) {
                     /** @var Column $column */
                     $column = $attribute->newInstance();
-                    yield $column;
+                    yield $property->getName() => $column;
                 }
             }
         }

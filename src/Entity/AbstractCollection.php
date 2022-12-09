@@ -49,6 +49,19 @@ abstract class AbstractCollection implements Iterator
     }
 
     /**
+     * @param string $key
+     * @param object $item
+     */
+    public function addItem(string $key, object $item): void
+    {
+        if (array_key_exists($key, $this->collection)) {
+            throw new InvalidArgumentException('Key ' . $key . ' already exists in collection');
+        }
+        $this->validateItem($item);
+        $this->collection[$key] = $item;
+    }
+
+    /**
      * Add item to end of collection
      *
      * @param object $item

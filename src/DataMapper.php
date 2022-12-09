@@ -224,7 +224,8 @@ class DataMapper
                     /** @var Column $column */
                     $column = $attribute->newInstance();
                     $columnType = $column->getType();
-                    $collection->push(
+                    $collection->addItem(
+                        $property->getName(),
                         new Field(
                             $column->getName(),
                             $column->castToType($property->getValue($model), $columnType),
@@ -343,13 +344,18 @@ class DataMapper
         $fields = $this->getFields($reflection, $model);
         $keys = $fields->getKeys();
 
+        $primaryKey = ColumnHelper::getPrimaryKeyColumnName($reflection);
+        $keys = array_diff($keys, [$primaryKey]);
+
         $insertStatement = $this->getQueryBuilder()
             ->insert(
                 $this->getTable($reflection),
                 $keys
             );
 
-        // todo: add logic here
+        $statement = $this->execute((string)$insertStatement, $keys);
+        $primaryKeyValue = $this->pdo->lastInsertId();
+        $model->$primaryKey = $primaryKeyValue;
 
         return $model;
     }
