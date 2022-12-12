@@ -55,7 +55,7 @@ class ConditionFactory extends ConditionFactoryParent
             Operators::EXISTS => new Exists([$left]),
             Operators::NOT_EXISTS => new NotExists([$left]),
             Operators::RLIKE => new Regex([$left, $right]),
-            Operators::SOUNDS_LIKE => '',
+            Operators::SOUNDS_LIKE => '', // todo: add SoundsLike operator usage
             default => '',
         };
 

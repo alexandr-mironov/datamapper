@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\MySQL;
 
-
-use DataMapper\QueryBuilder\Operators as OperatorsParent;
+use DataMapper\QueryBuilder\Operators as CommonOperators;
 
 /**
  * Class Operators
@@ -12,7 +12,7 @@ use DataMapper\QueryBuilder\Operators as OperatorsParent;
  *
  * @package DataMapper\QueryBuilder\MySQL
  */
-class Operators extends OperatorsParent
+class Operators extends CommonOperators
 {
     /** @var string */
     public const RLIKE = 'RLIKE';
