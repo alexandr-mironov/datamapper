@@ -6,7 +6,7 @@ namespace DataMapper\Attributes;
 use Attribute;
 use DataMapper\Helpers\ColumnTrait;
 use DataMapper\QueryBuilder\Definitions\DefinitionInterface;
-use DateTime;
+use DateTimeInterface;
 use Exception;
 
 /**
@@ -93,14 +93,6 @@ class Column implements DefinitionInterface
     }
 
     /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
      * @return array<mixed>
      */
     public function getOptions(): array
@@ -110,31 +102,49 @@ class Column implements DefinitionInterface
 
     /**
      * @param mixed $value
-     * @param string $type
      *
      * @return mixed
      */
-    public function castToType(mixed $value, string $type): mixed
+    public function castToType(mixed $value): mixed
     {
-        return match ($type) {
+        return match ($this->getType()) {
             self::INTEGER => intval($value),
             self::FLOAT => doubleval($value),
             self::STRING, self::VARCHAR => strval($value),
             self::BOOLEAN => boolval($value),
             self::JSON, self::JSONB => json_encode($value),
-            self::DATETIME => $this->castDateTimeToString($value),
+            self::DATETIME => $this->castDateTimeToString(
+                $value,
+                (string)($this->getOption('format') ?? 'Y-m-d H:i:s')
+            ),
             default => $value,
         };
     }
 
     /**
-     * @param DateTime $dateTime
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param DateTimeInterface $dateTime
+     * @param string $format
      *
      * @return string
      */
-    private function castDateTimeToString(DateTime $dateTime): string
+    private function castDateTimeToString(
+        DateTimeInterface $dateTime,
+        string $format = 'Y-m-d H:i:s'
+    ): string {
+        return $dateTime->format($format);
+    }
+
+    public function getOption(string $name): mixed
     {
-        return $dateTime->format('Y-m-d H:i:s');
+        return $this->options[$name] ?? null;
     }
 
     /**

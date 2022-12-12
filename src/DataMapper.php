@@ -228,7 +228,7 @@ class DataMapper
                         $property->getName(),
                         new Field(
                             $column->getName(),
-                            $column->castToType($property->getValue($model), $columnType),
+                            $column->castToType($property->getValue($model)),
                             $columnType
                         )
                     );
