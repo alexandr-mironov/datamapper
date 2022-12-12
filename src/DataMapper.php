@@ -280,7 +280,7 @@ class DataMapper
 
         foreach ($fieldsMap as $propName => $column) {
             if (property_exists($instance, $propName) && array_key_exists($column->getName(), $values)) {
-                $instance->$propName = $column->castFromType($values[$column->getName()], $column->getType());
+                $instance->$propName = $column->castFromType($values[$column->getName()]);
             }
         }
 

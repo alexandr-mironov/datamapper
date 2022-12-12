@@ -6,6 +6,7 @@ namespace DataMapper\Attributes;
 use Attribute;
 use DataMapper\Helpers\ColumnTrait;
 use DataMapper\QueryBuilder\Definitions\DefinitionInterface;
+use DateTime;
 use DateTimeInterface;
 use Exception;
 
@@ -142,6 +143,22 @@ class Column implements DefinitionInterface
         return $dateTime->format($format);
     }
 
+    /**
+     * @param string $datetimeString
+     * @param string $format
+     *
+     * @return DateTime
+     */
+    private function castStringToDateTime(string $datetimeString, string $format): DateTime
+    {
+        return DateTime::createFromFormat($format, $datetimeString);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return mixed
+     */
     public function getOption(string $name): mixed
     {
         return $this->options[$name] ?? null;
@@ -153,10 +170,14 @@ class Column implements DefinitionInterface
      *
      * @return mixed
      */
-    public function castFromType(mixed $value, string $type): mixed
+    public function castFromType(mixed $value): mixed
     {
-        return match ($type) {
+        return match ($this->getType()) {
             self::JSON, self::JSONB => json_decode($value, true),
+            self::DATETIME => $this->castStringToDateTime(
+                $value,
+                (string)($this->getOption('format') ?? 'Y-m-d H:i:s')
+            ),
             default => $value
         };
     }
