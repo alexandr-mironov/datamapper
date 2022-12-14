@@ -150,10 +150,14 @@ class DataMapper
         $this->limit = null;
         $this->offset = null;
 
-        $this->statement = $this->queryBuilder->select(
-            $this->getTable($this->entityReflection),
-            ...$conditions
-        );
+        $this->statement = $this->queryBuilder
+            ->select(
+                $this->getTable($this->entityReflection),
+                ...$conditions
+            )
+            ->fieldSet(
+                ColumnHelper::getFieldSet($this->entityReflection)
+            );
 
         return $this;
     }

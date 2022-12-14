@@ -16,6 +16,7 @@ use Test\TestEntity;
 
 class DataMapperTest extends TestCase
 {
+    public const TEST_ENTITY_FIELD_SET = 'id as TestEntity.id, username as TestEntity.from, email as TestEntity.email, created_at as TestEntity.createdAt, updated_at as TestEntity.updatedAt, scores as TestEntity.scores, data as TestEntity.data';
     /**
      * @var DataMapper
      */
@@ -58,7 +59,7 @@ class DataMapperTest extends TestCase
     public function testGetSQL()
     {
         $this->assertEquals(
-            'SELECT * FROM `some_database`.`user`',
+            "SELECT " . self::TEST_ENTITY_FIELD_SET . " FROM `some_database`.`user`",
             $this->dataMapper->find(TestEntity::class)->getSQL()
         );
     }

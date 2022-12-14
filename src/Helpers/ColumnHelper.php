@@ -31,7 +31,27 @@ class ColumnHelper
     /**
      * @param ReflectionClass $reflection
      *
-     * @return Generator
+     * @return string[]
+     */
+    public static function getFieldSet(ReflectionClass $reflection): array
+    {
+        $fieldSet = [];
+        $prefix = $reflection->getShortName();
+        /**
+         * @var string $propName
+         * @var Column $column
+         */
+        foreach (self::getColumnIterator($reflection) as $propName => $column) {
+            $fieldSet[] = $column->getName() . ' as ' . $prefix . "." . $propName;
+        }
+
+        return $fieldSet;
+    }
+
+    /**
+     * @param ReflectionClass $reflection
+     *
+     * @return Generator<string, Column>
      */
     public static function getColumnIterator(ReflectionClass $reflection): Generator
     {

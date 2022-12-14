@@ -44,10 +44,14 @@ class Select extends AbstractStatementWithWhere implements StatementInterface
 
     /**
      * @param string[] $fields
+     *
+     * @return Select
      */
-    public function fieldSet(array $fields): void
+    public function fieldSet(array $fields): static
     {
         $this->selectExpression = implode(', ', $fields);
+
+        return $this;
     }
 
     /**
