@@ -49,6 +49,7 @@ class Column implements DefinitionInterface
     }
 
     /**
+     *
      * @return string
      * @throws Exception
      */
