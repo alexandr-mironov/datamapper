@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\Entity;
 
+use Generator;
 use InvalidArgumentException;
 use Iterator;
 
@@ -55,6 +56,7 @@ class Collection implements Iterator
     ) {
         foreach ($keys as $key) {
             if (!property_exists($this->entityClass, $key)) {
+                // todo: replace Exception to some custom exception
                 throw new InvalidArgumentException(
                     'Property '
                     . $key
@@ -77,10 +79,31 @@ class Collection implements Iterator
     public function push(object $item): void
     {
         if (!$this->validateItem($item)) {
+            // todo: replace Exception to some custom exception
             throw new InvalidArgumentException('Provided item is not instance of ' . $this->entityClass);
         }
 
+        $nextIndex = count($this->collection) + 1;
+        $this->collection[$nextIndex] = $item;
 
+        foreach ($this->keyMaps as $mapKey => &$collection) {
+            $collection[(string)$item->$mapKey] = &$item; // ?object was set as link anyway?
+        }
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return object[]
+     */
+    public function getMap(string $key): array
+    {
+        if (!array_key_exists($key, $this->keyMaps)) {
+            // todo: replace Exception to some custom exception
+            throw new InvalidArgumentException("Collection can't be mapped with key " . $key);
+        }
+
+        return $this->keyMaps[$key];
     }
 
     /**
@@ -109,5 +132,21 @@ class Collection implements Iterator
     public function rewind(): void
     {
         $this->current = 0;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return Generator
+     */
+    public function getMapIterator(string $key): Generator
+    {
+        foreach ($this->collection as $item) {
+            if (!property_exists($item, $key)) {
+                // todo: replace Exception to some custom exception
+                throw new InvalidArgumentException("Item doesn't have property " . $key);
+            }
+            yield ((string)$item->{$key}) => $item;
+        }
     }
 }
