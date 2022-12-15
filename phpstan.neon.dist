@@ -7,4 +7,4 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
         - '#Property DataMapper\\QueryBuilder\\Statements\\With\:\:\$aliases is never read, only written.#'
-        - '#Property DataMapper\\QueryBuilder\\QueryBuilder\:\:\$statement is never read, only written.#'
+#       - '#Property DataMapper\\QueryBuilder\\QueryBuilder\:\:\$statement is never read, only written.#'

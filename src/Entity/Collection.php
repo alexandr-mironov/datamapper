@@ -42,6 +42,9 @@ class Collection implements Iterator
     /** @var int $current current item key (index) */
     protected int $current = 0;
 
+    /**
+     * @var array<string, array<object>>
+     */
     protected array $keyMaps = [];
 
     /**

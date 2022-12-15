@@ -149,10 +149,15 @@ class Column implements DefinitionInterface
      * @param string $format
      *
      * @return DateTime
+     * @throws Exception
      */
     private function castStringToDateTime(string $datetimeString, string $format): DateTime
     {
-        return DateTime::createFromFormat($format, $datetimeString);
+        $datetime = DateTime::createFromFormat($format, $datetimeString);
+        if (!$datetime) {
+            throw new Exception(sprintf('Invalid datetime string provided: %s , for format: %s', $datetimeString, $format));
+        }
+        return $datetime;
     }
 
     /**
