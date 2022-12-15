@@ -35,12 +35,6 @@ class QueryBuilder implements BuilderInterface
 
     public const POSTGRESQL = 'postgresql';
 
-    /** @var BuilderInterface */
-    public BuilderInterface $adapter;
-
-    /** @var StatementInterface */
-    private StatementInterface $statement;
-
     /**
      * QueryBuilder constructor.
      *
@@ -115,10 +109,10 @@ class QueryBuilder implements BuilderInterface
     /**
      * @param Select[] $selects
      *
-     * @return $this
+     * @return With
      * @throws Exception
      */
-    public function with(array $selects): static
+    public function with(array $selects): With
     {
         $wrappers = [];
         foreach ($selects as $key => $select) {
@@ -131,9 +125,8 @@ class QueryBuilder implements BuilderInterface
             }
             $wrappers[] = new SelectWrapper($select, $alias);
         }
-        $this->statement = new With(...$wrappers);
 
-        return $this;
+        return new With(...$wrappers);
     }
 
     /**
