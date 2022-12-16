@@ -44,6 +44,8 @@ class DataMapper
     /**
      * DataMapper constructor.
      *
+     * @codeCoverageIgnore
+     *
      * @param PDO $pdo
      * @param string $dbmsAlias
      * @param bool $beautify
@@ -89,6 +91,8 @@ class DataMapper
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param string $dsn
      * @param string|null $username
      * @param string|null $password
@@ -112,6 +116,8 @@ class DataMapper
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param PDO $pdo
      * @param string $dbmsAlias
      * @param bool $beautify
@@ -242,53 +248,6 @@ class DataMapper
         }
 
         return $collection;
-    }
-
-    /**
-     * @param ReflectionClass $reflection
-     *
-     * @return array<string, Column>
-     */
-    private function getFieldsMap(ReflectionClass $reflection): array
-    {
-        $map = [];
-        $properties = $reflection->getProperties();
-        foreach ($properties as $property) {
-            $columnAttributes = $property->getAttributes(Column::class);
-            if (count($columnAttributes)) {
-                foreach ($columnAttributes as $attribute) {
-                    /** @var Column $column */
-                    $column = $attribute->newInstance();
-                    $map[$property->getName()] = $column;
-                }
-            }
-        }
-
-        return $map;
-    }
-
-    /**
-     * @param ReflectionClass $reflection
-     * @param array<string, Column> $fieldsMap
-     * @param array<string, mixed> $values
-     *
-     * @return object
-     * @throws ReflectionException
-     */
-    private function getMappedValuesToEntity(
-        ReflectionClass $reflection,
-        array $fieldsMap,
-        array $values
-    ): object {
-        $instance = $reflection->newInstance();
-
-        foreach ($fieldsMap as $propName => $column) {
-            if (property_exists($instance, $propName) && array_key_exists($column->getName(), $values)) {
-                $instance->$propName = $column->castFromType($values[$column->getName()]);
-            }
-        }
-
-        return $instance;
     }
 
     /**
@@ -530,8 +489,56 @@ class DataMapper
     }
 
     /**
+     * @param ReflectionClass $reflection
+     *
+     * @return array<string, Column>
+     */
+    private function getFieldsMap(ReflectionClass $reflection): array
+    {
+        $map = [];
+        $properties = $reflection->getProperties();
+        foreach ($properties as $property) {
+            $columnAttributes = $property->getAttributes(Column::class);
+            if (count($columnAttributes)) {
+                foreach ($columnAttributes as $attribute) {
+                    /** @var Column $column */
+                    $column = $attribute->newInstance();
+                    $map[$property->getName()] = $column;
+                }
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * @param ReflectionClass $reflection
+     * @param array<string, Column> $fieldsMap
+     * @param array<string, mixed> $values
+     *
+     * @return object
+     * @throws ReflectionException
+     */
+    private function getMappedValuesToEntity(
+        ReflectionClass $reflection,
+        array $fieldsMap,
+        array $values
+    ): object {
+        $instance = $reflection->newInstance();
+
+        foreach ($fieldsMap as $propName => $column) {
+            if (property_exists($instance, $propName) && array_key_exists($column->getName(), $values)) {
+                $instance->$propName = $column->castFromType($values[$column->getName()]);
+            }
+        }
+
+        return $instance;
+    }
+
+    /**
      * @return object[]
      * @throws Exception
+     * @throws ReflectionException
      */
     public function getArray(): array
     {
@@ -586,6 +593,9 @@ class DataMapper
         return $collection;
     }
 
+    /**
+     * @return string
+     */
     public function getSQL(): string
     {
         if ($this->statement instanceof Select) {
