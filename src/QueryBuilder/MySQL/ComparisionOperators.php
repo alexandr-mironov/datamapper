@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\MySQL;
 
-use DataMapper\QueryBuilder\Operators as CommonOperators;
+use DataMapper\QueryBuilder\ComparisionOperators as CommonOperators;
 
 /**
  * Class Operators
@@ -12,7 +12,7 @@ use DataMapper\QueryBuilder\Operators as CommonOperators;
  *
  * @package DataMapper\QueryBuilder\MySQL
  */
-class Operators extends CommonOperators
+class ComparisionOperators extends CommonOperators
 {
     /** @var string */
     public const RLIKE = 'RLIKE';

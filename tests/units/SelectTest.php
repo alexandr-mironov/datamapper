@@ -8,7 +8,7 @@ use DataMapper\DataMapper;
 use DataMapper\Exceptions\Exception;
 use DataMapper\QueryBuilder\Conditions\Equal;
 use DataMapper\QueryBuilder\Exceptions\Exception as QueryBuilderException;
-use DataMapper\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\LogicalOperators;
 use DataMapper\QueryBuilder\QueryBuilder;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -143,8 +143,8 @@ class SelectTest extends TestCase
         $expectedSimpleQuery = "SELECT " . self::TEST_ENTITY_FIELD_SET . " FROM `some_database`.`user` WHERE 'field' = 'value' OR 'another_field' = 'another_value'";
         $result = $this->dataMapper
             ->find(TestEntity::class)
-            ->by('field', 'value', Operators::OR)
-            ->by('another_field', 'another_value', Operators::OR)
+            ->by('field', 'value', LogicalOperators:: OR)
+            ->by('another_field', 'another_value', LogicalOperators:: OR)
             ->getSQL();
         $this->assertEquals($expectedSimpleQuery, $result);
     }
@@ -160,8 +160,8 @@ class SelectTest extends TestCase
         $expectedSimpleQuery = "SELECT " . self::TEST_ENTITY_FIELD_SET . " FROM `some_database`.`user` WHERE 'field' = 'value' XOR 'another_field' = 'another_value'";
         $result = $this->dataMapper
             ->find(TestEntity::class)
-            ->by('field', 'value', Operators::OR)
-            ->by('another_field', 'another_value', Operators::XOR)
+            ->by('field', 'value', LogicalOperators:: OR)
+            ->by('another_field', 'another_value', LogicalOperators:: XOR)
             ->getSQL();
         $this->assertEquals($expectedSimpleQuery, $result);
     }

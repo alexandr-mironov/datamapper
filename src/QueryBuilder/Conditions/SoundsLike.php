@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\MySQL\Operators;
+use DataMapper\QueryBuilder\MySQL\ComparisionOperators;
 
 /**
  * Class SoundsLike
@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\MySQL\Operators;
 class SoundsLike extends Like
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = Operators::SOUNDS_LIKE;
+    protected const CONDITION_OPERATOR = ComparisionOperators::SOUNDS_LIKE;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid argument for ' . self::CONDITION_OPERATOR . ' condition';

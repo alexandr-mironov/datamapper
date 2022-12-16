@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\ComparisionOperators;
 
 /**
  * Class NotExists
@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\Operators;
 class NotExists extends Exists
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = Operators::NOT_EXISTS;
+    protected const CONDITION_OPERATOR = ComparisionOperators::NOT_EXISTS;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid argument for Not Exists condition';

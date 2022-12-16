@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\MySQL\Operators;
+use DataMapper\QueryBuilder\MySQL\ComparisionOperators;
 
 class Regex extends Like
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = Operators::RLIKE;
+    protected const CONDITION_OPERATOR = ComparisionOperators::RLIKE;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid argument for ' . self::CONDITION_OPERATOR . ' condition';

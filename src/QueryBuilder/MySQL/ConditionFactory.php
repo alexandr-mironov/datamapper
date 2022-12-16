@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\MySQL;
 
+use DataMapper\QueryBuilder\ComparisionOperators;
 use DataMapper\QueryBuilder\Conditions\{Between,
     ConditionFactory as ConditionFactoryParent,
     Equal,
@@ -20,8 +21,7 @@ use DataMapper\QueryBuilder\Conditions\{Between,
     NotExists,
     NotGreaterThen,
     NotLessThen,
-    Regex
-};
+    Regex};
 use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
@@ -39,23 +39,23 @@ class ConditionFactory extends ConditionFactoryParent
         [$operator, $left, $right] = $conditionParts;
 
         $this->condition = (string)match ($operator) {
-            Operators::EQUAL => new Equal([$left, $right]),
-            Operators::LIKE => new Like([$left, $right]),
-            Operators::BETWEEN => new Between([$left, $right, $conditionParts[3]]),
-            Operators::IN => new In([$left, $right]),
-            Operators::GREATER_THEN => new GreaterThen([$left, $right]),
-            Operators::NOT_LESS_THEN => new NotLessThen([$left, $right]),
-            Operators::LESS_THEN => new LessThen([$left, $right]),
-            Operators::NOT_GREATER_THEN => new NotGreaterThen([$left, $right]),
-            Operators::GREATER_THEN_OR_EQUAL => new GreaterThenOrEqual([$left, $right]),
-            Operators::LESS_THEN_OR_EQUAL => new LessThenOrEqual([$left, $right]),
-            Operators::NOT_EQUAL => new NotEqual([$left, $right]),
-            Operators::IS_NULL => new IsNull([$left]),
-            Operators::IS_NOT_NULL => new IsNotNull([$left]),
-            Operators::EXISTS => new Exists([$left]),
-            Operators::NOT_EXISTS => new NotExists([$left]),
-            Operators::RLIKE => new Regex([$left, $right]),
-            Operators::SOUNDS_LIKE => '', // todo: add SoundsLike operator usage
+            ComparisionOperators::EQUAL => new Equal([$left, $right]),
+            ComparisionOperators::LIKE => new Like([$left, $right]),
+            ComparisionOperators::BETWEEN => new Between([$left, $right, $conditionParts[3]]),
+            ComparisionOperators::IN => new In([$left, $right]),
+            ComparisionOperators::GREATER_THEN => new GreaterThen([$left, $right]),
+            ComparisionOperators::NOT_LESS_THEN => new NotLessThen([$left, $right]),
+            ComparisionOperators::LESS_THEN => new LessThen([$left, $right]),
+            ComparisionOperators::NOT_GREATER_THEN => new NotGreaterThen([$left, $right]),
+            ComparisionOperators::GREATER_THEN_OR_EQUAL => new GreaterThenOrEqual([$left, $right]),
+            ComparisionOperators::LESS_THEN_OR_EQUAL => new LessThenOrEqual([$left, $right]),
+            ComparisionOperators::NOT_EQUAL => new NotEqual([$left, $right]),
+            ComparisionOperators::IS_NULL => new IsNull([$left]),
+            ComparisionOperators::IS_NOT_NULL => new IsNotNull([$left]),
+            ComparisionOperators::EXISTS => new Exists([$left]),
+            ComparisionOperators::NOT_EXISTS => new NotExists([$left]),
+            ComparisionOperators::RLIKE => new Regex([$left, $right]),
+            ComparisionOperators::SOUNDS_LIKE => '', // todo: add SoundsLike operator usage
             default => '',
         };
 

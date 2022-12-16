@@ -579,6 +579,7 @@ class DataMapper
      *
      * @return array<string, object>
      * @throws Exception
+     * @throws ReflectionException
      */
     public function getMap(string $key): array
     {

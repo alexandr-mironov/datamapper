@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
+use DataMapper\QueryBuilder\ComparisionOperators;
 use DataMapper\QueryBuilder\Exceptions\Exception;
-use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class Equal
@@ -15,7 +15,7 @@ use DataMapper\QueryBuilder\Operators;
 class Equal extends AbstractCondition
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = Operators::EQUAL;
+    protected const CONDITION_OPERATOR = ComparisionOperators::EQUAL;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Equal condition required two elements';

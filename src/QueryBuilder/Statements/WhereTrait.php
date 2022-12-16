@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\Conditions\LessThenOrEqual;
 use DataMapper\QueryBuilder\Conditions\NotEqual;
 use DataMapper\QueryBuilder\Conditions\NotIn;
 use DataMapper\QueryBuilder\Exceptions\Exception;
-use DataMapper\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\LogicalOperators;
 
 trait WhereTrait
 {
@@ -87,7 +87,7 @@ trait WhereTrait
      * @return $this
      * @throws Exception
      */
-    public function by(string $key, mixed $value, string $operator = Operators:: AND): static
+    public function by(string $key, mixed $value, string $operator = LogicalOperators:: AND): static
     {
         $args = [$key, $value];
         $this->addWhereCondition(
@@ -102,7 +102,7 @@ trait WhereTrait
      * @param ConditionInterface $condition
      * @param string $operator
      */
-    public function addWhereCondition(ConditionInterface $condition, string $operator = Operators:: AND): void
+    public function addWhereCondition(ConditionInterface $condition, string $operator = LogicalOperators:: AND): void
     {
         $this->wheres[] = [
             'operator' => $operator,
@@ -118,7 +118,7 @@ trait WhereTrait
      * @return $this
      * @throws Exception
      */
-    public function byNot(string $key, mixed $value, string $operator = Operators:: AND): static
+    public function byNot(string $key, mixed $value, string $operator = LogicalOperators:: AND): static
     {
         $args = [$key, $value];
         $this->addWhereCondition(
@@ -137,7 +137,7 @@ trait WhereTrait
      * @return $this
      * @throws Exception
      */
-    public function whereGreaterThen(string $key, mixed $value, string $operator = Operators:: AND): static
+    public function whereGreaterThen(string $key, mixed $value, string $operator = LogicalOperators:: AND): static
     {
         return $this->where(GreaterThen::class, $key, $value, $operator);
     }
@@ -151,7 +151,7 @@ trait WhereTrait
      * @return $this
      * @throws Exception
      */
-    public function where(string $condition, string $key, mixed $value, string $operator = Operators:: AND): static
+    public function where(string $condition, string $key, mixed $value, string $operator = LogicalOperators:: AND): static
     {
         if (!class_exists($condition)) {
             throw new Exception('invalid condition provided');
@@ -179,7 +179,7 @@ trait WhereTrait
      * @return $this
      * @throws Exception
      */
-    public function whereGreaterThenOrEqual(string $key, mixed $value, string $operator = Operators:: AND): static
+    public function whereGreaterThenOrEqual(string $key, mixed $value, string $operator = LogicalOperators:: AND): static
     {
         return $this->where(GreaterThenOrEqual::class, $key, $value, $operator);
     }
@@ -192,7 +192,7 @@ trait WhereTrait
      * @return $this
      * @throws Exception
      */
-    public function whereLessThen(string $key, mixed $value, string $operator = Operators:: AND): static
+    public function whereLessThen(string $key, mixed $value, string $operator = LogicalOperators:: AND): static
     {
         return $this->where(LessThen::class, $key, $value, $operator);
     }
@@ -205,7 +205,7 @@ trait WhereTrait
      * @return $this
      * @throws Exception
      */
-    public function whereLessThenOrEqual(string $key, mixed $value, string $operator = Operators:: AND): static
+    public function whereLessThenOrEqual(string $key, mixed $value, string $operator = LogicalOperators:: AND): static
     {
         return $this->where(LessThenOrEqual::class, $key, $value, $operator);
     }

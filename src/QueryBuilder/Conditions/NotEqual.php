@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\ComparisionOperators;
 
 /**
  * Class NotEqual
@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\Operators;
 class NotEqual extends Equal
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = Operators::NOT_EQUAL;
+    protected const CONDITION_OPERATOR = ComparisionOperators::NOT_EQUAL;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid arguments Not Equal condition';

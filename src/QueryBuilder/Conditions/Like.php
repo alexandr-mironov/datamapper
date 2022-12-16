@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
+use DataMapper\QueryBuilder\ComparisionOperators;
 use DataMapper\QueryBuilder\Exceptions\Exception;
-use DataMapper\QueryBuilder\Operators;
 
 /**
  * Class Like
@@ -15,7 +15,7 @@ use DataMapper\QueryBuilder\Operators;
 class Like extends AbstractCondition
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = Operators::LIKE;
+    protected const CONDITION_OPERATOR = ComparisionOperators::LIKE;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid condition parameters';

@@ -8,7 +8,7 @@ use DataMapper\DataMapper;
 use DataMapper\Exceptions\Exception;
 use DataMapper\QueryBuilder\Conditions\NotEqual;
 use DataMapper\QueryBuilder\Exceptions\UnsupportedException;
-use DataMapper\QueryBuilder\Operators;
+use DataMapper\QueryBuilder\LogicalOperators;
 use DataMapper\QueryBuilder\QueryBuilder;
 use DataMapper\QueryBuilder\Statements\Insert;
 use DataMapper\QueryBuilder\Statements\Select;
@@ -52,7 +52,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals('SELECT * FROM `some_database`.`user`', (string)$select);
         $select->by('some_field', 'some_value');
         $this->assertEquals("SELECT * FROM `some_database`.`user` WHERE 'some_field' = 'some_value'", (string)$select);
-        $select->addWhereCondition(new NotEqual(['another_column', 'another_value']), Operators:: OR);
+        $select->addWhereCondition(new NotEqual(['another_column', 'another_value']), LogicalOperators:: OR);
         $this->assertEquals(
             "SELECT * FROM `some_database`.`user` WHERE 'some_field' = 'some_value' OR 'another_column' != 'another_value'",
             (string)$select
