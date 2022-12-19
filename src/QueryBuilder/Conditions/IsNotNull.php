@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 
 /**
  * Class IsNotNull
@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\ComparisionOperators;
 class IsNotNull extends IsNull
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = ComparisionOperators::IS_NOT_NULL;
+    protected const CONDITION_OPERATOR = ComparisonOperators::IS_NOT_NULL;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid arguments for IS NULL condition';

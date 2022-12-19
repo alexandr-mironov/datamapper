@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 
 /**
  * Class NotLike
@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\ComparisionOperators;
 class NotLike extends Like
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = ComparisionOperators::NOT_LIKE;
+    protected const CONDITION_OPERATOR = ComparisonOperators::NOT_LIKE;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid condition parameters';

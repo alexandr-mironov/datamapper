@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 
 /**
  * Class LessThenOrEqual
@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\ComparisionOperators;
 class LessThenOrEqual extends Equal
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = ComparisionOperators::LESS_THEN_OR_EQUAL;
+    protected const CONDITION_OPERATOR = ComparisonOperators::LESS_THEN_OR_EQUAL;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid arguments Less Then Or Equal condition';

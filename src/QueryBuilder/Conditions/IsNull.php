@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
@@ -15,7 +15,7 @@ use DataMapper\QueryBuilder\Exceptions\Exception;
 class IsNull extends AbstractCondition
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = ComparisionOperators::IS_NULL;
+    protected const CONDITION_OPERATOR = ComparisonOperators::IS_NULL;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid arguments for IS NULL condition';

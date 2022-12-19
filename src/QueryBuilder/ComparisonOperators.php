@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder;
 
-class ComparisionOperators
+class ComparisonOperators
 {
 
     /** @var string */

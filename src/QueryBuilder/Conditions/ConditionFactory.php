@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
@@ -22,21 +22,21 @@ class ConditionFactory extends AbstractCondition
         [$operator, $left, $right] = $conditionParts;
 
         $this->condition = (string)match ($operator) {
-            ComparisionOperators::EQUAL => new Equal([$left, $right]),
-            ComparisionOperators::LIKE => new Like([$left, $right]),
-            ComparisionOperators::BETWEEN => new Between([$left, $right, $conditionParts[3]]),
-            ComparisionOperators::IN => new In([$left, $right]),
-            ComparisionOperators::GREATER_THEN => new GreaterThen([$left, $right]),
-            ComparisionOperators::NOT_LESS_THEN => new NotLessThen([$left, $right]),
-            ComparisionOperators::LESS_THEN => new LessThen([$left, $right]),
-            ComparisionOperators::NOT_GREATER_THEN => new NotGreaterThen([$left, $right]),
-            ComparisionOperators::GREATER_THEN_OR_EQUAL => new GreaterThenOrEqual([$left, $right]),
-            ComparisionOperators::LESS_THEN_OR_EQUAL => new LessThenOrEqual([$left, $right]),
-            ComparisionOperators::NOT_EQUAL => new NotEqual([$left, $right]),
-            ComparisionOperators::IS_NULL => new IsNull([$left]),
-            ComparisionOperators::IS_NOT_NULL => new IsNotNull([$left]),
-            ComparisionOperators::EXISTS => new Exists([$left]),
-            ComparisionOperators::NOT_EXISTS => new NotExists([$left]),
+            ComparisonOperators::EQUAL => new Equal([$left, $right]),
+            ComparisonOperators::LIKE => new Like([$left, $right]),
+            ComparisonOperators::BETWEEN => new Between([$left, $right, $conditionParts[3]]),
+            ComparisonOperators::IN => new In([$left, $right]),
+            ComparisonOperators::GREATER_THEN => new GreaterThen([$left, $right]),
+            ComparisonOperators::NOT_LESS_THEN => new NotLessThen([$left, $right]),
+            ComparisonOperators::LESS_THEN => new LessThen([$left, $right]),
+            ComparisonOperators::NOT_GREATER_THEN => new NotGreaterThen([$left, $right]),
+            ComparisonOperators::GREATER_THEN_OR_EQUAL => new GreaterThenOrEqual([$left, $right]),
+            ComparisonOperators::LESS_THEN_OR_EQUAL => new LessThenOrEqual([$left, $right]),
+            ComparisonOperators::NOT_EQUAL => new NotEqual([$left, $right]),
+            ComparisonOperators::IS_NULL => new IsNull([$left]),
+            ComparisonOperators::IS_NOT_NULL => new IsNotNull([$left]),
+            ComparisonOperators::EXISTS => new Exists([$left]),
+            ComparisonOperators::NOT_EXISTS => new NotExists([$left]),
             default => '',
         };
 

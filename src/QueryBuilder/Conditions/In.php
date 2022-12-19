@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
@@ -15,7 +15,7 @@ use DataMapper\QueryBuilder\Exceptions\Exception;
 class In extends AbstractCondition
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = ComparisionOperators::IN;
+    protected const CONDITION_OPERATOR = ComparisonOperators::IN;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid right hand of IN condition';

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 
 /**
  * Class NotGreaterThen
@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\ComparisionOperators;
 class NotGreaterThen extends GreaterThen
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = ComparisionOperators::NOT_GREATER_THEN;
+    protected const CONDITION_OPERATOR = ComparisonOperators::NOT_GREATER_THEN;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid argument for Not Greater Then condition';

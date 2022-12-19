@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 
 /**
  * Class Exists
@@ -14,7 +14,7 @@ use DataMapper\QueryBuilder\ComparisionOperators;
 class Exists extends IsNull
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = ComparisionOperators::EXISTS;
+    protected const CONDITION_OPERATOR = ComparisonOperators::EXISTS;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid arguments for Exists condition';

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DataMapper\QueryBuilder\Conditions;
 
-use DataMapper\QueryBuilder\ComparisionOperators;
+use DataMapper\QueryBuilder\ComparisonOperators;
 use DataMapper\QueryBuilder\Exceptions\Exception;
 use DataMapper\QueryBuilder\LogicalOperators;
 
@@ -16,7 +16,7 @@ use DataMapper\QueryBuilder\LogicalOperators;
 class Between extends AbstractCondition
 {
     /** @var string */
-    protected const CONDITION_OPERATOR = ComparisionOperators::BETWEEN;
+    protected const CONDITION_OPERATOR = ComparisonOperators::BETWEEN;
 
     /** @var string */
     protected const EXCEPTION_MESSAGE = 'Invalid condition parameters';
