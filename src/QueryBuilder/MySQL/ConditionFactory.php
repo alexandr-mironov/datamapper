@@ -21,7 +21,8 @@ use DataMapper\QueryBuilder\Conditions\{Between,
     NotExists,
     NotGreaterThen,
     NotLessThen,
-    Regex};
+    Regex,
+    SoundsLike};
 use DataMapper\QueryBuilder\Exceptions\Exception;
 
 /**
@@ -55,7 +56,7 @@ class ConditionFactory extends ConditionFactoryParent
             ComparisonOperators::EXISTS => new Exists([$left]),
             ComparisonOperators::NOT_EXISTS => new NotExists([$left]),
             ComparisonOperators::RLIKE => new Regex([$left, $right]),
-            ComparisonOperators::SOUNDS_LIKE => '', // todo: add SoundsLike operator usage
+            ComparisonOperators::SOUNDS_LIKE => new SoundsLike([$left, $right]),
             default => '',
         };
 
