@@ -102,7 +102,7 @@ trait WhereTrait
      * @param ConditionInterface $condition
      * @param string $operator
      *
-     * @return WhereTrait
+     * @return $this
      */
     public function addWhereCondition(ConditionInterface $condition, string $operator = LogicalOperators:: AND): static
     {
