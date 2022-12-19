@@ -60,6 +60,48 @@ class QueryBuilderTest extends TestCase
     }
 
     /**
+     * @dataProvider selectProvider
+     *
+     * @covers \DataMapper\QueryBuilder\QueryBuilder::select
+     * @covers \DataMapper\QueryBuilder\Statements\WhereTrait::by
+     * @covers \DataMapper\QueryBuilder\Statements\Select::__toString
+     * @covers \DataMapper\QueryBuilder\Statements\WhereTrait::addWhereCondition
+     *
+     * @param Select $select
+     * @param string $expected
+     */
+    public function testSelect2(Select $select, string $expected): void
+    {
+        $this->assertEquals($expected, (string)$select);
+    }
+
+    public function selectProvider(): array
+    {
+        $this->setUp();
+        $queryBuilder = new QueryBuilder();
+        $reflection = new ReflectionClass(TestEntity::class);
+
+        $select = $queryBuilder->select($this->dataMapper->getTable($reflection));
+
+        return [
+            [
+                'select' => $select,
+                'expected' => 'SELECT * FROM `some_database`.`user`'
+            ],
+            [
+                'select' => (clone $select)->by('some_field', 'some_value'),
+                'expected' => "SELECT * FROM `some_database`.`user` WHERE 'some_field' = 'some_value'"
+            ],
+            [
+                'select' => (clone $select)
+                    ->by('some_field', 'some_value')
+                    ->addWhereCondition(new NotEqual(['another_column', 'another_value']), LogicalOperators:: OR),
+                'expected' => "SELECT * FROM `some_database`.`user` WHERE 'some_field' = 'some_value' OR 'another_column' != 'another_value'"
+            ]
+        ];
+    }
+
+    /**
      * @covers \DataMapper\QueryBuilder\Statements\Insert
      * @covers \DataMapper\QueryBuilder\Statements\Insert::__toString
      * @covers \DataMapper\QueryBuilder\Statements\Insert::addValues

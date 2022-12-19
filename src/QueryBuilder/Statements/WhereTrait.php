@@ -101,13 +101,17 @@ trait WhereTrait
     /**
      * @param ConditionInterface $condition
      * @param string $operator
+     *
+     * @return WhereTrait
      */
-    public function addWhereCondition(ConditionInterface $condition, string $operator = LogicalOperators:: AND): void
+    public function addWhereCondition(ConditionInterface $condition, string $operator = LogicalOperators:: AND): static
     {
         $this->wheres[] = [
             'operator' => $operator,
             'condition' => (string)$condition,
         ];
+
+        return $this;
     }
 
     /**

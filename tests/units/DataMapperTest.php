@@ -7,6 +7,8 @@ namespace Test\units;
 use DataMapper\DataMapper;
 use DataMapper\Entity\Table;
 use DataMapper\Exceptions\Exception;
+use DataMapper\QueryBuilder\Exceptions\Exception as QueryBuilderException;
+use DataMapper\QueryBuilder\Exceptions\UnsupportedException;
 use DataMapper\QueryBuilder\QueryBuilder;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -22,6 +24,10 @@ class DataMapperTest extends TestCase
      */
     private DataMapper $dataMapper;
 
+    /**
+     * @throws QueryBuilderException
+     * @throws UnsupportedException
+     */
     public function setUp(): void
     {
         $pdo = $this->createMock(PDO::class);
