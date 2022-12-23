@@ -4,7 +4,7 @@
   "keywords": ["PDO", "ORM", "MySQL", "Postgres"],
   "homepage": "https://github.com/alexandr-mironov/datamapper",
   "type": "library",
-  "license": "LGPL",
+  "license": "LGPL-3.0-or-later",
   "authors": [
     {
       "name": "Alexandr Mironov",
@@ -23,6 +23,7 @@
   },
   "require": {
     "php": "^8",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "alexandr-mironov/multikeyhashmap": "*"
   }
 }
